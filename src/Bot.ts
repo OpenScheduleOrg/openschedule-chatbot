@@ -29,8 +29,9 @@ export default class Bot extends Controller {
     const consultas = c.reduce((p, c) => {
       const marcada = c.marcada as Date;
       if (!p[marcada.toLocaleDateString()]) {
-        p[marcada.toLocaleDateString()];
+        p[marcada.toLocaleDateString()] = [];
       }
+
       p[marcada.toLocaleDateString()].push(c);
       return p;
     }, {} as { [x: string]: Consulta[] });
@@ -45,13 +46,16 @@ export default class Bot extends Controller {
       day_consultas = consultas[date_str];
       current_date = day_consultas[0].marcada as Date;
 
-      horarios = `*${day_consultas[0]["hora"].slice(0, 5)}*`;
+      horarios = `*${current_date.toLocaleTimeString().slice(0, 5)}*`;
       for (let i = 1; i < day_consultas.length; i++) {
+        current_date = day_consultas[i].marcada as Date;
         if (i === day_consultas.length - 1) {
           horarios +=
-            " e outra as " + `*${day_consultas[i]["hora"].slice(0, 5)}*`;
+            " e outra as " +
+            `*${current_date.toLocaleTimeString().slice(0, 5)}*`;
         } else {
-          horarios += ", " + `*${day_consultas[i]["hora"].slice(0, 5)}*`;
+          horarios +=
+            ", " + `*${current_date.toLocaleTimeString().slice(0, 5)}*`;
         }
       }
       if (day_consultas.length === 2) {
@@ -65,9 +69,9 @@ export default class Bot extends Controller {
         date_str +
         " - " +
         Message.SHOWCONSULTA.format(
-          Weekday[current_date.getUTCDay()],
-          String(current_date.getUTCDate()),
-          Month[current_date.getUTCMonth()],
+          Weekday[current_date.getDay()],
+          String(current_date.getDate()),
+          Month[current_date.getMonth()],
           horarios,
           this.clinica.nome
         );
@@ -281,8 +285,9 @@ export default class Bot extends Controller {
       };
 
       const res = await createCliente(cliente);
+      console.log(res);
 
-      if (res) {
+      if (res.data.cliente) {
         const cliente = res.data.cliente;
         this.chats[jid].id = cliente.id;
         this.chats[jid].nome = cliente.nome;
@@ -320,10 +325,10 @@ export default class Bot extends Controller {
       for (let i = 0; i < horarios.length; i++) {
         res_text =
           res_text +
-          `\n${i + 1} - \u200E${horarios[i]["hora"].slice(
+          `\n${i + 1} - \u200E${horarios[i].hhmm.slice(
             0,
             4
-          )}\u200E\u200E${horarios[i]["hora"].slice(4, 5)}`;
+          )}\u200E\u200E${horarios[i].hhmm.slice(4, 5)}`;
       }
       res_text =
         res_text + "\n0 - escolher outro dia\n\n" + Message.HORACONSULTA;
@@ -435,10 +440,12 @@ export default class Bot extends Controller {
         cliente_id,
         marcada,
       };
+      console.log(marcada)
 
       const res = await createConsulta(consulta);
+      console.log(res)
 
-      if (res) {
+      if (res.data && res.data.consulta) {
         const consulta = res.data.consulta;
         const marcada = new Date(consulta.marcada);
 
@@ -450,7 +457,7 @@ export default class Bot extends Controller {
           String(marcada.getDate()),
           Month[marcada.getMonth()],
           marcada.toLocaleTimeString("pt-BR", {}).slice(0, 5),
-          consulta.clinica_nome
+          this.clinica.nome
         );
 
         this.send(jid, res_text);
@@ -504,6 +511,7 @@ export default class Bot extends Controller {
     day_consultas: Consulta[],
     selected_date: Date
   ): { hhmm: string; marcada: Date }[] {
+    console.log(selected_date);
     const horario = this.horarios.find(
       (d) => selected_date.getDay() === d.dia_semana
     );

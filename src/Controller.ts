@@ -82,12 +82,7 @@ export default class Controller extends WhatsApp implements IController {
     await this.wsp.updatePresence(jid, Presence.available);
     await this.wsp.updatePresence(jid, Presence.composing);
 
-    await sleep(1000);
-
     let response = await this.wsp.sendMessage(jid, content, type);
-
-    // console.log("Resposta: ");
-    // console.log(response);
   };
 
   APIProblem(jid) {
@@ -101,6 +96,9 @@ export default class Controller extends WhatsApp implements IController {
     if (!clinica) throw "Clinica não existe impossível de continuar.";
     const horarios = (await getHorarios({ clinica_id: clinica.id })).data
       .horarios;
+
+    this.clinica = clinica;
+    this.horarios = horarios;
 
     await super.connect();
     this.wsp.on("chat-update", async (chat) => {
