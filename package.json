@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/build/bot.js",
+    "start": "npx tsc && node build",
     "build": "npx tsc"
   },
   "keywords": [],
@@ -12,6 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/baileys": "^3.5.1",
-    "node-fetch": "^2.6.1"
+    "axios": "^0.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.3"
   }
 }

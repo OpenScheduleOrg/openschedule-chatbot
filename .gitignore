@@ -1,4 +1,4 @@
 node_modules
 .env
 auth_info.json
-src/build
+build

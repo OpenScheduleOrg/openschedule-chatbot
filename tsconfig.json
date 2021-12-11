@@ -1,13 +1,15 @@
 {
     "compilerOptions": {
-        "target": "ES5",
-        "module": "CommonJS",
+        "target": "es6",
+        "module": "commonjs",
+        "esModuleInterop": true,
         "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "outDir": "./src/build"
+        "moduleResolution": "node",
+        "outDir": "./build"
     },
-    "include": ["./src/*"],
+    "include": ["./src/*.ts"],
     "exclude": ["./src/interfaces"]
 }
