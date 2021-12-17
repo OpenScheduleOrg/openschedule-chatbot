@@ -7,6 +7,7 @@ import {
   GetConsultas,
   UpdateCliente,
   DeleteConsulta,
+  UpdateConsulta,
 } from "../interfaces/services";
 
 export const createConsulta: CreateConsulta = (consulta) =>
@@ -43,9 +44,14 @@ export const getConsultas: GetConsultas = (params, id = undefined) =>
     })
     .catch((e) => undefined);
 
-export const updateConsulta: UpdateCliente = (id, consulta) =>
+export const updateConsulta: UpdateConsulta = (
+  id,
+  marcada,
+  realizada,
+  descricao
+) =>
   axios
-    .post("/consulta", consulta)
+    .put("/consulta/" + id, { marcada, realizada, descricao })
     .then((res) => res.data)
     .catch((e) => undefined);
 

@@ -22,9 +22,9 @@ export type CreateConsulta = (consulta: Consulta) => Promise<APIResponse>;
 
 export type UpdateConsulta = (
   id: number,
-  marcada: string | null,
-  realizada: boolean | null,
-  descricao: string | null
+  marcada?: Date,
+  realizada?: boolean,
+  descricao?: string
 ) => Promise<APIResponse>;
 
 export type GetConsultas = (

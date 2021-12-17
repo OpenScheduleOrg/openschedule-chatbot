@@ -1,4 +1,4 @@
-import { Horario } from "./interfaces";
+import { Horario, Consulta } from "./interfaces";
 
 export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -43,5 +43,11 @@ export function secondsToHorario(s: number): {
 export function sortHorarios(a: Horario, b: Horario): number {
   if (a.dia_semana < b.dia_semana) return -1;
   if (a.dia_semana > b.dia_semana) return 1;
+  return 0;
+}
+
+export function sortConsultas(a: Consulta, b: Consulta): number {
+  if (a.marcada.valueOf() < b.marcada.valueOf()) return -1;
+  if (a.marcada.valueOf() > b.marcada.valueOf()) return 1;
   return 0;
 }

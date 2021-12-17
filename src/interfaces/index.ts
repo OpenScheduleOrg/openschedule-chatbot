@@ -41,7 +41,8 @@ export interface Chat {
         cpf?: string;
         horarios?: { marcada: Date; hhmm: string }[];
         data?: Date;
-        consultas?: {[ISODate:string]: Consulta[]};
+        consulta?: Consulta;
+        consultas?: Consulta[] | { [ISODate: string]: Consulta[] };
       };
     };
   };

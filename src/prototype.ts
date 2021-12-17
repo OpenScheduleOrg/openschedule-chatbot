@@ -5,6 +5,7 @@ interface String {
 interface Date {
   monthDays(): number;
   addSeconds(s: number): Date;
+  getHHMM(): string;
 }
 
 String.prototype.format = function () {
@@ -43,4 +44,8 @@ Date.prototype.toJSON = function (key) {
   this.setMinutes(this.getMinutes() + tzoffseet);
 
   return isoformat;
+};
+
+Date.prototype.getHHMM = function () {
+  return this.toLocaleTimeString().slice(0, 5);
 };

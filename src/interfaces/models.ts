@@ -2,7 +2,7 @@ export interface Consulta {
   id?: number;
   clinica_id: number;
   cliente_id: number;
-  marcada: string | Date;
+  marcada: Date;
   duracao?: number;
   his?: number;
   descricao?: string;

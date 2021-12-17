@@ -1,5 +1,5 @@
 import "./prototype";
-import { secondsToHorario } from "./helpers";
+import { secondsToHorario, sortConsultas } from "./helpers";
 import { Month, Weekday, Message } from "./constants";
 import { MessageType } from "@adiwajshing/baileys";
 
@@ -16,8 +16,6 @@ import {
 import Controller from "./Controller";
 
 process.env.TZ = "America/Fortaleza";
-
-const fetch = 0;
 
 export default class Bot extends Controller {
   async send_consultas(jid: string, c: Consulta[]) {
@@ -46,16 +44,14 @@ export default class Bot extends Controller {
       day_consultas = consultas[date_str];
       current_date = day_consultas[0].marcada as Date;
 
-      horarios = `*${current_date.toLocaleTimeString().slice(0, 5)}*`;
+      horarios = `*${current_date.getHHMM()}*`;
+
       for (let i = 1; i < day_consultas.length; i++) {
         current_date = day_consultas[i].marcada as Date;
         if (i === day_consultas.length - 1) {
-          horarios +=
-            " e outra as " +
-            `*${current_date.toLocaleTimeString().slice(0, 5)}*`;
+          horarios += " e outra as " + `*${current_date.getHHMM()}*`;
         } else {
-          horarios +=
-            ", " + `*${current_date.toLocaleTimeString().slice(0, 5)}*`;
+          horarios += ", " + `*${current_date.getHHMM()}*`;
         }
       }
       if (day_consultas.length === 2) {
@@ -78,6 +74,26 @@ export default class Bot extends Controller {
 
       await this.send(jid, res_text);
     }
+  }
+
+  async send_consultas_enumerate(jid: string, consultas: Consulta[]) {
+    let res_text = "";
+
+    this.chats[jid]["session"]["data"]["consultas"] = consultas;
+
+    for (let i = 0; i < consultas.length; i++) {
+      res_text =
+        res_text +
+        Message.LINEARCONSULTA.format(
+          String(i + 1),
+          consultas[i].marcada.toLocaleDateString(),
+          consultas[i].marcada.getHHMM()
+        ) +
+        "\n\n";
+    }
+    res_text = res_text + "0 - Para cancelar essa operação.";
+
+    await this.send(jid, res_text);
   }
 
   l_menu: Tlistener = async (jid, text) => {
@@ -113,11 +129,16 @@ export default class Bot extends Controller {
       test_text.match(/((minhas?|ver)\s*consultas?)|(^consultas?)/i)
     ) {
       if (cliente_id) {
-        const res = await getConsultas({ clinica_id, cliente_id });
+        const res = await getConsultas({
+          clinica_id,
+          cliente_id,
+          date_start: new Date(),
+        });
         if (res) {
           const consultas = res.data.consultas;
 
           if (consultas.length) {
+            consultas.sort(sortConsultas);
             this.chats[jid]["session"]["listener"] = this.l_default;
             await this.send_consultas(jid, consultas);
             delete this.chats[jid]["session"]["data"][
@@ -133,20 +154,40 @@ export default class Bot extends Controller {
       test_text == "3" ||
       test_text.match(/(reagendar\s*consultas?)|(reagendar)/i)
     ) {
-      this.chats[jid]["session"]["listener"] = this.l_default;
-      this.send(
-        jid,
-        "Desculpa mais ainda não é possível reagendar consultas.\n\nCancele sua consulta e marque outra que da no mesmo."
-      );
+      if (cliente_id) {
+        const res = await getConsultas({
+          clinica_id,
+          cliente_id,
+          date_start: new Date(),
+        });
+        if (res) {
+          const consultas = res.data.consultas;
+
+          if (consultas.length) {
+            consultas.sort(sortConsultas);
+            this.chats[jid]["session"]["listener"] = this.l_reagendar;
+            await this.send_consultas_enumerate(jid, consultas);
+            this.send(jid, Message.REAGEDARCONSULTA);
+            return;
+          }
+        }
+      }
+      this.chats[jid]["session"]["listener"] = this.sn_consulta;
+      this.send(jid, Message.NOCONSULTA);
     } else if (
       test_text == "4" ||
       test_text.match(/(cancelar\s*consultas?)|(cancelar)/i)
     ) {
       if (cliente_id) {
-        const res = await getConsultas({ clinica_id, cliente_id });
+        const res = await getConsultas({
+          clinica_id,
+          cliente_id,
+          date_start: new Date(),
+        });
         if (res) {
           const consultas = res.data.consultas;
-          if (Object.keys(consultas).length) {
+          if (consultas.length) {
+            consultas.sort(sortConsultas);
             this.chats[jid]["session"]["listener"] = this.l_cancelar;
             this.send(jid, Message.INTERRUPT);
             await this.send_consultas(jid, consultas);
@@ -403,6 +444,9 @@ export default class Bot extends Controller {
     let index = Number(text);
     let horarios = this.chats[jid]["session"]["data"]["horarios"];
     let res_text: string;
+    const consulta = this.chats[jid]["session"]["data"]["consulta"];
+    const marcada = horarios[index - 1]["marcada"];
+
     if (index == NaN && text.match(/^([0-1]\d|2[0-3]):[0-5]\d$/)) {
       index = 1;
       for (let hora of horarios) {
@@ -431,26 +475,46 @@ export default class Bot extends Controller {
       this.send(jid, Message.NEWDAY);
     } else if (index < 1 || index > horarios.length || !index) {
       this.send(jid, Message.INVALIDHORA);
-    } else {
-      const cliente_id = this.chats[jid]["id"];
-      const clinica_id = this.clinica.id;
-      const marcada = horarios[index - 1]["marcada"];
-      const consulta = {
-        clinica_id,
-        cliente_id,
-        marcada,
-      };
-      console.log(marcada)
-
-      const res = await createConsulta(consulta);
-      console.log(res)
+    } else if (consulta) {
+      const res = await updateConsulta(consulta.id, marcada);
 
       if (res.data && res.data.consulta) {
         const consulta = res.data.consulta;
         const marcada = new Date(consulta.marcada);
 
         this.chats[jid]["session"]["listener"] = this.l_default;
-        delete this.chats[jid]["session"]["data"]["horarios"];
+
+        res_text = Message.CONSULTAREAGENDADA.format(
+          Weekday[marcada.getDay()],
+          String(marcada.getDate()),
+          Month[marcada.getMonth()],
+          marcada.toLocaleTimeString("pt-BR", {}).slice(0, 5),
+          this.clinica.nome
+        );
+
+        this.send(jid, res_text);
+      } else {
+        this.APIProblem(jid);
+      }
+      delete this.chats[jid]["session"]["data"]["horarios"];
+      delete this.chats[jid]["session"]["data"]["consultas"];
+      delete this.chats[jid]["session"]["data"]["consulta"];
+    } else {
+      const cliente_id = this.chats[jid]["id"];
+      const clinica_id = this.clinica.id;
+      const consulta = {
+        clinica_id,
+        cliente_id,
+        marcada,
+      };
+
+      const res = await createConsulta(consulta);
+
+      if (res.data && res.data.consulta) {
+        const consulta = res.data.consulta;
+        const marcada = new Date(consulta.marcada);
+
+        this.chats[jid]["session"]["listener"] = this.l_default;
 
         res_text = Message.NOVACONSULTA.format(
           Weekday[marcada.getDay()],
@@ -464,6 +528,41 @@ export default class Bot extends Controller {
       } else {
         this.APIProblem(jid);
       }
+      delete this.chats[jid]["session"]["data"]["horarios"];
+    }
+  };
+
+  l_reagendar: Tlistener = async (jid, text) => {
+    let test_text = text.toLocaleLowerCase("pt-BR");
+
+    let consultas = this.chats[jid]["session"]["data"]["consultas"];
+    let res_text: string;
+    const today = new Date();
+    const indx = Number(text);
+    if (
+      test_text == "0" ||
+      test_text == "cancelar" ||
+      test_text == "não" ||
+      test_text == "n" ||
+      test_text == "ñ"
+    ) {
+      this.chats[jid]["session"]["listener"] = this.l_menu;
+      let res_text = Message.MENU.format(
+        "Tudo bem, aqui estão algumas opções para acesso rápido:"
+      );
+      this.send(jid, res_text);
+    } else if (indx && indx > 0 && indx <= consultas.length) {
+      this.chats[jid].session.data.consulta = consultas[indx - 1];
+      this.chats[jid]["session"]["listener"] = this.l_day;
+      res_text = Message.DIACONSULTAREAGENDAR.format(
+        String(today.monthDays()),
+        Weekday[today.getDay()],
+        String(today.getDate()),
+        Month[today.getMonth()]
+      );
+      await this.send(jid, res_text);
+    } else {
+      this.send(jid, "Informe uma entrada válida:");
     }
   };
 
