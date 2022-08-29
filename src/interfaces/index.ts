@@ -1,8 +1,9 @@
-import { MessageType, WALocationMessage } from "@adiwajshing/baileys";
+import { AnyMessageContent } from "@adiwajshing/baileys";
 
 import { Consulta, Clinica, Cliente, Horario } from "./models";
 
 export * from "./models";
+export * from "./bot";
 
 export interface APIResponseSuccess {
   consulta: Consulta;
@@ -55,11 +56,7 @@ export interface IController {
   clinica: Clinica;
   horarios: Horario[];
   read: (jid: string, text: string) => void;
-  send: (
-    jid: string,
-    content: string | WALocationMessage,
-    type?: MessageType
-  ) => void;
+  send: (jid: string, content: AnyMessageContent, location?: boolean) => void;
   newChat: (jid: string, cliente: Cliente, listener: Tlistener) => void;
   APIProblem: (jid: string) => void;
   connect: () => void;

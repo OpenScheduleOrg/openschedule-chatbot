@@ -6,10 +6,9 @@
         "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
-        "sourceMap": false,
+        "sourceMap": true,
         "moduleResolution": "node",
         "outDir": "./build"
     },
-    "include": ["./src/*.ts"],
-    "exclude": ["./src/interfaces"]
+    "include": ["./src/*.ts"]
 }

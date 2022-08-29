@@ -1,11 +1,8 @@
 import "./prototype";
-import { secondsToHorario, sortConsultas } from "./helpers";
+import { secondsToHorario, sortConsultas, tenDigits } from "./helpers";
 import { Month, Weekday, Message } from "./constants";
-import { MessageType } from "@adiwajshing/baileys";
 
-import { Tlistener, Consulta } from "./interfaces";
-
-import { createCliente } from "./services/cliente";
+import { createCliente, getClientes } from "./services/cliente";
 import {
   createConsulta,
   updateConsulta,
@@ -13,11 +10,30 @@ import {
   deleteConsulta,
 } from "./services/consulta";
 
-import Controller from "./Controller";
+import {
+  Chat,
+  Tlistener,
+  Clinica,
+  Horario,
+  Consulta,
+  Cliente,
+  IBot,
+} from "./interfaces";
 
 process.env.TZ = "America/Fortaleza";
 
-export default class Bot extends Controller {
+export default class Bot implements IBot {
+  chats: Chat;
+  clinica: Clinica;
+  horarios: Horario[];
+  send: (jid: string, content: any) => Promise<void>;
+
+  constructor(clinica: Clinica, horarios: Horario[]) {
+    this.clinica = clinica;
+    this.horarios = horarios;
+    this.chats = {};
+  }
+
   async send_consultas(jid: string, c: Consulta[]) {
     let current_date: Date,
       res_text: string,
@@ -37,7 +53,7 @@ export default class Bot extends Controller {
     this.chats[jid]["session"]["data"]["consultas"] = consultas;
 
     if (c.length > 1) {
-      await this.send(jid, Message.SHOWCONSULTAS);
+      await this.send(jid, { text: Message.SHOWCONSULTAS });
     }
 
     for (const date_str in consultas) {
@@ -72,7 +88,7 @@ export default class Bot extends Controller {
           this.clinica.nome
         );
 
-      await this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     }
   }
 
@@ -93,7 +109,7 @@ export default class Bot extends Controller {
     }
     res_text = res_text + "0 - Para cancelar essa operação.";
 
-    await this.send(jid, res_text);
+    await this.send(jid, { text: res_text });
   }
 
   l_menu: Tlistener = async (jid, text) => {
@@ -116,13 +132,13 @@ export default class Bot extends Controller {
           String(today.getDate()),
           Month[today.getMonth()]
         );
-        await this.send(jid, Message.INTERRUPT);
-        this.send(jid, res_text);
+        await this.send(jid, { text: Message.INTERRUPT });
+        await this.send(jid, { text: res_text });
       } else {
         this.chats[jid]["session"]["listener"] = this.l_name;
         res_text = `${Message.NEWCLIENT}\n${Message.NAME}`;
-        await this.send(jid, Message.INTERRUPT);
-        this.send(jid, res_text);
+        await this.send(jid, { text: Message.INTERRUPT });
+        await this.send(jid, { text: res_text });
       }
     } else if (
       test_text == "2" ||
@@ -149,7 +165,7 @@ export default class Bot extends Controller {
         }
       }
       this.chats[jid]["session"]["listener"] = this.sn_consulta;
-      this.send(jid, Message.NOCONSULTA);
+      await this.send(jid, { text: Message.NOCONSULTA });
     } else if (
       test_text == "3" ||
       test_text.match(/(reagendar\s*consultas?)|(reagendar)/i)
@@ -167,13 +183,13 @@ export default class Bot extends Controller {
             consultas.sort(sortConsultas);
             this.chats[jid]["session"]["listener"] = this.l_reagendar;
             await this.send_consultas_enumerate(jid, consultas);
-            this.send(jid, Message.REAGEDARCONSULTA);
+            await this.send(jid, { text: Message.REAGEDARCONSULTA });
             return;
           }
         }
       }
       this.chats[jid]["session"]["listener"] = this.sn_consulta;
-      this.send(jid, Message.NOCONSULTA);
+      await this.send(jid, { text: Message.NOCONSULTA });
     } else if (
       test_text == "4" ||
       test_text.match(/(cancelar\s*consultas?)|(cancelar)/i)
@@ -189,15 +205,15 @@ export default class Bot extends Controller {
           if (consultas.length) {
             consultas.sort(sortConsultas);
             this.chats[jid]["session"]["listener"] = this.l_cancelar;
-            this.send(jid, Message.INTERRUPT);
+            await this.send(jid, { text: Message.INTERRUPT });
             await this.send_consultas(jid, consultas);
-            this.send(jid, Message.CANCELAR);
+            await this.send(jid, { text: Message.CANCELAR });
             return;
           }
         }
       }
       this.chats[jid]["session"]["listener"] = this.sn_consulta;
-      this.send(jid, Message.NOCONSULTA);
+      await this.send(jid, { text: Message.NOCONSULTA });
     } else if (
       test_text == "5" ||
       test_text.match(
@@ -211,18 +227,16 @@ export default class Bot extends Controller {
         this.clinica.telefone,
         this.clinica.endereco
       );
-      this.send(jid, res_text.toLocaleUpperCase("pt-BR"));
-      this.send(
-        jid,
-        {
+      await this.send(jid, { text: res_text.toLocaleUpperCase("pt-BR") });
+      await this.send(jid, {
+        location: {
           degreesLatitude: Number(this.clinica.latitude),
           degreesLongitude: Number(this.clinica.logintude),
           address: this.clinica.endereco,
         },
-        MessageType.location
-      );
+      });
     } else {
-      this.send(jid, Message.INVALIDMENU);
+      await this.send(jid, { text: Message.INVALIDMENU });
     }
   };
 
@@ -241,19 +255,19 @@ export default class Bot extends Controller {
           Month[today.getMonth()]
         );
 
-        this.send(jid, res_text);
+        await this.send(jid, res_text);
       } else {
         this.chats[jid]["session"]["listener"] = this.l_name;
         res_text = `${Message.NEWCLIENT}\n${Message.NAME}`;
-        await this.send(jid, Message.INTERRUPT);
-        this.send(jid, res_text);
+        await this.send(jid, { text: Message.INTERRUPT });
+        await this.send(jid, res_text);
       }
     } else {
       this.chats[jid]["session"]["listener"] = this.l_menu;
       let res_text = Message.MENU.format(
         "Bom, aqui estão algumas opções para acesso rápido:"
       );
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     }
   };
 
@@ -263,7 +277,7 @@ export default class Bot extends Controller {
     let res_text = Message.MENU.format(
       "De nada! Mas não entendo muita coisa, aqui estão algumas opções com o que consigo fazer:"
     );
-    this.send(jid, res_text);
+    await this.send(jid, { text: res_text });
   };
 
   l_name: Tlistener = async (jid, text) => {
@@ -282,9 +296,9 @@ export default class Bot extends Controller {
       res_text = Message.MENU.format(
         "Tudo bem, aqui estão algumas opções para acesso rápido:"
       );
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else if (test_text.length <= 3) {
-      this.send(jid, Message.INVALIDNAME);
+      await this.send(jid, { text: Message.INVALIDNAME });
     } else {
       const nome_completo = text.split(/\s+/);
       const nome = nome_completo[0];
@@ -292,13 +306,13 @@ export default class Bot extends Controller {
       this.chats[jid]["session"]["listener"] = this.l_cpf;
       this.chats[jid]["session"]["data"]["nome"] = nome;
       this.chats[jid]["session"]["data"]["sobrenome"] = sobrenome;
-      this.send(jid, Message.CPF);
+      await this.send(jid, { text: Message.CPF });
     }
   };
 
   l_cpf: Tlistener = async (jid, text) => {
     let test_text = text.toLocaleLowerCase("pt-BR");
-    let fone = this.tenDigits(jid);
+    let fone = tenDigits(jid);
 
     let res_text: string;
 
@@ -314,9 +328,9 @@ export default class Bot extends Controller {
       let res_text = Message.MENU.format(
         "Tudo bem, aqui estão algumas opções para acesso rápido:"
       );
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else if (!test_text.match(/^\d{11}$|^\d{3}\.\d{3}\.\d{3}-\d{2}$/)) {
-      this.send(jid, Message.INVALIDCPF);
+      await this.send(jid, { text: Message.INVALIDCPF });
     } else {
       const cliente = {
         nome: this.chats[jid]["session"]["data"]["nome"],
@@ -345,7 +359,7 @@ export default class Bot extends Controller {
           Month[today.getMonth()]
         );
 
-        this.send(jid, res_text);
+        await this.send(jid, { text: res_text });
       } else {
         this.APIProblem(jid);
       }
@@ -396,10 +410,10 @@ export default class Bot extends Controller {
       let res_text = Message.MENU.format(
         "Tudo bem, aqui estão algumas opções para acesso rápido:"
       );
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else if (!day || day < 1 || day > mouth_size) {
       let res_text = Message.INVALIDDAY.format(String(mouth_size));
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else {
       if (day < today.getDate()) today.setMonth(today.getMonth() + 1);
       const clinica_id = this.clinica.id;
@@ -423,15 +437,15 @@ export default class Bot extends Controller {
 
           this.chats[jid]["session"]["listener"] = this.l_horario;
           this.chats[jid]["session"]["data"]["horarios"] = horarios;
-          this.send(jid, res_text);
+          await this.send(jid, { text: res_text });
         } else {
           res_text = Message.NOHORARIOS.format(
-            Weekday[date_start.getDate()],
+            Weekday[date_start.getDay()],
             String(date_start.getDate()),
             Month[date_start.getMonth()]
           );
-          this.send(jid, res_text);
-          this.send(jid, Message.NEWDAY);
+          await this.send(jid, { text: res_text });
+          await this.send(jid, { text: Message.NEWDAY });
         }
       } else {
         this.APIProblem(jid);
@@ -445,7 +459,6 @@ export default class Bot extends Controller {
     let horarios = this.chats[jid]["session"]["data"]["horarios"];
     let res_text: string;
     const consulta = this.chats[jid]["session"]["data"]["consulta"];
-    const marcada = horarios[index - 1]["marcada"];
 
     if (index == NaN && text.match(/^([0-1]\d|2[0-3]):[0-5]\d$/)) {
       index = 1;
@@ -468,14 +481,15 @@ export default class Bot extends Controller {
       let res_text = Message.MENU.format(
         "Tudo bem, aqui estão algumas opções para acesso rápido:"
       );
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else if (text === "0") {
       this.chats[jid]["session"]["listener"] = this.l_day;
       delete this.chats[jid]["session"]["data"]["horarios"];
-      this.send(jid, Message.NEWDAY);
+      await this.send(jid, { text: Message.NEWDAY });
     } else if (index < 1 || index > horarios.length || !index) {
-      this.send(jid, Message.INVALIDHORA);
+      await this.send(jid, { text: Message.INVALIDHORA });
     } else if (consulta) {
+      const marcada = horarios[index - 1]["marcada"];
       const res = await updateConsulta(consulta.id, marcada);
 
       if (res.data && res.data.consulta) {
@@ -492,7 +506,7 @@ export default class Bot extends Controller {
           this.clinica.nome
         );
 
-        this.send(jid, res_text);
+        await this.send(jid, { text: res_text });
       } else {
         this.APIProblem(jid);
       }
@@ -500,6 +514,7 @@ export default class Bot extends Controller {
       delete this.chats[jid]["session"]["data"]["consultas"];
       delete this.chats[jid]["session"]["data"]["consulta"];
     } else {
+      const marcada = horarios[index - 1]["marcada"];
       const cliente_id = this.chats[jid]["id"];
       const clinica_id = this.clinica.id;
       const consulta = {
@@ -524,7 +539,7 @@ export default class Bot extends Controller {
           this.clinica.nome
         );
 
-        this.send(jid, res_text);
+        await this.send(jid, { text: res_text });
       } else {
         this.APIProblem(jid);
       }
@@ -550,7 +565,7 @@ export default class Bot extends Controller {
       let res_text = Message.MENU.format(
         "Tudo bem, aqui estão algumas opções para acesso rápido:"
       );
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else if (indx && indx > 0 && indx <= consultas.length) {
       this.chats[jid].session.data.consulta = consultas[indx - 1];
       this.chats[jid]["session"]["listener"] = this.l_day;
@@ -560,9 +575,9 @@ export default class Bot extends Controller {
         String(today.getDate()),
         Month[today.getMonth()]
       );
-      await this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else {
-      this.send(jid, "Informe uma entrada válida:");
+      await this.send(jid, { text: "Informe uma entrada válida:" });
     }
   };
 
@@ -583,7 +598,7 @@ export default class Bot extends Controller {
       let res_text = Message.MENU.format(
         "Tudo bem, aqui estão algumas opções para acesso rápido:"
       );
-      this.send(jid, res_text);
+      await this.send(jid, { text: res_text });
     } else if (consultas[text]) {
       const consulta = consultas[text][0];
       const res = await deleteConsulta(consulta.id);
@@ -597,12 +612,12 @@ export default class Bot extends Controller {
           Month[marcada.getUTCMonth()]
         );
         delete this.chats[jid]["session"]["data"]["consultas"];
-        this.send(jid, res_text);
+        await this.send(jid, { text: res_text });
       } else {
         this.APIProblem(jid);
       }
     } else {
-      this.send(jid, Message.NODATACONSULTA.format(text));
+      await this.send(jid, { text: Message.NODATACONSULTA.format(text) });
     }
   };
 
@@ -653,5 +668,52 @@ export default class Bot extends Controller {
     }
 
     return free_horarios;
+  }
+
+  async APIProblem(jid) {
+    delete this.chats[jid];
+    await this.send(jid, { text: Message.TECHNICALPROBLEMS });
+  }
+
+  async read(jid, text) {
+    text = text.trim();
+
+    if (jid in this.chats) {
+      this.chats[jid]["session"]["listener"](jid, text);
+    } else {
+      let fone_number = tenDigits(jid);
+      let res = await getClientes({ telefone: fone_number });
+
+      if (res) {
+        let cliente: Cliente =
+          res.data && (res.data.cliente || res.data.clientes[0]);
+
+        if (cliente) {
+          this.newChat(jid, cliente, this.l_menu);
+
+          let nome = cliente["nome"].split(/\s+/)[0];
+          let res_text = Message.MENU.format(
+            "Tudo bem? Bom aqui tenho algumas opções para você achar o que procurar:"
+          );
+
+          await this.send(jid, { text: Message.WELCOMEBACK.format(nome) });
+          await this.send(jid, { text: res_text });
+        } else {
+          this.newChat(jid, cliente, this.sn_consulta);
+          await this.send(jid, { text: Message.SNCONSULTA });
+        }
+      } else {
+        await this.send(jid, { text: Message.TECHNICALPROBLEMS });
+      }
+    }
+  }
+
+  newChat(jid, cliente, listener) {
+    this.chats[jid] = {
+      id: cliente && cliente.id,
+      nome: cliente && cliente.nome,
+      sobrenome: cliente && cliente.sobrenome,
+      session: { listener: listener, data: {} },
+    };
   }
 }

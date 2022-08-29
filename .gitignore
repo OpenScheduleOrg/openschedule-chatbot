@@ -1,4 +1,5 @@
 node_modules
 .env
-auth_info.json
 build
+baileys_auth_info
+.vscode

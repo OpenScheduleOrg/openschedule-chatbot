@@ -51,3 +51,12 @@ export function sortConsultas(a: Consulta, b: Consulta): number {
   if (a.marcada.valueOf() > b.marcada.valueOf()) return 1;
   return 0;
 }
+
+export function onlyNumber(jid: string): string {
+  return jid.replace("@s.whatsapp.net", "");
+}
+
+export function tenDigits(jid: string): string {
+  const with_ddi = onlyNumber(jid);
+  return with_ddi.slice(2);
+}
