@@ -13,7 +13,8 @@
   "dependencies": {
     "@adiwajshing/baileys": "^4.4.0",
     "@types/ws": "^8.5.3",
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "date-fns": "^2.29.2"
   },
   "devDependencies": {
     "@types/node": "^18.7.14",

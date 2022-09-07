@@ -7,7 +7,7 @@ import makeWASocket, {
   useMultiFileAuthState,
 } from "@adiwajshing/baileys";
 
-import { IBot } from "./interfaces";
+import { IBot } from "./bot-types";
 
 export default class Whatsapp {
   sock: any;
