@@ -5,9 +5,10 @@ import {
   HorarioService,
 } from "@/data/usecases";
 import axios, { Axios } from "axios";
+import config from "./config";
 
 const axiosInstance: Axios = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: config.APIDNS,
   headers: {
     "content-type": "application/json",
   },

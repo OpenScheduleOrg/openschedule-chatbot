@@ -7,8 +7,10 @@ import {
   horarioService,
 } from "@/main/services";
 
+import config from "./config";
+
 async function main(): Promise<void> {
-  const clinica = await clinicaService.loadById("1");
+  const clinica = await clinicaService.loadById(config.CLINICAID);
   const bot = new Bot(clinica, consultaService, clienteService, horarioService);
 
   const whatsapp = new Whatsapp(bot);
