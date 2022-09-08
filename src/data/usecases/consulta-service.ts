@@ -1,6 +1,6 @@
 import { Axios, AxiosResponse } from "axios";
 
-import { IConsuleService, IConsultaService } from "@/domain/usecases";
+import { IConsuleService, IConsultaService } from "@/domain/services";
 import { ResponseConsultaModel, ResponseConsultasModel } from "../models";
 
 export class ConsultaService implements IConsultaService {

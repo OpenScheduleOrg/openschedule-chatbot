@@ -1,6 +1,6 @@
 import { Axios, AxiosResponse } from "axios";
 
-import { IHorarioService } from "@/domain/usecases";
+import { IHorarioService } from "@/domain/services";
 import { ResponseHorariosModel } from "../models";
 
 export class HorarioService implements IHorarioService {

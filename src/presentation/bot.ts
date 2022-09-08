@@ -19,7 +19,7 @@ import {
   IClienteService,
   IConsultaService,
   IHorarioService,
-} from "@/domain/usecases";
+} from "@/domain/services";
 import { AnyMessageContent } from "@adiwajshing/baileys";
 
 process.env.TZ = "America/Fortaleza";

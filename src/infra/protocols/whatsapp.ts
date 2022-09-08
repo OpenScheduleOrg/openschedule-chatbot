@@ -7,9 +7,11 @@ import makeWASocket, {
   useMultiFileAuthState,
 } from "@adiwajshing/baileys";
 
-import { IBot } from "./bot-types";
+import { IBot } from "../../presentation/bot-types";
+import { IMessageApp } from "@/presentation/protocols/message-app";
+import { ContentSend } from "@/domain/models";
 
-export default class Whatsapp {
+export default class Whatsapp implements IMessageApp {
   sock: any;
   bot: IBot;
 
@@ -17,16 +19,17 @@ export default class Whatsapp {
     this.bot = bot;
     bot.send = this.send;
   }
+  read: (id: string, content: any) => Promise<void>;
 
-  send = async (jid: string, content: AnyMessageContent) => {
-    await this.sock.presenceSubscribe(jid);
+  send = async (id: string, content: ContentSend) => {
+    await this.sock.presenceSubscribe(id);
     await delay(500);
 
-    await this.sock.sendPresenceUpdate("composing", jid);
+    await this.sock.sendPresenceUpdate("composing", id);
     await delay(2000);
 
-    await this.sock.sendPresenceUpdate("paused", jid);
-    await this.sock.sendMessage(jid, content);
+    await this.sock.sendPresenceUpdate("paused", id);
+    await this.sock.sendMessage(id, content);
   };
 
   async connect() {

@@ -1,5 +1,5 @@
 import Bot from "@/presentation/bot";
-import Whatsapp from "@/presentation/whatsapp";
+import Whatsapp from "@/infra/protocols/whatsapp";
 import {
   clienteService,
   clinicaService,

@@ -1,6 +1,6 @@
 import { Axios, AxiosResponse } from "axios";
 
-import { IClienteService } from "@/domain/usecases";
+import { IClienteService } from "@/domain/services";
 import { ResponseClienteModel } from "../models";
 
 export class ClienteService implements IClienteService {

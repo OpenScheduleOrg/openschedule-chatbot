@@ -1,6 +1,6 @@
 import { Axios, AxiosResponse } from "axios";
 
-import { IClinicaService } from "@/domain/usecases";
+import { IClinicaService } from "@/domain/services";
 import { ResponseClinicaModel } from "../models";
 
 export class ClinicaService implements IClinicaService {
