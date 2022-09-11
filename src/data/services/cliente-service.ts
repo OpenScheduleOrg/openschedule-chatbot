@@ -19,14 +19,15 @@ export class ClienteService implements IClienteService {
 
   async loadByPhone(phone: string): Promise<IClienteService.Model> {
     return (
-      await this.httpClient.get<any, AxiosResponse<ResponseClienteModel>>(
-        this.url,
-        {
+      await this.httpClient
+        .get<any, AxiosResponse<ResponseClienteModel>>(this.url, {
           params: {
             telefone: phone,
           },
-        }
-      )
-    ).data.data.cliente;
+        })
+        .catch((err) => {
+          return undefined;
+        })
+    )?.data.data.cliente;
   }
 }

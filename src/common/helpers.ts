@@ -47,10 +47,21 @@ export function sortConsultas(a: ConsultaModel, b: ConsultaModel): number {
 }
 
 export function onlyNumber(jid: string): string {
-  return jid.replace("@s.whatsapp.net", "");
+  return jid.slice(2, 12);
 }
 
-export function tenDigits(jid: string): string {
-  const with_ddi = onlyNumber(jid);
-  return with_ddi.slice(2);
-}
+const accentsMap = new Map([
+  ["a", "á|à|ã|â|ä"],
+  ["e", "é|è|ê|ë"],
+  ["i", "í|ì|î|ï"],
+  ["o", "ó|ò|ô|õ|ö"],
+  ["u", "ú|ù|û|ü"],
+  ["c", "ç"],
+  ["n", "ñ"],
+]);
+
+const reducer = (acc, [key, _]) =>
+  acc.replace(new RegExp(accentsMap.get(key), "gi"), key);
+
+export const slugify = (text) =>
+  [...accentsMap].reduce(reducer, text.toLowerCase());

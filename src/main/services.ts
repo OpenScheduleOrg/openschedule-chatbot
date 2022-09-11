@@ -3,7 +3,7 @@ import {
   ClinicaService,
   ConsultaService,
   HorarioService,
-} from "@/data/usecases";
+} from "@/data/services";
 import axios, { Axios } from "axios";
 import config from "./config";
 

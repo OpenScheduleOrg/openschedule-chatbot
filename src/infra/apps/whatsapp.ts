@@ -7,21 +7,19 @@ import makeWASocket, {
   useMultiFileAuthState,
 } from "@adiwajshing/baileys";
 
-import { IBot } from "../../presentation/bot-types";
-import { IMessageApp } from "@/presentation/protocols/message-app";
-import { ContentSend } from "@/domain/models";
+import { IMessageApp } from "@/infra/interfaces/message-app";
+import { ContentSend } from "@/presentation/models";
+import { TypeRead } from "@/presentation/interfaces";
+import { onlyNumber } from "@/common/helpers";
 
 export default class Whatsapp implements IMessageApp {
   sock: any;
-  bot: IBot;
 
-  constructor(bot: IBot) {
-    this.bot = bot;
-    bot.send = this.send;
-  }
-  read: (id: string, content: any) => Promise<void>;
+  read: TypeRead;
 
   send = async (id: string, content: ContentSend) => {
+    id = "55" + id + "@s.whatsapp.net";
+
     await this.sock.presenceSubscribe(id);
     await delay(500);
 
@@ -93,6 +91,10 @@ export default class Whatsapp implements IMessageApp {
     const text =
       msg.message.conversation ||
       (msg.message.extendedTextMessage && msg.message.extendedTextMessage.text);
-    if (text) await this.bot.read(msg.key.remoteJid, text);
+    if (text)
+      await this.read(onlyNumber(msg.key.remoteJid), {
+        text,
+        timestamp: msg.messageTimestamp as number,
+      });
   }
 }

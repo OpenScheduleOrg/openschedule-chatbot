@@ -1,7 +1,6 @@
 import { TypeRead, TypeSend } from "@/presentation/interfaces";
 
-export interface IMessageApp {
-  read: TypeSend;
-  send: TypeRead;
+export interface IContextManager {
+  read: TypeRead;
   connect(): Promise<void>;
 }

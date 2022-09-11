@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 
 import "@/common/prototype";
-import { sortConsultas, tenDigits } from "@/common/helpers";
+import { onlyNumber, sortConsultas } from "@/common/helpers";
 import { Month, Weekday } from "@/common/constants";
 
 import Messages from "@/presentation/messages";
@@ -301,7 +301,7 @@ export default class Bot implements IBot {
 
   l_cpf: Tlistener = async (jid, text) => {
     let test_text = text.toLocaleLowerCase("pt-BR");
-    let fone = tenDigits(jid);
+    let fone = onlyNumber(jid);
 
     let res_text: string;
 
@@ -536,7 +536,7 @@ export default class Bot implements IBot {
         if (simple_lst) await simple_lst(jid);
         else await this.chats[jid]["session"]["default"](jid, text);
       } else {
-        const fone_number = tenDigits(jid);
+        const fone_number = onlyNumber(jid);
         const cliente = await this.clienteService.loadByPhone(fone_number);
 
         if (cliente) {
