@@ -27,12 +27,17 @@ export class ContextManager implements IContextManager {
         const cliente = await this.clienteService.loadByPhone(id);
         session = this.sessionManager.create(
           id,
-          cliente ? this.newUserConversation : this.welcomeBackConversation,
+          cliente ? this.welcomeBackConversation : this.newUserConversation,
           cliente
         );
+        if (!cliente) {
+          await session.conversation.ask(session);
+          return;
+        }
       }
-      session.conversation.answer(session, content.text);
-    } catch {
+      await session.conversation.answer(session, content.text);
+    } catch (e) {
+      this.sessionManager.close(id);
       await this.send(id, { text: Messages.TECHNICALPROBLEMS });
     }
   };

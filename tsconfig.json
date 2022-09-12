@@ -11,10 +11,11 @@
         "outDir": "./build",
         "baseUrl": "./src",
         "paths": {
-          "@/*": ["*"]
+          "@/*": ["*"],
+          "@/tests/*": ["../tests/*"]
         },
     },
-    "include": ["src"],
+    "include": ["src", "tests"],
     "ts-node": {
     "require": ["tsconfig-paths/register"]
   }

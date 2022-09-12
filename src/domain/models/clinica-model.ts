@@ -1,4 +1,4 @@
-export interface ClinicaModel {
+export type ClinicaModel = {
   id: string;
   nome: string;
   telefone: string;
@@ -6,4 +6,4 @@ export interface ClinicaModel {
   tipo: string;
   latitude: string;
   logintude: string;
-}
+};
