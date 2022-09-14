@@ -26,7 +26,10 @@ export class NewUserConversation implements IConversation {
     if (clean_text === "sim") await this.informNameConveration.ask(session);
     else if (clean_text == "nao") await this.optionsConversation.ask(session);
     else if (this.conversations[clean_text])
-      this.conversations[clean_text].ask(session);
-    else this.undefinableConversation.ask(session);
+      await this.conversations[clean_text].ask(session);
+    else
+      await this.undefinableConversation.ask(session, {
+        complement: Messages.SORRYUDERSTAND,
+      });
   }
 }

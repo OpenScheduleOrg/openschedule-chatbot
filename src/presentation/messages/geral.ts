@@ -1,6 +1,8 @@
 export default {
   WELCOME: "Olá! Sou Robot\nSeu assistente para agendamento de consultas.",
   WELCOMEBACK: "Seja bem-vindo(a) de volta *{0}*.",
+  SORRYUDERSTAND: "Desculpa não entendo muita coisa.",
+  ITFINE: "Tudo bem.",
   MENU: "{0}\n\n1 -  🆕Marcar consulta\n2 -  🗓️Minhas consultas\n3 -  📆Reagendar consulta\n4 -  ❌Cancelar consulta \n5 -  🏥Sobre Clínica\n\nDigite o número refente ao que busca:",
   INVALIDMENU: "Desculpa não entendi essa mensagem.",
   INTERRUPT:
@@ -12,4 +14,5 @@ export default {
     "\nEndereço: {3}",
   TECHNICALPROBLEMS:
     "Desculpa estamos com problemas técnicos, por favor nos contate mais tarde.",
+  EASYACCESS: "Aqui estão opções para acesso fácil.",
 };

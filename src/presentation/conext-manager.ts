@@ -23,6 +23,8 @@ export class ContextManager implements IContextManager {
 
   read: TypeRead = async (id: string, content: MessageInfo) => {
     try {
+      content.text = content.text.trim();
+
       let session = this.sessionManager.get(id);
       if (!session) {
         const cliente = await this.clienteService.loadByPhone(id);
@@ -31,10 +33,7 @@ export class ContextManager implements IContextManager {
           cliente ? this.welcomeBackConversation : this.newUserConversation,
           cliente
         );
-        if (!cliente) {
-          await session.conversation.ask(session);
-          return;
-        }
+        if (!cliente) return await session.conversation.ask(session);
       }
       await session.conversation.answer(session, {
         text: content.text,
