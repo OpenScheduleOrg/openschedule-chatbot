@@ -1,3 +1,4 @@
+import { slugify } from "@/common/helpers";
 import { ISessionManager } from "@/domain/interfaces";
 import { IClienteService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
@@ -35,7 +36,10 @@ export class ContextManager implements IContextManager {
           return;
         }
       }
-      await session.conversation.answer(session, content.text);
+      await session.conversation.answer(session, {
+        text: content.text,
+        clean_text: slugify(content.text),
+      });
     } catch (e) {
       this.sessionManager.close(id);
       await this.send(id, { text: Messages.TECHNICALPROBLEMS });

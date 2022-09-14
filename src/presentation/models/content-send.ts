@@ -1,3 +1,9 @@
+type MessageButton = {
+  buttonId: string;
+  buttonText: { displayText: string };
+  type: number;
+};
+
 export type ContentSend = {
   text?: string;
   location?: {
@@ -5,4 +11,5 @@ export type ContentSend = {
     degreesLongitude: number;
     address: string;
   };
+  buttons?: MessageButton[];
 };

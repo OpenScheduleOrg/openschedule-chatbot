@@ -5,7 +5,7 @@ import {
   HorarioService,
 } from "@/data/services";
 import axios, { Axios } from "axios";
-import config from "./config";
+import config from "../config";
 
 const axiosInstance: Axios = axios.create({
   baseURL: config.APIDNS,

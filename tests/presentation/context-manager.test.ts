@@ -109,6 +109,27 @@ describe("ContextManager", () => {
     expect(welcomeBackConversationMock.answer).toBeCalledTimes(1);
   });
 
+  test("Should call answer with clean text using slugify function", async () => {
+    const { sut, clienteServiceMock, welcomeBackConversationMock } = makeSut();
+    const cliente = makeFakeCliente();
+
+    (clienteServiceMock.loadByPhone as jest.Mock).mockImplementation(
+      () => cliente
+    );
+    const dirty_message = "Não";
+
+    await sut.read(id, { text: dirty_message, timestamp: 0 });
+
+    expect(welcomeBackConversationMock.answer).toBeCalledTimes(1);
+    expect(welcomeBackConversationMock.answer).toBeCalledWith(
+      expect.anything(),
+      {
+        text: "Não",
+        clean_text: "nao",
+      }
+    );
+  });
+
   test("Should close session if some exception occurs", async () => {
     const { sut, newUserConversationMock, sessionManagerMock } = makeSut();
 

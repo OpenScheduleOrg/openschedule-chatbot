@@ -1,4 +1,6 @@
 export default {
+  SNCADASTRO:
+    "Poderia nos informar alguns de seus para realizamos um cadastro?\nÉ fácil e rápido!",
   NEWCLIENT:
     "Antes de marcar a consulta precisamos de algumas informações sua.",
   NAME: "Por favor nos informe seu nome:",
