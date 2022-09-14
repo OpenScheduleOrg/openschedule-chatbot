@@ -147,7 +147,7 @@ export default class Bot implements IBot {
         await this.send(jid, { text: res_text });
       } else {
         this.chats[jid]["session"]["default"] = this.l_name;
-        res_text = `${Messages.NEWCLIENT}\n${Messages.NAME}`;
+        res_text = `${Messages.NEWCLIENT}\n${Messages.INFORMNAME}`;
         await this.send(jid, { text: Messages.INTERRUPT });
         await this.send(jid, { text: res_text });
       }
@@ -260,7 +260,7 @@ export default class Bot implements IBot {
         await this.send(jid, { text: res_text });
       } else {
         this.chats[jid]["session"]["default"] = this.l_name;
-        res_text = `${Messages.NEWCLIENT}\n${Messages.NAME}`;
+        res_text = `${Messages.NEWCLIENT}\n${Messages.INFORMNAME}`;
         await this.send(jid, { text: Messages.INTERRUPT });
         await this.send(jid, res_text);
       }
@@ -295,7 +295,7 @@ export default class Bot implements IBot {
       this.chats[jid]["session"]["default"] = this.l_cpf;
       this.chats[jid]["session"]["data"]["nome"] = nome;
       this.chats[jid]["session"]["data"]["sobrenome"] = sobrenome;
-      await this.send(jid, { text: Messages.CPF });
+      await this.send(jid, { text: Messages.INFORMCPF });
     }
   };
 

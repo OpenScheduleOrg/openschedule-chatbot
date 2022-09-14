@@ -5,5 +5,5 @@ export type UserSession = {
   id: string;
   userinfo?: ClienteModel;
   conversation: IConversation;
-  data: {};
+  data: { name?: string; last_name?: string };
 };
