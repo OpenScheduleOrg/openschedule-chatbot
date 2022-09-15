@@ -4,12 +4,18 @@ import {
   InformNameConversation,
   NewUserConversation,
   OptionsConversation,
+  WelcomeBackConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
 import { clienteService } from "./services";
 
 export const buildConversations = (send: TypeSend): TypeConvesations => {
   const optionsConversation = new OptionsConversation(send, {});
+  const welcomeBackConversation = new WelcomeBackConversation(
+    send,
+    optionsConversation,
+    {}
+  );
 
   const informCpfConversation = new InformCpfConversation(
     send,
@@ -32,5 +38,5 @@ export const buildConversations = (send: TypeSend): TypeConvesations => {
     {}
   );
 
-  return { newUserConversation, optionsConversation };
+  return { newUserConversation, welcomeBackConversation };
 };

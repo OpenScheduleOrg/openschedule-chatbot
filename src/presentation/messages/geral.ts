@@ -1,6 +1,6 @@
 export default {
   WELCOME: "Olá! Sou Robot\nSeu assistente para agendamento de consultas.",
-  WELCOMEBACK: "Seja bem-vindo(a) de volta *{0}*.",
+  WELCOMEBACK: "Olá {0}, que bom vê-lo novamente.",
   SORRYUDERSTAND: "Desculpa não entendo muita coisa.",
   ITFINE: "Tudo bem.",
   MENU: "{0}\n\n1 -  🆕Marcar consulta\n2 -  🗓️Minhas consultas\n3 -  📆Reagendar consulta\n4 -  ❌Cancelar consulta \n5 -  🏥Sobre Clínica\n\nDigite o número refente ao que busca:",

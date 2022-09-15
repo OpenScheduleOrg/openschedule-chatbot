@@ -1,7 +1,7 @@
 import { UserSession } from "../models/user-sesssion";
 
 export interface IConversation {
-  ask(
+  ask?(
     session: UserSession,
     optional?: { complement?: string; title?: string }
   ): Promise<void>;

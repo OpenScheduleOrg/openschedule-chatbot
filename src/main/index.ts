@@ -5,20 +5,24 @@ import config from "@/main/config";
 import { clienteService, clinicaService } from "@/main/factories/services";
 import { buildConversations } from "./factories";
 
+import "@/common/prototype";
+
 async function main(): Promise<void> {
   const clinica = await clinicaService.loadById(config.CLINICAID);
 
   const app = new Whatsapp();
   const session = new SessionManager(clinica);
 
-  const { newUserConversation } = buildConversations(app.send);
+  const { newUserConversation, welcomeBackConversation } = buildConversations(
+    app.send
+  );
 
   const context = new ContextManager(
     app,
     session,
     clienteService,
     newUserConversation,
-    null
+    welcomeBackConversation
   );
   await context.connect();
 }
