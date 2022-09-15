@@ -5,12 +5,13 @@ import { TypeSend } from "../interfaces";
 import Messages from "../messages";
 
 export class NewUserConversation implements IConversation {
+  conversations: TypeConvesations = {};
+
   constructor(
     private readonly send: TypeSend,
     private readonly informNameConveration: IConversation,
     private readonly optionsConversation: IConversation,
-    private readonly undefinableConversation: IConversation,
-    private readonly conversations: TypeConvesations
+    private readonly undefinableConversation: IConversation
   ) {}
 
   async ask(session: UserSession): Promise<void> {

@@ -5,10 +5,11 @@ import { TypeSend } from "../interfaces";
 import Messages from "../messages";
 
 export class WelcomeBackConversation implements IConversation {
+  conversations: TypeConvesations = {};
+
   constructor(
     private readonly send: TypeSend,
-    private readonly optionsConversation: IConversation,
-    private readonly conversations: TypeConvesations
+    private readonly optionsConversation: IConversation
   ) {}
 
   async answer(session: UserSession, { clean_text }): Promise<void> {

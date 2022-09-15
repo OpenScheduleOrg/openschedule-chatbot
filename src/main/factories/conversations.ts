@@ -1,5 +1,7 @@
 import { TypeConvesations } from "@/domain/interfaces";
+import { ClinicaModel } from "@/domain/models";
 import {
+  AboutClinicConversation,
   InformCpfConversation,
   InformNameConversation,
   NewUserConversation,
@@ -9,34 +11,41 @@ import {
 import { TypeSend } from "@/presentation/interfaces";
 import { clienteService } from "./services";
 
-export const buildConversations = (send: TypeSend): TypeConvesations => {
-  const optionsConversation = new OptionsConversation(send, {});
+export const buildConversations = (
+  send: TypeSend,
+  clinica: ClinicaModel
+): TypeConvesations => {
+  const optionsConversation = new OptionsConversation(send);
+
+  const aboutClinicConversation = new AboutClinicConversation(
+    send,
+    clinica,
+    optionsConversation
+  );
+
   const welcomeBackConversation = new WelcomeBackConversation(
     send,
-    optionsConversation,
-    {}
+    optionsConversation
   );
 
   const informCpfConversation = new InformCpfConversation(
     send,
     clienteService,
-    undefined,
-    {}
+    undefined
   );
-
   const informNameConversation = new InformNameConversation(
     send,
-    informCpfConversation,
-    {}
+    informCpfConversation
   );
 
   const newUserConversation = new NewUserConversation(
     send,
     informNameConversation,
     optionsConversation,
-    optionsConversation,
-    {}
+    optionsConversation
   );
+
+  optionsConversation.aboutClinicConversation = aboutClinicConversation;
 
   return { newUserConversation, welcomeBackConversation };
 };

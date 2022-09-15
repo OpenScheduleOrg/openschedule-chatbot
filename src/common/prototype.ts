@@ -1,5 +1,6 @@
 interface String {
   format(...args: string[]): string;
+  phoneMask(): string;
 }
 
 interface Date {
@@ -25,6 +26,10 @@ String.prototype.format = function () {
       return obj.hasOwnProperty(key) ? obj[key] : m;
     });
   }
+};
+
+String.prototype.phoneMask = function () {
+  return `(${this.slice(0, 2)}) 9${this.slice(2, 6)}-${this.slice(6, 10)}`;
 };
 
 Date.prototype.monthDays = function () {

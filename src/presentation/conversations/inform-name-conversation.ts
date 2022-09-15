@@ -5,10 +5,11 @@ import { TypeSend } from "../interfaces";
 import Messages from "../messages";
 
 export class InformNameConversation implements IConversation {
+  conversations: TypeConvesations = {};
+
   constructor(
     private readonly send: TypeSend,
-    private readonly informCpfConversation: IConversation,
-    private readonly conversations: TypeConvesations
+    private readonly informCpfConversation: IConversation
   ) {}
 
   async ask(session: UserSession): Promise<void> {
@@ -22,7 +23,7 @@ export class InformNameConversation implements IConversation {
 
     const fullname = text.replace(/\s+/g, " ").split(" ");
     if (fullname.length < 2)
-      return this.send(session.id, {
+      return await this.send(session.id, {
         text: Messages.INVALIDNAME,
       });
 

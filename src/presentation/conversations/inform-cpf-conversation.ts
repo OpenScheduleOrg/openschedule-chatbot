@@ -6,11 +6,12 @@ import { TypeSend } from "../interfaces";
 import Messages from "../messages";
 
 export class InformCpfConversation implements IConversation {
+  conversations: TypeConvesations = {};
+
   constructor(
     private readonly send: TypeSend,
     private readonly clienteService: IClienteService,
-    private readonly marcarConsultaConversation: IConversation,
-    private readonly conversations: TypeConvesations
+    private readonly optionsConversation: IConversation
   ) {}
 
   async ask(session: UserSession): Promise<void> {
@@ -31,8 +32,10 @@ export class InformCpfConversation implements IConversation {
       cpf: cpf,
       telefone: session.id,
     });
-    this.send(session.id, { text: Messages.SUCCESSREGISTER });
+    await this.send(session.id, { text: Messages.SUCCESSREGISTER });
 
-    await this.marcarConsultaConversation.ask(session);
+    await this.optionsConversation.ask(session, {
+      complement: Messages.THANKS,
+    });
   }
 }

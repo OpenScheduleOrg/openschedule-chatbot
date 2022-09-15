@@ -14,7 +14,8 @@ async function main(): Promise<void> {
   const session = new SessionManager(clinica);
 
   const { newUserConversation, welcomeBackConversation } = buildConversations(
-    app.send
+    app.send,
+    clinica
   );
 
   const context = new ContextManager(
