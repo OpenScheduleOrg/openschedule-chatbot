@@ -1,4 +1,5 @@
 export default {
+  INFORMMONTH: "Para qual mês deseja agendar?",
   SNCONSULTA: "Deseja marcar uma consulta?(Sim, Não)",
   NOCONSULTA:
     "Você não possui consulta marcada, gostaria de marcar uma consulta?(Sim, Não)",
@@ -6,6 +7,7 @@ export default {
     "Qual a dia que você deseja marcar a consulta?(1 - {0})\n\nTenha em mente que hoje é {1} dia {2} de {3}, os dias anteriores a hoje serão considerados para o próximo mês.",
   DIACONSULTAREAGENDAR:
     "Para qual a dia que você deseja remarcar sua consulta?(1 - {0})\n\nTenha em mente que hoje é {1} dia {2} de {3}, os dias anteriores a hoje serão considerados para o próximo mês.",
+  INVALIDMONTH: "Desculpa, mas isso não corresponde a um mês.",
   INVALIDDAY: "Por favor informe um dia válido, no intervalo de 1 a {0}:",
   NOHORARIOS: "Infelizmente não temos horários livres para {0} dia {1} de {2}.",
   NEWDAY: "Por favor, diga outro dia para que possamos agendar sua consulta:",

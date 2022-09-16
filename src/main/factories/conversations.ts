@@ -3,6 +3,7 @@ import { ClinicaModel } from "@/domain/models";
 import {
   AboutClinicConversation,
   InformCpfConversation,
+  InformMonthConversation,
   InformNameConversation,
   NewUserConversation,
   OptionsConversation,
@@ -45,7 +46,10 @@ export const buildConversations = (
     optionsConversation
   );
 
+  const informMonthConversation = new InformMonthConversation(send, undefined);
+
   optionsConversation.aboutClinicConversation = aboutClinicConversation;
+  optionsConversation.informMounthConversation = informMonthConversation;
 
   return { newUserConversation, welcomeBackConversation };
 };
