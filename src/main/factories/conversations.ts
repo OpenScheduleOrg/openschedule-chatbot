@@ -6,12 +6,13 @@ import {
   InformDayConversation,
   InformMonthConversation,
   InformNameConversation,
+  InformScheduleConversation,
   NewUserConversation,
   OptionsConversation,
   WelcomeBackConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
-import { clienteService, horarioService } from "./services";
+import { clienteService, consultaService, horarioService } from "./services";
 
 export const buildConversations = (
   send: TypeSend,
@@ -47,12 +48,20 @@ export const buildConversations = (
     optionsConversation
   );
 
+  const informScheduleConversation = new InformScheduleConversation(
+    send,
+    clinica,
+    horarioService,
+    consultaService,
+    undefined
+  );
   const informDayConversation = new InformDayConversation(
     send,
     clinica,
     horarioService,
-    undefined
+    informScheduleConversation
   );
+
   const informMonthConversation = new InformMonthConversation(
     send,
     informDayConversation

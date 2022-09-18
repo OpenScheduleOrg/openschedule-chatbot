@@ -26,7 +26,7 @@ export class InformCpfConversation implements IConversation {
     const cpf = text.replace(/\D/g, "");
     if (!cpf.match(/^\d{11}$/))
       return this.send(session.id, { text: Messages.INVALIDCPF });
-    session.userinfo = await this.clienteService.create({
+    session.cliente = await this.clienteService.create({
       nome: session.data.name,
       sobrenome: session.data.last_name,
       cpf: cpf,

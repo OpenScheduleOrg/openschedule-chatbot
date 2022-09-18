@@ -17,7 +17,7 @@ export class WelcomeBackConversation implements IConversation {
       return await this.conversations[clean_text].ask(session);
 
     await this.optionsConversation.ask(session, {
-      complement: Messages.WELCOMEBACK.format(session.userinfo.nome),
+      complement: Messages.WELCOMEBACK.format(session.cliente.nome),
     });
   }
 }

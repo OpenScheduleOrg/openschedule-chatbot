@@ -15,7 +15,7 @@ export class SessionManager implements ISessionManager {
   ): UserSession {
     return (this.sessions[id] = {
       id: id,
-      userinfo: user,
+      cliente: user,
       conversation: conversation,
       conversation_stack: [],
       data: {},

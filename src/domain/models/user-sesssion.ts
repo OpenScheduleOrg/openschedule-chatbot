@@ -3,7 +3,7 @@ import { ClienteModel } from "./cliente-model";
 
 export type UserSession = {
   id: string;
-  userinfo?: ClienteModel;
+  cliente?: ClienteModel;
   conversation: IConversation;
   conversation_stack: IConversation[];
   data: {
@@ -12,6 +12,6 @@ export type UserSession = {
     year?: number;
     month?: number;
     day?: number;
-    schedules?: Date[];
+    schedules?: { [index: string]: Date };
   };
 };

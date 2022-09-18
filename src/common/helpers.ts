@@ -65,3 +65,7 @@ const reducer = (acc, [key, _]) =>
 
 export const slugify = (text) =>
   [...accentsMap].reduce(reducer, text.toLowerCase());
+
+export const manyIndexes = (indexes: string[], value: any, obj: object) => {
+  for (const index of indexes) obj[index] = value;
+};

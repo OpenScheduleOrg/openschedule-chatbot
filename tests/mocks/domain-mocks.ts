@@ -6,7 +6,7 @@ export const makeSessionManagerMock = (): ISessionManager => ({
   clinica: makeFakeClinica(),
   create: jest.fn().mockImplementation((id, conversation, cliente) => ({
     id,
-    userinfo: conversation,
+    cliente: conversation,
     conversation: conversation,
     data: {},
   })),
