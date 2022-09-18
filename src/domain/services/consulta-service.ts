@@ -19,7 +19,7 @@ export namespace IConsuleService {
   export type Params = {
     clinica_id: string;
     cliente_id: string;
-    date_start: Date;
+    date_start?: Date;
   };
   export type Model = ConsultaModel;
 }

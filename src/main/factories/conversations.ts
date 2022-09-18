@@ -2,6 +2,8 @@ import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicaModel } from "@/domain/models";
 import {
   AboutClinicConversation,
+  AppointmentsConversation,
+  ConfirmConversation,
   InformCpfConversation,
   InformDayConversation,
   InformMonthConversation,
@@ -73,7 +75,24 @@ export const buildConversations = (
     informDayConversation
   );
 
+  const newAppointmentConversation = new ConfirmConversation(
+    send,
+    informMonthConversation,
+    optionsConversation,
+    optionsConversation
+  );
+
+  const appointmentsConversation = new AppointmentsConversation(
+    send,
+    clinica,
+    consultaService,
+    newAppointmentConversation,
+    undefined,
+    optionsConversation
+  );
+
   optionsConversation.aboutClinicConversation = aboutClinicConversation;
+  optionsConversation.appointmentsConversation = appointmentsConversation;
   optionsConversation.informMounthConversation = informMonthConversation;
 
   return { newUserConversation, welcomeBackConversation };

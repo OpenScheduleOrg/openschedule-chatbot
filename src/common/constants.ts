@@ -22,3 +22,13 @@ export enum Weekday {
   "Sexta-feira",
   "Sábado",
 }
+
+export enum WeekdayMinimal {
+  "Domingo" = 0,
+  "Segunda",
+  "Terça",
+  "Quarta",
+  "Quinta",
+  "Sexta",
+  "Sábado",
+}

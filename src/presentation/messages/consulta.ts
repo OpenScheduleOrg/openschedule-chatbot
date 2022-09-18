@@ -6,7 +6,7 @@ export default {
   WITHOUTFREESCHEDULES:
     "Não temos mais horários livres para o dia {0} de {1}, por favor informe outro dia.",
   NOCONSULTA:
-    "Você não possui consulta marcada, gostaria de marcar uma consulta?(Sim, Não)",
+    "Parece que você não possui nenhuma consulta marcada, gostaria de marcar uma consulta?",
   INFORMDAY: "Para qual dia de {0} você deseja realizar a consulta?",
   INFORMSCHEDULE: "Em qual horário deseja marcar a consulta no dia {0} de {1}?",
   DIACONSULTAREAGENDAR:
@@ -24,6 +24,8 @@ export default {
   NOVACONSULTA: "✔Sua consulta foi marcada para 🗓 {0}, {1} de {2} as 🕜 {3}.",
   SUCCESSAPOINTMENT:
     "✔Agendamento realizado com successo\n\n🗓 {0}, {1} de {2}\n🕜 {3}",
+  SHOWAPPOINTMENTS: "Você possui as seguintes consultas marcadas:",
+  APPOINTMENTBUTTON: "{0}, {1} de {2} as {3}",
   CONSULTAREAGENDADA:
     "✔Sua consulta foi reagendada para 🗓 {0}, {1} de {2} as 🕜 {3}.",
   SHOWCONSULTA:

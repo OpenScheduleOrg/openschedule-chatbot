@@ -40,6 +40,7 @@ export class ContextManager implements IContextManager {
         clean_text: slugify(content.text),
       });
     } catch (e) {
+      console.error(e);
       this.sessionManager.close(id);
       await this.send(id, { text: Messages.TECHNICALPROBLEMS });
     }

@@ -6,7 +6,6 @@ interface String {
 interface Date {
   monthDays(): number;
   addSeconds(s: number): Date;
-  getHHMM(): string;
 }
 
 String.prototype.format = function () {
@@ -39,18 +38,4 @@ Date.prototype.monthDays = function () {
 
 Date.prototype.addSeconds = function (s) {
   return new Date(this.valueOf() + s * 1000);
-};
-
-Date.prototype.toJSON = function (key) {
-  const tzoffseet = this.getTimezoneOffset();
-  this.setMinutes(this.getMinutes() - tzoffseet);
-  let isoformat = this.toISOString();
-  isoformat = isoformat.replace("Z", "");
-  this.setMinutes(this.getMinutes() + tzoffseet);
-
-  return isoformat;
-};
-
-Date.prototype.getHHMM = function () {
-  return this.toLocaleTimeString().slice(0, 5);
 };

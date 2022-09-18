@@ -51,11 +51,11 @@ export class InformScheduleConversation implements IConversation {
 
     for (let i = 0; i < schedules.length; i++) {
       rows.push({
-        title: format(schedules[i], "kk:mm"),
+        title: format(schedules[i], "HH:mm"),
         rowId: i + 1,
       });
       manyIndexes(
-        [(i + 1).toString(), format(schedules[i], "kk:mm")],
+        [(i + 1).toString(), format(schedules[i], "HH:mm")],
         schedules[i],
         session.data.schedules
       );
@@ -92,7 +92,7 @@ export class InformScheduleConversation implements IConversation {
         Weekday[marcada.getDay()],
         marcada.getDate().toString(),
         Month[marcada.getMonth() + 1].toLocaleLowerCase(),
-        format(marcada, "kk:mm")
+        format(marcada, "HH:mm")
       ),
     });
 
