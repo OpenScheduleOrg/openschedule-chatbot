@@ -10,6 +10,7 @@ import {
   NewUserConversation,
   OptionsConversation,
   WelcomeBackConversation,
+  YouAreWelcomeConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
 import { clienteService, consultaService, horarioService } from "./services";
@@ -48,13 +49,18 @@ export const buildConversations = (
     optionsConversation
   );
 
+  const youAreWelcomeConversation = new YouAreWelcomeConversation(
+    optionsConversation
+  );
+
   const informScheduleConversation = new InformScheduleConversation(
     send,
     clinica,
     horarioService,
     consultaService,
-    undefined
+    youAreWelcomeConversation
   );
+
   const informDayConversation = new InformDayConversation(
     send,
     clinica,

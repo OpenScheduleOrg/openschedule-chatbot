@@ -1,6 +1,7 @@
 export * from "./options-covesation";
 export * from "./new-user-conversation";
 export * from "./welcome-back-conversation";
+export * from "./you-are-welcome-conversation";
 
 export * from "./inform-name-conversation";
 export * from "./inform-cpf-conversation";
