@@ -17,6 +17,7 @@ export class SessionManager implements ISessionManager {
       id: id,
       userinfo: user,
       conversation: conversation,
+      conversation_stack: [],
       data: {},
     });
   }

@@ -3,6 +3,7 @@ import { ClinicaModel } from "@/domain/models";
 import {
   AboutClinicConversation,
   InformCpfConversation,
+  InformDayConversation,
   InformMonthConversation,
   InformNameConversation,
   NewUserConversation,
@@ -10,7 +11,7 @@ import {
   WelcomeBackConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
-import { clienteService } from "./services";
+import { clienteService, horarioService } from "./services";
 
 export const buildConversations = (
   send: TypeSend,
@@ -46,7 +47,16 @@ export const buildConversations = (
     optionsConversation
   );
 
-  const informMonthConversation = new InformMonthConversation(send, undefined);
+  const informDayConversation = new InformDayConversation(
+    send,
+    clinica,
+    horarioService,
+    undefined
+  );
+  const informMonthConversation = new InformMonthConversation(
+    send,
+    informDayConversation
+  );
 
   optionsConversation.aboutClinicConversation = aboutClinicConversation;
   optionsConversation.informMounthConversation = informMonthConversation;

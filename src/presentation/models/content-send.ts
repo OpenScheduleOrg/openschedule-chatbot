@@ -12,4 +12,8 @@ export type ContentSend = {
     address: string;
   };
   buttons?: MessageButton[];
+  footer?: string;
+  title?: string;
+  buttonText?: string;
+  sections?: any[];
 };

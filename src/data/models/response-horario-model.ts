@@ -1,5 +1,6 @@
 export type ResponseHorariosModel = {
   data: {
-    horarios_livres: string[];
+    horarios_livres?: string[];
+    dias?: number[];
   };
 };

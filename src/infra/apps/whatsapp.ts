@@ -91,7 +91,9 @@ export default class Whatsapp implements IMessageApp {
     const text =
       msg.message.conversation ||
       msg.message?.extendedTextMessage?.text ||
-      msg.message?.buttonsResponseMessage.selectedButtonId;
+      msg.message?.buttonsResponseMessage?.selectedButtonId ||
+      msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId;
+
     if (text)
       await this.read(onlyNumber(msg.key.remoteJid), {
         text,

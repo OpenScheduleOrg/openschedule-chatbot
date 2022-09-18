@@ -77,7 +77,12 @@ export class InformMonthConversation implements IConversation {
     if (isNaN(month) || month < 1 || month > 12)
       return await this.ask(session, { complement: Messages.INVALIDMONTH });
 
-    session.data = { month };
+    const now = new Date();
+    session.data = {
+      month,
+      year:
+        now.getMonth() + 1 > month ? now.getFullYear() + 1 : now.getFullYear(),
+    };
 
     await this.informDayConversation.ask(session);
   }
