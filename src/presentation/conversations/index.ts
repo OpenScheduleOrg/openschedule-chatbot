@@ -14,3 +14,4 @@ export * from "./inform-day-conversation";
 export * from "./inform-schedule-conversation";
 
 export * from "./appointments-conversation";
+export * from "./appointment-conversation";
