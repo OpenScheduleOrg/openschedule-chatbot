@@ -83,7 +83,7 @@ export class InformScheduleConversation implements IConversation {
 
     const consulta = await this.consultaService.create({
       clinica_id: this.clinica.id,
-      marcada,
+      marcada: new Date(format(marcada, "yyyy-MM-dd'T'HH:mm:ss'Z'")),
       cliente_id: session.cliente.id,
     });
 
