@@ -47,7 +47,11 @@ export class InformDayConversation implements IConversation {
     }
 
     await this.send(session.id, {
-      text: Messages.INFORMDAY.format(Month[session.data.month].toLowerCase()),
+      text: session.data.appointment
+        ? Messages.INFORMDAYREAPOINTMENT.format(
+            Month[session.data.month].toLowerCase()
+          )
+        : Messages.INFORMDAY.format(Month[session.data.month].toLowerCase()),
       buttonText: "Dias disponíveis para agendamento",
       sections: [{ rows }],
     });
@@ -56,8 +60,10 @@ export class InformDayConversation implements IConversation {
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
-    if (this.conversations[clean_text])
+    if (this.conversations[clean_text]) {
+      session.data.appointment = undefined;
       return await this.conversations[clean_text].ask(session);
+    }
 
     const day = Number(clean_text);
 

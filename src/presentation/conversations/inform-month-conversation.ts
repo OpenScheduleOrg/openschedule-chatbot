@@ -45,7 +45,9 @@ export class InformMonthConversation implements IConversation {
     ];
 
     await this.send(session.id, {
-      text: Messages.INFORMMONTH,
+      text: session.data.appointment
+        ? Messages.INFORMMONTHREAPPOINTMENT
+        : Messages.INFORMMONTH,
       buttons: buttons,
     });
 
@@ -68,8 +70,10 @@ export class InformMonthConversation implements IConversation {
   };
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
-    if (this.conversations[clean_text])
+    if (this.conversations[clean_text]) {
+      session.data.appointment = undefined;
       return await this.conversations[clean_text].ask(session);
+    }
 
     clean_text = this.month_to_number[clean_text] || clean_text;
     const month = Number(clean_text);
@@ -79,6 +83,7 @@ export class InformMonthConversation implements IConversation {
 
     const now = new Date();
     session.data = {
+      ...session.data,
       month,
       year:
         now.getMonth() + 1 > month ? now.getFullYear() + 1 : now.getFullYear(),

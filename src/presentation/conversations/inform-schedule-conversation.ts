@@ -62,10 +62,15 @@ export class InformScheduleConversation implements IConversation {
     }
 
     await this.send(session.id, {
-      text: Messages.INFORMSCHEDULE.format(
-        session.data.day.toString(),
-        Month[session.data.month].toLowerCase()
-      ),
+      text: session.data.appointment
+        ? Messages.INFORMSCHEDULEREAPPOINTMENT.format(
+            session.data.day.toString(),
+            Month[session.data.month].toLowerCase()
+          )
+        : Messages.INFORMSCHEDULE.format(
+            session.data.day.toString(),
+            Month[session.data.month].toLowerCase()
+          ),
       buttonText: "Horarios livres para agendametno",
       sections: [{ rows }],
     });
@@ -74,28 +79,47 @@ export class InformScheduleConversation implements IConversation {
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
-    if (this.conversations[clean_text])
+    if (this.conversations[clean_text]) {
+      session.data.appointment = undefined;
       return await this.conversations[clean_text].ask(session);
+    }
 
     const marcada = session.data.schedules[clean_text];
     if (!marcada)
       return await this.ask(session, { complement: Messages.INVALIDSCHEDULE });
 
-    const consulta = await this.consultaService.create({
-      clinica_id: this.clinica.id,
-      marcada: new Date(format(marcada, "yyyy-MM-dd'T'HH:mm:ss'Z'")),
-      cliente_id: session.cliente.id,
-    });
+    if (session.data.appointment)
+      await this.consultaService.update(session.data.appointment.id, {
+        marcada: new Date(format(marcada, "yyyy-MM-dd'T'HH:mm:ss'Z'")),
+      });
+    else
+      await this.consultaService.create({
+        clinica_id: this.clinica.id,
+        marcada: new Date(format(marcada, "yyyy-MM-dd'T'HH:mm:ss'Z'")),
+        cliente_id: session.cliente.id,
+      });
 
+    const old_appointment = session.data.appointment;
     await this.send(session.id, {
-      text: Messages.SUCCESSAPOINTMENT.format(
-        Weekday[marcada.getDay()],
-        marcada.getDate().toString(),
-        Month[marcada.getMonth() + 1].toLocaleLowerCase(),
-        format(marcada, "HH:mm")
-      ),
+      text: old_appointment
+        ? Messages.SUCCESSREAPOINTMENT.format(
+            old_appointment.marcada.getDate().toString(),
+            Month[old_appointment.marcada.getMonth() + 1].toLocaleLowerCase(),
+            format(old_appointment.marcada, "HH:mm"),
+            Weekday[marcada.getDay()],
+            marcada.getDate().toString(),
+            Month[marcada.getMonth() + 1].toLocaleLowerCase(),
+            format(marcada, "HH:mm")
+          )
+        : Messages.SUCCESSAPOINTMENT.format(
+            Weekday[marcada.getDay()],
+            marcada.getDate().toString(),
+            Month[marcada.getMonth() + 1].toLocaleLowerCase(),
+            format(marcada, "HH:mm")
+          ),
     });
 
+    session.data.appointment = undefined;
     await this.youAreWelcomeConversation.ask(session);
   }
 }
