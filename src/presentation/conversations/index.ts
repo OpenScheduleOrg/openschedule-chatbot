@@ -15,3 +15,4 @@ export * from "./inform-schedule-conversation";
 
 export * from "./appointments-conversation";
 export * from "./appointment-conversation";
+export * from "./cancel-conversation";

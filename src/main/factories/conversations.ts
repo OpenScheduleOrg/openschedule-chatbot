@@ -4,6 +4,7 @@ import {
   AboutClinicConversation,
   AppointmentConversation,
   AppointmentsConversation,
+  CancelConversation,
   ConfirmConversation,
   InformCpfConversation,
   InformDayConversation,
@@ -83,10 +84,16 @@ export const buildConversations = (
     optionsConversation
   );
 
+  const cancelConversation = new CancelConversation(
+    send,
+    consultaService,
+    youAreWelcomeConversation
+  );
+
   const appointmentConversation = new AppointmentConversation(
     send,
     informMonthConversation,
-    undefined
+    cancelConversation
   );
 
   const appointmentsConversation = new AppointmentsConversation(

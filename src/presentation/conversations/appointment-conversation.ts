@@ -22,7 +22,7 @@ export class AppointmentConversation implements IConversation {
       text: Messages.SHOWAPPOINTMENT.format(
         Weekday[appointment.marcada.getDay()].toLowerCase(),
         appointment.marcada.getDate().toString(),
-        Month[appointment.marcada.getMonth()].toLowerCase(),
+        Month[appointment.marcada.getMonth() + 1].toLowerCase(),
         format(appointment.marcada, "HH:mm")
       ),
       buttons: Messages.APPOINMENTACTIONS,
@@ -47,9 +47,10 @@ export class AppointmentConversation implements IConversation {
       clean_text === "2" ||
       clean_text === "cancelar" ||
       clean_text === "cancela"
-    )
+    ) {
+      session.conversation_stack.push(this);
       await this.cancelConversation.ask(session);
-    else
+    } else
       await this.send(session.id, {
         text: Messages.SORRYNOTUDERSTAND,
       });

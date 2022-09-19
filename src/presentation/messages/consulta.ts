@@ -48,4 +48,8 @@ export default {
   LINEARCONSULTA: "{0} - {1} *{2}*",
   REAGEDARCONSULTA:
     "Informe o número referente ao horário que deseja reagendar:",
+  CANCELAPPOINTMENT:
+    "Você deseja realmente cancelar sua consulta marcada para {0}, {1} de {2} as {3}?",
+  CANCELEDAPPOINTMENT:
+    "Sua consulta que estava marcada para o dia {0} de {1} de {2} foi cancelada.",
 };
