@@ -19,6 +19,7 @@ export class AppointmentsConversation implements IConversation {
     private readonly consultaService: IConsultaService,
     private readonly newAppointmentConversation: IConversation,
     private readonly showAppointmentConversation: IConversation,
+    private readonly newUserConversation: IConversation,
     private readonly optionsConversation: IConversation
   ) {}
 
@@ -26,6 +27,11 @@ export class AppointmentsConversation implements IConversation {
     session: UserSession,
     { complement } = { complement: undefined }
   ): Promise<void> {
+    if (!session.cliente)
+      return this.newUserConversation.ask(session, {
+        complement: Messages.NEEDREGISTER,
+      });
+
     if (complement) await this.send(session.id, { text: complement });
 
     const appointments = await this.consultaService.loadAll({

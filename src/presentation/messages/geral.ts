@@ -14,4 +14,6 @@ export default {
   TECHNICALPROBLEMS:
     "Desculpa estamos com problemas técnicos, por favor nos contate mais tarde.",
   EASYACCESS: "Aqui estão opções para acesso fácil.",
+  NEEDREGISTER:
+    "É preciso está cadastrado para ter acesso a essa funcionalidade.",
 };

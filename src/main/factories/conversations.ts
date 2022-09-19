@@ -76,7 +76,8 @@ export const buildConversations = (
 
   const informMonthConversation = new InformMonthConversation(
     send,
-    informDayConversation
+    informDayConversation,
+    newUserConversation
   );
 
   const newAppointmentConversation = new ConfirmConversation(
@@ -104,6 +105,7 @@ export const buildConversations = (
     consultaService,
     newAppointmentConversation,
     appointmentConversation,
+    newUserConversation,
     optionsConversation
   );
 

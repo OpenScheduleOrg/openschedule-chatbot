@@ -12,7 +12,8 @@ export class InformMonthConversation implements IConversation {
 
   constructor(
     private readonly send: TypeSend,
-    private readonly informDayConversation: IConversation
+    private readonly informDayConversation: IConversation,
+    private readonly newUserConversation: IConversation
   ) {}
 
   private createMonthButton(date: Date) {
@@ -34,6 +35,11 @@ export class InformMonthConversation implements IConversation {
     session: UserSession,
     { complement } = { complement: undefined }
   ): Promise<void> {
+    if (!session.cliente)
+      return this.newUserConversation.ask(session, {
+        complement: Messages.NEEDREGISTER,
+      });
+
     if (complement) await this.send(session.id, { text: complement });
 
     const now = new Date();

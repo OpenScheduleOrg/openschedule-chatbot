@@ -14,8 +14,11 @@ export class NewUserConversation implements IConversation {
     private readonly undefinableConversation: IConversation
   ) {}
 
-  async ask(session: UserSession): Promise<void> {
-    await this.send(session.id, { text: Messages.WELCOME });
+  async ask(
+    session: UserSession,
+    { complement } = { complement: Messages.WELCOME }
+  ): Promise<void> {
+    await this.send(session.id, { text: complement });
     await this.send(session.id, {
       text: Messages.SNCADASTRO,
       buttons: Messages.SNBUTTONS,
