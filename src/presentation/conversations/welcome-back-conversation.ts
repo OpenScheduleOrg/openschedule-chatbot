@@ -13,10 +13,13 @@ export class WelcomeBackConversation implements IConversation {
   ) {}
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
-    if (this.conversations[clean_text])
+    if (this.conversations[clean_text]) {
+      await this.send(session.id, {
+        text: Messages.WELCOMEBACK.format(session.cliente.nome),
+      });
       return await this.conversations[clean_text].ask(session);
-
-    await this.optionsConversation.ask(session, {
+    }
+    this.optionsConversation.ask(session, {
       complement: Messages.WELCOMEBACK.format(session.cliente.nome),
     });
   }

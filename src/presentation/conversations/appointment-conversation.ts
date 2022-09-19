@@ -17,6 +17,8 @@ export class AppointmentConversation implements IConversation {
   ) {}
 
   async ask(session: UserSession): Promise<void> {
+    session.conversation_stack = [];
+
     const appointment = session.data.appointment;
     this.send(session.id, {
       text: Messages.SHOWAPPOINTMENT.format(

@@ -1,3 +1,4 @@
+import { manyIndexes } from "@/common/helpers";
 import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicaModel } from "@/domain/models";
 import {
@@ -39,8 +40,9 @@ export const buildConversations = (
   const informCpfConversation = new InformCpfConversation(
     send,
     clienteService,
-    undefined
+    optionsConversation
   );
+
   const informNameConversation = new InformNameConversation(
     send,
     informCpfConversation
@@ -105,9 +107,54 @@ export const buildConversations = (
     optionsConversation
   );
 
-  optionsConversation.aboutClinicConversation = aboutClinicConversation;
-  optionsConversation.appointmentsConversation = appointmentsConversation;
   optionsConversation.informMounthConversation = informMonthConversation;
+  optionsConversation.appointmentsConversation = appointmentsConversation;
+  optionsConversation.aboutClinicConversation = aboutClinicConversation;
+
+  const new_user_listeners = {};
+  manyIndexes(
+    ["sobre", "clinica", "consultorio", "endereço", "endereco"],
+    aboutClinicConversation,
+    new_user_listeners
+  );
+  newUserConversation.conversations = new_user_listeners;
+  informNameConversation.conversations = new_user_listeners;
+  informCpfConversation.conversations = new_user_listeners;
+
+  const global_listeners = {};
+  manyIndexes(["cancelar", "menu"], optionsConversation, global_listeners);
+  manyIndexes(
+    ["marcar", "marcar consulta"],
+    informMonthConversation,
+    global_listeners
+  );
+  manyIndexes(
+    ["consultas", "minhas consultas"],
+    appointmentsConversation,
+    global_listeners
+  );
+  manyIndexes(
+    ["sobre", "clinica", "consultorio", "endereço", "endereco"],
+    aboutClinicConversation,
+    global_listeners
+  );
+
+  optionsConversation.conversations = global_listeners;
+
+  welcomeBackConversation.conversations = global_listeners;
+  appointmentConversation.conversations = global_listeners;
+  informMonthConversation.conversations = global_listeners;
+  appointmentsConversation.conversations = global_listeners;
+  aboutClinicConversation.conversations = global_listeners;
+
+  informDayConversation.conversations = global_listeners;
+  informScheduleConversation.conversations = global_listeners;
+  youAreWelcomeConversation.conversations = global_listeners;
+  newAppointmentConversation.conversations = global_listeners;
+
+  const cancel_listeners = { ...global_listeners };
+  delete cancel_listeners["cancelar"];
+  cancelConversation.conversations = cancel_listeners;
 
   return { newUserConversation, welcomeBackConversation };
 };
