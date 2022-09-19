@@ -6,10 +6,6 @@ export default {
   SORRYUDERSTAND: "Desculpa não entendo muita coisa.",
   SORRYNOTUDERSTAND: "Desculpa não entendi.",
   ITFINE: "Tudo bem.",
-  MENU: "{0}\n\n1 -  🆕Marcar consulta\n2 -  🗓️Minhas consultas\n3 -  📆Reagendar consulta\n4 -  ❌Cancelar consulta \n5 -  🏥Sobre Clínica\n\nDigite o número refente ao que busca:",
-  INVALIDMENU: "Desculpa não entendi essa mensagem.",
-  INTERRUPT:
-    "Esse procedimento pode ser interropido respondendo com não ou cancelar.",
   ABOUT:
     "*{0}*" +
     "\n\nTelefone: {1}" +
