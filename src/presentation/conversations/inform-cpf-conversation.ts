@@ -23,6 +23,15 @@ export class InformCpfConversation implements IConversation {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
 
+    if (
+      clean_text == "volta" ||
+      clean_text == "voltar" ||
+      clean_text == "corrige nome" ||
+      clean_text == "corrigir nome" ||
+      clean_text == "outro nome"
+    )
+      return await session.conversation_stack.pop()?.ask(session);
+
     const cpf = text.replace(/\D/g, "");
     if (!cpf.match(/^\d{11}$/))
       return this.send(session.id, { text: Messages.INVALIDCPF });

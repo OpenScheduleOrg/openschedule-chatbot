@@ -84,6 +84,13 @@ export class InformScheduleConversation implements IConversation {
       return await this.conversations[clean_text].ask(session);
     }
 
+    if (
+      clean_text == "volta" ||
+      clean_text == "voltar" ||
+      clean_text == "outro dia"
+    )
+      return await session.conversation_stack.pop()?.ask(session);
+
     const marcada = session.data.schedules[clean_text];
     if (!marcada)
       return await this.ask(session, { complement: Messages.INVALIDSCHEDULE });

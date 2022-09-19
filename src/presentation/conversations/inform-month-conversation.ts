@@ -42,6 +42,8 @@ export class InformMonthConversation implements IConversation {
 
     if (complement) await this.send(session.id, { text: complement });
 
+    session.conversation_stack = [];
+
     const now = new Date();
 
     const buttons = [
@@ -95,6 +97,7 @@ export class InformMonthConversation implements IConversation {
         now.getMonth() + 1 > month ? now.getFullYear() + 1 : now.getFullYear(),
     };
 
+    session.conversation_stack.push(this);
     await this.informDayConversation.ask(session);
   }
 }

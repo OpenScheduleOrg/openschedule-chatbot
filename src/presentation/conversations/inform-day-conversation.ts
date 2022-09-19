@@ -65,6 +65,14 @@ export class InformDayConversation implements IConversation {
       return await this.conversations[clean_text].ask(session);
     }
 
+    if (
+      clean_text == "volta" ||
+      clean_text == "voltar" ||
+      clean_text == "outro mês" ||
+      clean_text == "outro mes"
+    )
+      return await session.conversation_stack.pop()?.ask(session);
+
     const day = Number(clean_text);
 
     if (
@@ -78,6 +86,8 @@ export class InformDayConversation implements IConversation {
       return await this.ask(session, { complement: Messages.INVALIDDAY });
 
     session.data.day = day;
+
+    session.conversation_stack.push(this);
     await this.informScheduleConversation.ask(session);
   }
 }
