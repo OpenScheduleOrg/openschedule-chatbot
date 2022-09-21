@@ -1,1 +1,2 @@
-export * from "./conext-manager";
+export * from "./context-manager";
+export * from "./notification-job";

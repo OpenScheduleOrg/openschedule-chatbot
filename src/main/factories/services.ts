@@ -3,6 +3,7 @@ import {
   ClinicaService,
   ConsultaService,
   HorarioService,
+  NotificationService,
 } from "@/data/services";
 import axios, { Axios } from "axios";
 import config from "../config";
@@ -14,7 +15,14 @@ const axiosInstance: Axios = axios.create({
   },
 });
 
-export const consultaService = new ConsultaService("/consultas", axiosInstance);
+export const consultaService = new ConsultaService(
+  "/bot/consultas",
+  axiosInstance
+);
 export const clienteService = new ClienteService("/clientes", axiosInstance);
 export const clinicaService = new ClinicaService("/clinicas", axiosInstance);
 export const horarioService = new HorarioService("/horarios", axiosInstance);
+export const notificationService = new NotificationService(
+  "/notifications",
+  axiosInstance
+);

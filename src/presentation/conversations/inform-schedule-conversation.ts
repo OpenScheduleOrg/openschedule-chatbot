@@ -113,9 +113,9 @@ export class InformScheduleConversation implements IConversation {
             old_appointment.marcada.getDate().toString(),
             Month[old_appointment.marcada.getMonth() + 1].toLocaleLowerCase(),
             format(old_appointment.marcada, "HH:mm"),
-            Weekday[marcada.getDay()],
+            Weekday[marcada.getDay()].toLowerCase(),
             marcada.getDate().toString(),
-            Month[marcada.getMonth() + 1].toLocaleLowerCase(),
+            Month[marcada.getMonth() + 1].toLowerCase(),
             format(marcada, "HH:mm")
           )
         : Messages.SUCCESSAPOINTMENT.format(

@@ -19,7 +19,7 @@ export default {
   SUCCESSAPOINTMENT:
     "✔Agendamento realizado com successo\n\n🗓 {0}, {1} de {2}\n🕜 {3}",
   SUCCESSREAPOINTMENT:
-    "✔Sua consulta do dia {0} de {1} as {2}, foi reagendada para {3}, {4} de {5} as {6}",
+    "✔Sua consulta do dia {0} de {1} as {2}, foi reagendada para {3}, {4} de {5} as {6}.",
   SHOWAPPOINTMENTS: "Você possui as seguintes consultas marcadas:",
   SHOWAPPOINTMENT:
     "Você possui uma consulta marcada para {0}, {1} de {2} as {3}.\n\nGostaria de?",
