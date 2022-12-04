@@ -2,7 +2,7 @@ import { lastDayOfMonth } from "date-fns";
 
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { ClinicaModel } from "@/domain/models";
+import { ClinicModel } from "@/domain/models";
 import { UserSession } from "@/domain/models/user-sesssion";
 import { IHorarioService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
@@ -14,7 +14,7 @@ export class InformDayConversation implements IConversation {
 
   constructor(
     private readonly send: TypeSend,
-    private readonly clinica: ClinicaModel,
+    private readonly clinic: ClinicModel,
     private readonly horarioService: IHorarioService,
     private readonly informScheduleConversation: IConversation
   ) {}
@@ -27,7 +27,7 @@ export class InformDayConversation implements IConversation {
     const month = session.data.month - 1;
 
     const days = await this.horarioService.availableDays({
-      clinica_id: this.clinica.id,
+      clinica_id: String(this.clinic.id),
       month: month + 1,
     });
 

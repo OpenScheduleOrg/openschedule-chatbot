@@ -1,9 +1,9 @@
-import { ClienteModel, ClinicaModel } from "../models";
+import { ClinicModel, ClienteModel } from "../models";
 import { UserSession } from "../models/user-sesssion";
 import { IConversation } from "../usecases";
 
 export interface ISessionManager {
-  clinica: ClinicaModel;
+  clinic: ClinicModel;
   create(
     id: string,
     conversation: IConversation,

@@ -1,6 +1,6 @@
 import { manyIndexes } from "@/common/helpers";
 import { TypeConvesations } from "@/domain/interfaces";
-import { ClinicaModel } from "@/domain/models";
+import { ClinicModel } from "@/domain/models";
 import {
   AboutClinicConversation,
   AppointmentConversation,
@@ -22,13 +22,13 @@ import { clienteService, consultaService, horarioService } from "./services";
 
 export const buildConversations = (
   send: TypeSend,
-  clinica: ClinicaModel
+  clinic: ClinicModel
 ): TypeConvesations => {
   const optionsConversation = new OptionsConversation(send);
 
   const aboutClinicConversation = new AboutClinicConversation(
     send,
-    clinica,
+    clinic,
     optionsConversation
   );
 
@@ -61,7 +61,7 @@ export const buildConversations = (
 
   const informScheduleConversation = new InformScheduleConversation(
     send,
-    clinica,
+    clinic,
     horarioService,
     consultaService,
     youAreWelcomeConversation
@@ -69,7 +69,7 @@ export const buildConversations = (
 
   const informDayConversation = new InformDayConversation(
     send,
-    clinica,
+    clinic,
     horarioService,
     informScheduleConversation
   );
@@ -101,7 +101,7 @@ export const buildConversations = (
 
   const appointmentsConversation = new AppointmentsConversation(
     send,
-    clinica,
+    clinic,
     consultaService,
     newAppointmentConversation,
     appointmentConversation,

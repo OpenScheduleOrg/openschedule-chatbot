@@ -1,5 +1,5 @@
 import { TypeConvesations } from "@/domain/interfaces";
-import { ClinicaModel } from "@/domain/models";
+import { ClinicModel } from "@/domain/models";
 import { UserSession } from "@/domain/models/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
@@ -10,26 +10,27 @@ export class AboutClinicConversation implements IConversation {
 
   constructor(
     private readonly send: TypeSend,
-    private readonly clinica: ClinicaModel,
+    private readonly clinic: ClinicModel,
     private readonly optionsConversation: IConversation
   ) {}
 
   async ask(session: UserSession): Promise<void> {
     await this.send(session.id, {
       text: Messages.ABOUT.format(
-        this.clinica.nome,
-        this.clinica.telefone.phoneMask(),
-        this.clinica.endereco
+        this.clinic.name,
+        this.clinic.phone.phoneMask(),
+        this.clinic.address
       ),
     });
 
-    await this.send(session.id, {
-      location: {
-        degreesLatitude: Number(this.clinica.latitude),
-        degreesLongitude: Number(this.clinica.logintude),
-        address: this.clinica.endereco,
-      },
-    });
+    if (this.clinic.latitude && this.clinic.longitude)
+      await this.send(session.id, {
+        location: {
+          degreesLatitude: Number(this.clinic.latitude),
+          degreesLongitude: Number(this.clinic.longitude),
+          address: this.clinic.address,
+        },
+      });
     session.conversation = this;
   }
 

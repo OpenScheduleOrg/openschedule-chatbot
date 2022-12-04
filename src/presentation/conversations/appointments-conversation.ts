@@ -6,7 +6,7 @@ import { UserSession } from "@/domain/models/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import { IConsultaService } from "@/domain/services";
-import { ClinicaModel } from "@/domain/models";
+import { ClinicModel } from "@/domain/models";
 import Messages from "../messages";
 import { manyIndexes } from "@/common/helpers";
 
@@ -15,7 +15,7 @@ export class AppointmentsConversation implements IConversation {
 
   constructor(
     private readonly send: TypeSend,
-    private readonly clinica: ClinicaModel,
+    private readonly clinic: ClinicModel,
     private readonly consultaService: IConsultaService,
     private readonly newAppointmentConversation: IConversation,
     private readonly showAppointmentConversation: IConversation,
@@ -36,7 +36,7 @@ export class AppointmentsConversation implements IConversation {
 
     const appointments = await this.consultaService.loadAll({
       cliente_id: session.cliente.id,
-      clinica_id: this.clinica.id,
+      clinica_id: String(this.clinic.id),
       date_start: new Date(format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'")),
     });
 

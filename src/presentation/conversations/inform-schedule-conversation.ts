@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { ClinicaModel } from "@/domain/models";
+import { ClinicModel } from "@/domain/models";
 import { UserSession } from "@/domain/models/user-sesssion";
 import { IConsultaService, IHorarioService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
@@ -15,7 +15,7 @@ export class InformScheduleConversation implements IConversation {
 
   constructor(
     private readonly send: TypeSend,
-    private readonly clinica: ClinicaModel,
+    private readonly clinic: ClinicModel,
     private readonly horarioService: IHorarioService,
     private readonly consultaService: IConsultaService,
     private readonly youAreWelcomeConversation: IConversation
@@ -28,7 +28,7 @@ export class InformScheduleConversation implements IConversation {
     if (complement) await this.send(session.id, { text: complement });
 
     const schedules = await this.horarioService.availableSchedules({
-      clinica_id: this.clinica.id,
+      clinica_id: String(this.clinic.id),
       consulta_dia: new Date(
         session.data.year,
         session.data.month - 1,
@@ -101,9 +101,9 @@ export class InformScheduleConversation implements IConversation {
       });
     else
       await this.consultaService.create({
-        clinica_id: this.clinica.id,
+        clinica_id: String(this.clinic.id),
         marcada: new Date(format(marcada, "yyyy-MM-dd'T'HH:mm:ss'Z'")),
-        cliente_id: session.cliente.id,
+        cliente_id: String(session.cliente.id),
       });
 
     const old_appointment = session.data.appointment;

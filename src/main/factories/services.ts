@@ -1,18 +1,34 @@
+import { AuthorizeHttpClient } from "@/data/http/authorize-http-client";
+import { HttpClient } from "@/data/http/http-client";
 import {
   ClienteService,
-  ClinicaService,
   ConsultaService,
   HorarioService,
   NotificationService,
 } from "@/data/services";
+import { AuthService, ClinicService } from "@/domain/services";
+import { CredentialManager } from "@/security";
 import axios, { Axios } from "axios";
 import config from "../config";
 
+const httpClient = new HttpClient(config.AUTH_DNS);
+const authService = new AuthService(httpClient);
+const credentials = new CredentialManager(authService, config.BEARER_TOKEN);
+
+const authorizeHttpClient = new AuthorizeHttpClient(
+  config.API_DNS,
+  credentials
+);
+
+export const clinicService = new ClinicService(authorizeHttpClient);
+
+// TODO: garbage
 const axiosInstance: Axios = axios.create({
-  baseURL: config.APIDNS,
+  baseURL: config.API_DNS,
   headers: {
     "content-type": "application/json",
   },
+  withCredentials: true,
 });
 
 export const consultaService = new ConsultaService(
@@ -20,7 +36,6 @@ export const consultaService = new ConsultaService(
   axiosInstance
 );
 export const clienteService = new ClienteService("/clientes", axiosInstance);
-export const clinicaService = new ClinicaService("/clinicas", axiosInstance);
 export const horarioService = new HorarioService("/horarios", axiosInstance);
 export const notificationService = new NotificationService(
   "/notifications",

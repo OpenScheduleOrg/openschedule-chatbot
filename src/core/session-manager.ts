@@ -1,12 +1,12 @@
 import { ISessionManager } from "@/domain/interfaces";
-import { ClinicaModel, ClienteModel } from "@/domain/models";
+import { ClinicModel, ClienteModel } from "@/domain/models";
 import { UserSession } from "@/domain/models/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 
 export class SessionManager implements ISessionManager {
   private sessions: { [id: string]: UserSession } = {};
 
-  constructor(readonly clinica: ClinicaModel) {}
+  constructor(readonly clinic: ClinicModel) {}
 
   create(
     id: string,

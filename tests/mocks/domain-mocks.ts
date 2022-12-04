@@ -1,10 +1,10 @@
 import { ISessionManager } from "@/domain/interfaces";
 import { IConversation } from "@/domain/usecases";
-import { makeFakeClinica } from "./fake-models";
+import { makeFakeClinic } from "./fake-models";
 
 export const makeSessionManagerMock = (): ISessionManager => ({
-  clinica: makeFakeClinica(),
-  create: jest.fn().mockImplementation((id, conversation, cliente) => ({
+  clinic: makeFakeClinic(),
+  create: jest.fn().mockImplementation((id, conversation) => ({
     id,
     cliente: conversation,
     conversation: conversation,

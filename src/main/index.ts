@@ -4,7 +4,7 @@ import { ContextManager } from "@/presentation";
 import config from "@/main/config";
 import {
   clienteService,
-  clinicaService,
+  clinicService,
   notificationService,
 } from "@/main/factories/services";
 import { buildConversations } from "./factories";
@@ -12,14 +12,14 @@ import { buildConversations } from "./factories";
 import "@/common/prototype";
 
 async function main(): Promise<void> {
-  const clinica = await clinicaService.loadById(config.CLINICAID);
+  const clinic = await clinicService.getById(config.CLINIC_ID);
 
   const app = new Whatsapp();
-  const session = new SessionManager(clinica);
+  const session = new SessionManager(clinic);
 
   const { newUserConversation, welcomeBackConversation } = buildConversations(
     app.send,
-    clinica
+    clinic
   );
 
   const context = new ContextManager(
