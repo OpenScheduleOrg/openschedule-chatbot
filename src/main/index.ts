@@ -1,6 +1,6 @@
 import { SessionManager } from "@/core";
 import Whatsapp from "@/infra/apps/whatsapp";
-import { ContextManager, NotificationJob } from "@/presentation";
+import { ContextManager } from "@/presentation";
 import config from "@/main/config";
 import {
   clienteService,
@@ -30,9 +30,7 @@ async function main(): Promise<void> {
     welcomeBackConversation
   );
 
-  const notificationJob = new NotificationJob(app, notificationService);
   context.connect();
-  await setInterval(notificationJob.run, 5000);
 }
 
 main();
