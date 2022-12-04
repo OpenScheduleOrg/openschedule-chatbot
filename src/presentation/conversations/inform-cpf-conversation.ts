@@ -1,6 +1,6 @@
 import { TypeConvesations } from "@/domain/interfaces";
 import { UserSession } from "@/domain/models/user-sesssion";
-import { IClienteService } from "@/domain/services";
+import { PatientService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
@@ -10,7 +10,7 @@ export class InformCpfConversation implements IConversation {
 
   constructor(
     private readonly send: TypeSend,
-    private readonly clienteService: IClienteService,
+    private readonly patientService: PatientService,
     private readonly optionsConversation: IConversation
   ) {}
 
@@ -35,11 +35,10 @@ export class InformCpfConversation implements IConversation {
     const cpf = text.replace(/\D/g, "");
     if (!cpf.match(/^\d{11}$/))
       return this.send(session.id, { text: Messages.INVALIDCPF });
-    session.cliente = await this.clienteService.create({
-      nome: session.data.name,
-      sobrenome: session.data.last_name,
+    session.patient = await this.patientService.create({
+      name: session.data.name,
       cpf: cpf,
-      telefone: session.id,
+      phone: session.id,
     });
     await this.send(session.id, { text: Messages.SUCCESSREGISTER });
 

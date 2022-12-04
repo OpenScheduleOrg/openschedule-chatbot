@@ -1,5 +1,5 @@
 import { ISessionManager } from "@/domain/interfaces";
-import { ClinicModel, ClienteModel } from "@/domain/models";
+import { ClinicModel, PatientModel } from "@/domain/models";
 import { UserSession } from "@/domain/models/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 
@@ -11,11 +11,11 @@ export class SessionManager implements ISessionManager {
   create(
     id: string,
     conversation: IConversation,
-    user: ClienteModel = undefined
+    user: PatientModel = undefined
   ): UserSession {
     return (this.sessions[id] = {
       id: id,
-      cliente: user,
+      patient: user,
       conversation: conversation,
       conversation_stack: [],
       data: {},

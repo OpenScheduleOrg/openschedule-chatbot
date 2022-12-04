@@ -1,6 +1,6 @@
 import { slugify } from "@/common/helpers";
 import { ISessionManager } from "@/domain/interfaces";
-import { IClienteService } from "@/domain/services";
+import { PatientService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { IMessageApp } from "@/infra/interfaces/message-app";
 import { IContextManager, TypeSend, TypeRead } from "./interfaces";
@@ -13,7 +13,7 @@ export class ContextManager implements IContextManager {
   constructor(
     private readonly app: IMessageApp,
     private readonly sessionManager: ISessionManager,
-    private readonly clienteService: IClienteService,
+    private readonly patientService: PatientService,
     private readonly newUserConversation: IConversation,
     private readonly welcomeBackConversation: IConversation
   ) {
@@ -27,20 +27,21 @@ export class ContextManager implements IContextManager {
 
       let session = this.sessionManager.get(id);
       if (!session) {
-        const cliente = await this.clienteService.loadByPhone(id);
+        const patient = await this.patientService
+          .getByPhone(id)
+          .catch(() => undefined);
         session = this.sessionManager.create(
           id,
-          cliente ? this.welcomeBackConversation : this.newUserConversation,
-          cliente
+          patient ? this.welcomeBackConversation : this.newUserConversation,
+          patient
         );
-        if (!cliente) return await session.conversation.ask(session);
+        if (!patient) return await session.conversation.ask(session);
       }
       await session.conversation.answer(session, {
         text: content.text,
         clean_text: slugify(content.text),
       });
     } catch (e) {
-      console.error(e);
       this.sessionManager.close(id);
       await this.send(id, { text: Messages.TECHNICALPROBLEMS });
     }

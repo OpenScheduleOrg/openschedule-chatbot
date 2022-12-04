@@ -18,7 +18,7 @@ import {
   YouAreWelcomeConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
-import { clienteService, consultaService, horarioService } from "./services";
+import { consultaService, horarioService, patientService } from "./services";
 
 export const buildConversations = (
   send: TypeSend,
@@ -39,7 +39,7 @@ export const buildConversations = (
 
   const informCpfConversation = new InformCpfConversation(
     send,
-    clienteService,
+    patientService,
     optionsConversation
   );
 

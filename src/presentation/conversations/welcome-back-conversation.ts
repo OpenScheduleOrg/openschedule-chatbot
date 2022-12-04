@@ -15,12 +15,14 @@ export class WelcomeBackConversation implements IConversation {
   async answer(session: UserSession, { clean_text }): Promise<void> {
     if (this.conversations[clean_text]) {
       await this.send(session.id, {
-        text: Messages.WELCOMEBACK.format(session.cliente.nome),
+        text: Messages.WELCOMEBACK.format(session.patient.name.split(" ")[0]),
       });
       return await this.conversations[clean_text].ask(session);
     }
     this.optionsConversation.ask(session, {
-      complement: Messages.WELCOMEBACK.format(session.cliente.nome),
+      complement: Messages.WELCOMEBACK.format(
+        session.patient.name.split(" ")[0]
+      ),
     });
   }
 }

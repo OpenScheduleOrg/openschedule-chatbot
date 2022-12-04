@@ -1,22 +1,23 @@
+import { ResourceNotFoundError } from "@/data/errors";
 import { ISessionManager } from "@/domain/interfaces";
-import { IClienteService } from "@/domain/services";
+import { PatientService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { IMessageApp } from "@/infra/interfaces/message-app";
 import { ContextManager } from "@/presentation";
 import Messages from "@/presentation/messages";
 import {
   makeAppMock,
-  makeClienteServiceMock,
+  makePatientServiceMock,
   makeConversationMock,
   makeSessionManagerMock,
 } from "../mocks";
-import { makeFakeCliente } from "../mocks/fake-models";
+import { makeFakePatient } from "../mocks/fake-models";
 
 type SutTypes = {
   sut: ContextManager;
   appMock: IMessageApp;
   sessionManagerMock: ISessionManager;
-  clienteServiceMock: IClienteService;
+  patientServiceMock: PatientService;
   newUserConversationMock: IConversation;
   welcomeBackConversationMock: IConversation;
 };
@@ -26,7 +27,7 @@ const makeSut = (): SutTypes => {
 
   const sessionManagerMock: ISessionManager = makeSessionManagerMock();
 
-  const clienteServiceMock: IClienteService = makeClienteServiceMock();
+  const patientServiceMock = makePatientServiceMock();
 
   const newUserConversationMock: IConversation = makeConversationMock();
 
@@ -35,7 +36,7 @@ const makeSut = (): SutTypes => {
   const sut = new ContextManager(
     appMock,
     sessionManagerMock,
-    clienteServiceMock,
+    patientServiceMock,
     newUserConversationMock,
     welcomeBackConversationMock
   );
@@ -44,7 +45,7 @@ const makeSut = (): SutTypes => {
     sut,
     appMock,
     sessionManagerMock,
-    clienteServiceMock,
+    patientServiceMock,
     newUserConversationMock,
     welcomeBackConversationMock,
   };
@@ -62,16 +63,24 @@ describe("ContextManager", () => {
   });
 
   test("Should try otain user if session not exists", async () => {
-    const { sut, clienteServiceMock } = makeSut();
+    const { sut, patientServiceMock } = makeSut();
 
     await sut.read(id, message);
-    expect(clienteServiceMock.loadByPhone).toBeCalledTimes(1);
-    expect(clienteServiceMock.loadByPhone).toBeCalledWith(id);
+    expect(patientServiceMock.getByPhone).toBeCalledTimes(1);
+    expect(patientServiceMock.getByPhone).toBeCalledWith(id);
   });
 
-  test("Should create a new session with new user convesation if session and user not exists", async () => {
-    const { sut, sessionManagerMock, newUserConversationMock } = makeSut();
+  test("Should create a new session with new user conversation if session and user not exists", async () => {
+    const {
+      sut,
+      sessionManagerMock,
+      newUserConversationMock,
+      patientServiceMock,
+    } = makeSut();
 
+    (patientServiceMock.getByPhone as jest.Mock).mockRejectedValueOnce(
+      new ResourceNotFoundError()
+    );
     await sut.read(id, message);
 
     expect(sessionManagerMock.create).toBeCalledTimes(1);
@@ -84,18 +93,16 @@ describe("ContextManager", () => {
     expect(newUserConversationMock.ask).toBeCalledTimes(1);
   });
 
-  test("Should create a new session with welcome back convesation if only session not exists", async () => {
+  test("Should create a new session with welcome back conversation if only session not exists", async () => {
     const {
       sut,
-      clienteServiceMock,
+      patientServiceMock,
       sessionManagerMock,
       welcomeBackConversationMock,
     } = makeSut();
-    const cliente = makeFakeCliente();
 
-    (clienteServiceMock.loadByPhone as jest.Mock).mockImplementation(
-      () => cliente
-    );
+    const patient = makeFakePatient();
+    (patientServiceMock.getByPhone as jest.Mock).mockResolvedValueOnce(patient);
 
     await sut.read(id, message);
 
@@ -103,19 +110,18 @@ describe("ContextManager", () => {
     expect(sessionManagerMock.create).toBeCalledWith(
       id,
       welcomeBackConversationMock,
-      cliente
+      patient
     );
 
     expect(welcomeBackConversationMock.answer).toBeCalledTimes(1);
   });
 
   test("Should call answer with clean text using slugify function", async () => {
-    const { sut, clienteServiceMock, welcomeBackConversationMock } = makeSut();
-    const cliente = makeFakeCliente();
+    const { sut, patientServiceMock, welcomeBackConversationMock } = makeSut();
 
-    (clienteServiceMock.loadByPhone as jest.Mock).mockImplementation(
-      () => cliente
-    );
+    const patient = makeFakePatient();
+    (patientServiceMock.getByPhone as jest.Mock).mockResolvedValueOnce(patient);
+
     const dirty_message = "Não";
 
     await sut.read(id, { text: dirty_message, timestamp: 0 });

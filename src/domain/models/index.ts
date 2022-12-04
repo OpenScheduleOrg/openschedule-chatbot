@@ -10,5 +10,4 @@ export * from "./user-model";
 
 // TODO: garbage
 export * from "@/domain/models/consulta-model";
-export * from "@/domain/models/cliente-model";
 export * from "@/domain/models/notification-model";

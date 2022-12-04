@@ -2,11 +2,7 @@ import { SessionManager } from "@/core";
 import Whatsapp from "@/infra/apps/whatsapp";
 import { ContextManager } from "@/presentation";
 import config from "@/main/config";
-import {
-  clienteService,
-  clinicService,
-  notificationService,
-} from "@/main/factories/services";
+import { clinicService, patientService } from "@/main/factories/services";
 import { buildConversations } from "./factories";
 
 import "@/common/prototype";
@@ -25,7 +21,7 @@ async function main(): Promise<void> {
   const context = new ContextManager(
     app,
     session,
-    clienteService,
+    patientService,
     newUserConversation,
     welcomeBackConversation
   );

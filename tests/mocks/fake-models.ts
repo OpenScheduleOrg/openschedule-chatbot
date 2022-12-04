@@ -1,4 +1,4 @@
-import { ClienteModel, ClinicModel } from "@/domain/models";
+import { ClinicModel, PatientModel } from "@/domain/models";
 
 export const makeFakeClinic = (): ClinicModel => ({
   id: 1,
@@ -10,10 +10,9 @@ export const makeFakeClinic = (): ClinicModel => ({
   longitude: "38.232234",
 });
 
-export const makeFakeCliente = (): ClienteModel => ({
-  id: "1",
-  nome: "Foo",
-  sobrenome: "Bar",
+export const makeFakePatient = (): PatientModel => ({
+  id: 1,
+  name: "Foo",
   cpf: "76887623412",
-  telefone: "7878672354",
+  phone: "7878672354",
 });

@@ -1,6 +1,14 @@
-import { IClienteService } from "@/domain/services";
+import { PatientService } from "@/domain/services";
 
-export const makeClienteServiceMock = (): IClienteService => ({
-  create: jest.fn(),
-  loadByPhone: jest.fn(),
-});
+class MockPatientService extends PatientService {
+  create = jest.fn();
+  update = jest.fn();
+  load = jest.fn();
+  getByPhone = jest.fn();
+  getById = jest.fn();
+  getByCpf = jest.fn();
+  deleteById = jest.fn();
+}
+
+export const makePatientServiceMock = (): PatientService =>
+  new MockPatientService(undefined);

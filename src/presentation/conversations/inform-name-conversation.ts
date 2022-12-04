@@ -23,15 +23,13 @@ export class InformNameConversation implements IConversation {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
 
-    const fullname = text.replace(/\s+/g, " ").split(" ");
-    if (fullname.length < 2)
+    const name = text.replace(/\s+/g, " ");
+    if (name.length < 2)
       return await this.send(session.id, {
         text: Messages.INVALIDNAME,
       });
 
-    const name = fullname[0];
-    const last_name = fullname.slice(1).join(" ");
-    session.data = { name, last_name };
+    session.data = { name };
 
     session.conversation_stack.push(this);
     await this.informCpfConversation.ask(session);

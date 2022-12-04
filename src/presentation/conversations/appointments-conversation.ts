@@ -27,7 +27,7 @@ export class AppointmentsConversation implements IConversation {
     session: UserSession,
     { complement } = { complement: undefined }
   ): Promise<void> {
-    if (!session.cliente)
+    if (!session.patient)
       return this.newUserConversation.ask(session, {
         complement: Messages.NEEDREGISTER,
       });
@@ -35,7 +35,7 @@ export class AppointmentsConversation implements IConversation {
     if (complement) await this.send(session.id, { text: complement });
 
     const appointments = await this.consultaService.loadAll({
-      cliente_id: session.cliente.id,
+      cliente_id: String(session.patient.id),
       clinica_id: String(this.clinic.id),
       date_start: new Date(format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'")),
     });

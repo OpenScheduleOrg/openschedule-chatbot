@@ -4,9 +4,9 @@ import { makeFakeClinic } from "./fake-models";
 
 export const makeSessionManagerMock = (): ISessionManager => ({
   clinic: makeFakeClinic(),
-  create: jest.fn().mockImplementation((id, conversation) => ({
+  create: jest.fn().mockImplementation((id, conversation, patient) => ({
     id,
-    cliente: conversation,
+    patient: patient,
     conversation: conversation,
     data: {},
   })),

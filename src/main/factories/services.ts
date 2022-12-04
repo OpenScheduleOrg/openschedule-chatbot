@@ -1,12 +1,11 @@
 import { AuthorizeHttpClient } from "@/data/http/authorize-http-client";
 import { HttpClient } from "@/data/http/http-client";
 import {
-  ClienteService,
   ConsultaService,
   HorarioService,
   NotificationService,
 } from "@/data/services";
-import { AuthService, ClinicService } from "@/domain/services";
+import { AuthService, ClinicService, PatientService } from "@/domain/services";
 import { CredentialManager } from "@/security";
 import axios, { Axios } from "axios";
 import config from "../config";
@@ -21,6 +20,7 @@ const authorizeHttpClient = new AuthorizeHttpClient(
 );
 
 export const clinicService = new ClinicService(authorizeHttpClient);
+export const patientService = new PatientService(authorizeHttpClient);
 
 // TODO: garbage
 const axiosInstance: Axios = axios.create({
@@ -35,7 +35,6 @@ export const consultaService = new ConsultaService(
   "/bot/consultas",
   axiosInstance
 );
-export const clienteService = new ClienteService("/clientes", axiosInstance);
 export const horarioService = new HorarioService("/horarios", axiosInstance);
 export const notificationService = new NotificationService(
   "/notifications",

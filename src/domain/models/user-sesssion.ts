@@ -1,15 +1,14 @@
 import { IConversation } from "../usecases";
-import { ClienteModel } from "./cliente-model";
 import { ConsultaModel } from "./consulta-model";
+import { PatientModel } from "./patient-model";
 
 export type UserSession = {
   id: string;
-  cliente?: ClienteModel;
+  patient?: PatientModel;
   conversation: IConversation;
   conversation_stack: IConversation[];
   data: {
     name?: string;
-    last_name?: string;
     year?: number;
     month?: number;
     day?: number;

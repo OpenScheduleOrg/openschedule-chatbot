@@ -35,7 +35,7 @@ export class InformMonthConversation implements IConversation {
     session: UserSession,
     { complement } = { complement: undefined }
   ): Promise<void> {
-    if (!session.cliente)
+    if (!session.patient)
       return this.newUserConversation.ask(session, {
         complement: Messages.NEEDREGISTER,
       });
