@@ -1,4 +1,5 @@
 export * from "./auth-service";
+export * from "./clinic-service";
 
 // TODO: garbage
 export * from "@/domain/services/consulta-service";
