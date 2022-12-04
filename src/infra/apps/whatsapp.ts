@@ -94,7 +94,7 @@ export default class Whatsapp implements IMessageApp {
       msg.message?.buttonsResponseMessage?.selectedButtonId ||
       msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId;
 
-    if (text)
+    if (text && msg.key.remoteJid.endsWith("s.whatsapp.net"))
       await this.read(onlyNumber(msg.key.remoteJid), {
         text,
         timestamp: msg.messageTimestamp as number,
