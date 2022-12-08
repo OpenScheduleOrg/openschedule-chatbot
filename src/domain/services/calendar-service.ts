@@ -2,6 +2,7 @@ import { HttpClient } from "@/data/http/http-client";
 import { ScheduleResponseModel, SpecialtyResponseModel } from "@/data/models";
 import { ScheduleModel, SpecialtyModel } from "../models";
 import { CalendarParams } from "../params";
+import { parseISO } from "date-fns";
 
 export class CalendarService {
   constructor(private readonly httpClient: HttpClient) {}
@@ -18,7 +19,7 @@ export class CalendarService {
   freeDays = async (params: CalendarParams): Promise<Date[]> => {
     return (
       await this.httpClient.get<string[]>("/calendar/free/days", { params })
-    ).map((d) => new Date(d));
+    ).map((d) => parseISO(d));
   };
 
   availableSchedules = async (
@@ -31,8 +32,8 @@ export class CalendarService {
       )
     ).map((sc) => ({
       ...sc,
-      start_date: new Date(sc.start_date),
-      end_date: sc.end_date ? new Date(sc.end_date) : undefined,
+      start_date: parseISO(sc.start_date),
+      end_date: sc.end_date ? parseISO(sc.end_date) : undefined,
     }));
   };
 }

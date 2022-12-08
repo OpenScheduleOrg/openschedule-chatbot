@@ -1,8 +1,8 @@
 export type CalendarParams = {
   clinic_id: number;
   specialty_id?: number;
-  start_date?: Date;
+  start_date?: string;
   num_days?: number;
   first_day_startime?: number;
-  day?: Date;
+  day?: string;
 };

@@ -3,7 +3,7 @@ export type AppointmentModel = {
   patient_name: string;
   patient_id: number;
   acting_id: number;
-  scheduled_day: string;
+  scheduled_day: Date;
   start_time: number;
   end_time?: number;
   complaint?: string;

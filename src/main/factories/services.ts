@@ -6,6 +6,7 @@ import {
   NotificationService,
 } from "@/data/services";
 import {
+  AppointmentService,
   AuthService,
   CalendarService,
   ClinicService,
@@ -27,6 +28,7 @@ const authorizeHttpClient = new AuthorizeHttpClient(
 export const clinicService = new ClinicService(authorizeHttpClient);
 export const patientService = new PatientService(authorizeHttpClient);
 export const calendarService = new CalendarService(authorizeHttpClient);
+export const appointmentService = new AppointmentService(authorizeHttpClient);
 
 // TODO: garbage
 const axiosInstance: Axios = axios.create({
