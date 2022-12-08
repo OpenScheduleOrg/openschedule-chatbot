@@ -5,7 +5,12 @@ import {
   HorarioService,
   NotificationService,
 } from "@/data/services";
-import { AuthService, ClinicService, PatientService } from "@/domain/services";
+import {
+  AuthService,
+  CalendarService,
+  ClinicService,
+  PatientService,
+} from "@/domain/services";
 import { CredentialManager } from "@/security";
 import axios, { Axios } from "axios";
 import config from "../config";
@@ -21,6 +26,7 @@ const authorizeHttpClient = new AuthorizeHttpClient(
 
 export const clinicService = new ClinicService(authorizeHttpClient);
 export const patientService = new PatientService(authorizeHttpClient);
+export const calendarService = new CalendarService(authorizeHttpClient);
 
 // TODO: garbage
 const axiosInstance: Axios = axios.create({
