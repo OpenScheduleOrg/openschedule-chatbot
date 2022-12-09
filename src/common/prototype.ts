@@ -1,11 +1,18 @@
-interface String {
-  format(...args: string[]): string;
-  phoneMask(): string;
-}
+export {};
 
-interface Date {
-  monthDays(): number;
-  addSeconds(s: number): Date;
+declare global {
+  interface Number {
+    toClockTime(): string;
+  }
+  interface String {
+    format(...args: string[]): string;
+    phoneMask(): string;
+  }
+
+  interface Date {
+    monthDays(): number;
+    addSeconds(s: number): Date;
+  }
 }
 
 String.prototype.format = function () {
@@ -38,4 +45,11 @@ Date.prototype.monthDays = function () {
 
 Date.prototype.addSeconds = function (s) {
   return new Date(this.valueOf() + s * 1000);
+};
+
+Number.prototype.toClockTime = function () {
+  const hour = (this.valueOf() / 60) >> 0;
+  const minutes = this.valueOf() % 60;
+
+  return String(hour).padStart(2, "0") + ":" + String(minutes).padStart(2, "0");
 };
