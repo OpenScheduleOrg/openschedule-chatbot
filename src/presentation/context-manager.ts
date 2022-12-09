@@ -22,10 +22,10 @@ export class ContextManager implements IContextManager {
   }
 
   read: TypeRead = async (id: string, content: MessageInfo) => {
+    let session = this.sessionManager.get(id);
     try {
       content.text = content.text.trim();
 
-      let session = this.sessionManager.get(id);
       if (!session) {
         const patient = await this.patientService
           .getByPhone(id)
@@ -42,6 +42,11 @@ export class ContextManager implements IContextManager {
         clean_text: slugify(content.text),
       });
     } catch (e) {
+      console.log(
+        "\n\nRECEIVED MESSAGE: ",
+        JSON.stringify(content, undefined, 2)
+      );
+      console.log("\n\nSESSION STATE: ", JSON.stringify(session, undefined, 2));
       this.sessionManager.close(id);
       await this.send(id, { text: Messages.TECHNICALPROBLEMS });
     }
