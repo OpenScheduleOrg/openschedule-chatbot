@@ -6,19 +6,26 @@ import {
   AppointmentConversation,
   AppointmentsConversation,
   CancelConversation,
+  ConfirmAppointmentConversation,
   ConfirmConversation,
   InformCpfConversation,
   InformDayConversation,
   InformMonthConversation,
   InformNameConversation,
   InformScheduleConversation,
+  InformSpecialtyConversation,
   NewUserConversation,
   OptionsConversation,
   WelcomeBackConversation,
   YouAreWelcomeConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
-import { consultaService, horarioService, patientService } from "./services";
+import {
+  appointmentService,
+  calendarService,
+  consultaService,
+  patientService,
+} from "./services";
 
 export const buildConversations = (
   send: TypeSend,
@@ -59,19 +66,32 @@ export const buildConversations = (
     optionsConversation
   );
 
+  const confirmAppointmentConversation = new ConfirmAppointmentConversation(
+    send,
+    appointmentService,
+    youAreWelcomeConversation
+  );
+
   const informScheduleConversation = new InformScheduleConversation(
     send,
     clinic,
-    horarioService,
-    consultaService,
-    youAreWelcomeConversation
+    calendarService,
+    confirmAppointmentConversation
   );
 
   const informDayConversation = new InformDayConversation(
     send,
     clinic,
-    horarioService,
+    calendarService,
     informScheduleConversation
+  );
+
+  const informSpecialtyConversation = new InformSpecialtyConversation(
+    send,
+    clinic,
+    calendarService,
+    informDayConversation,
+    optionsConversation
   );
 
   const informMonthConversation = new InformMonthConversation(
@@ -89,27 +109,26 @@ export const buildConversations = (
 
   const cancelConversation = new CancelConversation(
     send,
-    consultaService,
+    appointmentService,
     youAreWelcomeConversation
   );
 
   const appointmentConversation = new AppointmentConversation(
     send,
-    informMonthConversation,
+    informDayConversation,
     cancelConversation
   );
 
   const appointmentsConversation = new AppointmentsConversation(
     send,
     clinic,
-    consultaService,
+    appointmentService,
     newAppointmentConversation,
     appointmentConversation,
-    newUserConversation,
-    optionsConversation
+    newUserConversation
   );
 
-  optionsConversation.informMounthConversation = informMonthConversation;
+  optionsConversation.newAppointmentEntry = informSpecialtyConversation;
   optionsConversation.appointmentsConversation = appointmentsConversation;
   optionsConversation.aboutClinicConversation = aboutClinicConversation;
 
@@ -149,10 +168,12 @@ export const buildConversations = (
   appointmentsConversation.conversations = global_listeners;
   aboutClinicConversation.conversations = global_listeners;
 
+  informSpecialtyConversation.conversations = global_listeners;
   informDayConversation.conversations = global_listeners;
   informScheduleConversation.conversations = global_listeners;
   youAreWelcomeConversation.conversations = global_listeners;
   newAppointmentConversation.conversations = global_listeners;
+  confirmAppointmentConversation.conversations = global_listeners;
 
   const cancel_listeners = { ...global_listeners };
   delete cancel_listeners["cancelar"];

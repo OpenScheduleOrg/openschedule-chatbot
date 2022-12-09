@@ -5,21 +5,20 @@ import { TypeSend } from "../interfaces";
 import Messages from "../messages";
 
 export class OptionsConversation implements IConversation {
-  informMounthConversation: IConversation;
+  newAppointmentEntry: IConversation;
   appointmentsConversation: IConversation;
   aboutClinicConversation: IConversation;
   conversations: TypeConvesations = {};
 
   constructor(private readonly send: TypeSend) {}
 
-  async ask(
-    session: UserSession,
-    { complement } = { complement: Messages.ITFINE }
-  ): Promise<void> {
-    await this.send(session.id, { text: complement });
+  async ask(session: UserSession, optional): Promise<void> {
+    await this.send(session.id, {
+      text: optional.complement || Messages.ITFINE,
+    });
 
     await this.send(session.id, {
-      text: Messages.EASYACCESS,
+      text: optional.title || Messages.EASYACCESS,
       buttons: Messages.MENUOPTIONS,
     });
     session.conversation = this;
@@ -29,7 +28,7 @@ export class OptionsConversation implements IConversation {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
 
-    if (clean_text === "1") await this.informMounthConversation.ask(session);
+    if (clean_text === "1") await this.newAppointmentEntry.ask(session);
     else if (clean_text === "2")
       await this.appointmentsConversation.ask(session);
     else if (clean_text === "3")

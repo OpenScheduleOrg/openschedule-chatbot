@@ -1,14 +1,13 @@
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 
-import { Month, WeekdayMinimal } from "@/common/constants";
+import { WeekdayMinimal } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { UserSession } from "@/domain/models/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
-import { IConsultaService } from "@/domain/services";
+import { AppointmentService } from "@/domain/services";
 import { ClinicModel } from "@/domain/models";
 import Messages from "../messages";
-import { manyIndexes } from "@/common/helpers";
 
 export class AppointmentsConversation implements IConversation {
   conversations: TypeConvesations = {};
@@ -16,11 +15,10 @@ export class AppointmentsConversation implements IConversation {
   constructor(
     private readonly send: TypeSend,
     private readonly clinic: ClinicModel,
-    private readonly consultaService: IConsultaService,
+    private readonly appointmentService: AppointmentService,
     private readonly newAppointmentConversation: IConversation,
     private readonly showAppointmentConversation: IConversation,
-    private readonly newUserConversation: IConversation,
-    private readonly optionsConversation: IConversation
+    private readonly newUserConversation: IConversation
   ) {}
 
   async ask(
@@ -33,11 +31,13 @@ export class AppointmentsConversation implements IConversation {
       });
 
     if (complement) await this.send(session.id, { text: complement });
+    const now = new Date();
 
-    const appointments = await this.consultaService.loadAll({
-      cliente_id: String(session.patient.id),
-      clinica_id: String(this.clinic.id),
-      date_start: new Date(format(new Date(), "yyyy-MM-dd'T'HH:mm:ss'Z'")),
+    const appointments = await this.appointmentService.load({
+      clinic_id: this.clinic.id,
+      patient_id: session.patient.id,
+      start_date: formatISO(now, { representation: "date" }),
+      start_time: now.getHours() * 60 + now.getMinutes(),
     });
 
     if (!appointments.length)
@@ -45,33 +45,28 @@ export class AppointmentsConversation implements IConversation {
         complement: Messages.NOCONSULTA,
       });
 
-    session.data.appointments = {};
     const buttons = [];
-    for (let i = 0; i < appointments.length; i++) {
-      const appointment = appointments[i];
+    for (let appointment of appointments) {
       buttons.push({
-        buttonId: (i + 1).toString(),
+        buttonId: appointment.id,
         buttonText: {
           displayText: Messages.APPOINTMENTBUTTON.format(
-            WeekdayMinimal[appointment.marcada.getDay()],
-            appointment.marcada.getDate().toString(),
-            Month[appointment.marcada.getMonth() + 1].toLocaleLowerCase(),
-            format(appointment.marcada, "HH:mm")
+            appointment.specialty_description,
+            WeekdayMinimal[appointment.scheduled_day.getDay()],
+            format(appointment.scheduled_day, "dd/MM"),
+            appointment.start_time.toClockTime()
           ),
         },
         type: 1,
       });
-      manyIndexes(
-        [(i + 1).toString(), format(appointment.marcada, "dd/MM HH:mm")],
-        appointment,
-        session.data.appointments
-      );
     }
 
     this.send(session.id, {
       text: Messages.SHOWAPPOINTMENTS,
       buttons,
     });
+
+    session.data.appointments = appointments;
 
     session.conversation = this;
   }
@@ -80,12 +75,13 @@ export class AppointmentsConversation implements IConversation {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
 
-    if (!session.data.appointments[clean_text])
-      return await this.optionsConversation.ask(session, {
-        complement: Messages.SORRYUDERSTAND,
-      });
+    const appointment = session.data.appointments.find(
+      (a) => a.id == Number(clean_text)
+    );
+    if (!appointment)
+      return this.ask(session, { complement: "Entrada inválida!" });
 
-    session.data.appointment = session.data.appointments[clean_text];
+    session.data.appointment = appointment;
 
     await this.showAppointmentConversation.ask(session);
   }

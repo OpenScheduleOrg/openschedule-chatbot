@@ -1,13 +1,14 @@
-import { lastDayOfMonth } from "date-fns";
+import { parseISO } from "date-fns";
 
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicModel } from "@/domain/models";
 import { UserSession } from "@/domain/models/user-sesssion";
-import { IHorarioService } from "@/domain/services";
+import { CalendarService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
+import { formatISO } from "date-fns";
 
 export class InformDayConversation implements IConversation {
   conversations: TypeConvesations = {};
@@ -15,7 +16,7 @@ export class InformDayConversation implements IConversation {
   constructor(
     private readonly send: TypeSend,
     private readonly clinic: ClinicModel,
-    private readonly horarioService: IHorarioService,
+    private readonly calendarService: CalendarService,
     private readonly informScheduleConversation: IConversation
   ) {}
 
@@ -24,34 +25,34 @@ export class InformDayConversation implements IConversation {
     { complement } = { complement: undefined }
   ): Promise<void> {
     if (complement) await this.send(session.id, { text: complement });
-    const month = session.data.month - 1;
 
-    const days = await this.horarioService.availableDays({
-      clinica_id: String(this.clinic.id),
-      month: month + 1,
+    const days = await this.calendarService.freeDays({
+      clinic_id: this.clinic.id,
+      specialty_id: session.data.specialty_id,
+      start_date: formatISO(new Date(), { representation: "date" }),
     });
 
     if (!days.length) {
-      await this.send(session.id, { text: Messages.WITHOUTFREEDAYS });
-      return;
+      return await session.conversation_stack.pop()?.ask(session, {
+        complement: "Parece que não temos dias disponíveis para esse serviço.",
+      });
     }
+
     const rows = [];
 
     for (const day of days) {
       rows.push({
-        title: `${day.toString()} - ${
-          Weekday[new Date(session.data.year, month, day).getDay()]
-        } `,
-        rowId: day.toString(),
+        title: `${Weekday[day.getDay()]}, ${day.getDate()} de ${
+          Month[day.getMonth() + 1]
+        }`,
+        rowId: formatISO(day, { representation: "date" }),
       });
     }
 
     await this.send(session.id, {
       text: session.data.appointment
-        ? Messages.INFORMDAYREAPOINTMENT.format(
-            Month[session.data.month].toLowerCase()
-          )
-        : Messages.INFORMDAY.format(Month[session.data.month].toLowerCase()),
+        ? Messages.INFORMDAYREAPOINTMENT
+        : Messages.INFORMDAY,
       buttonText: "Dias disponíveis para agendamento",
       sections: [{ rows }],
     });
@@ -65,24 +66,12 @@ export class InformDayConversation implements IConversation {
       return await this.conversations[clean_text].ask(session);
     }
 
-    if (
-      clean_text == "volta" ||
-      clean_text == "voltar" ||
-      clean_text == "outro mês" ||
-      clean_text == "outro mes"
-    )
+    if (clean_text == "volta" || clean_text == "voltar")
       return await session.conversation_stack.pop()?.ask(session);
 
-    const day = Number(clean_text);
+    const day = parseISO(clean_text);
 
-    if (
-      isNaN(day) ||
-      day < 1 ||
-      day >
-        lastDayOfMonth(
-          new Date(session.data.year, session.data.month)
-        ).getDate()
-    )
+    if (!day)
       return await this.ask(session, { complement: Messages.INVALIDDAY });
 
     session.data.day = day;

@@ -1,6 +1,9 @@
 import { IConversation } from "../usecases";
+import { AppointmentModel } from "./appointment-model";
 import { ConsultaModel } from "./consulta-model";
 import { PatientModel } from "./patient-model";
+import { ScheduleModel } from "./schedule-model";
+import { SpecialtyModel } from "./specialty-model";
 
 export type UserSession = {
   id: string;
@@ -9,11 +12,14 @@ export type UserSession = {
   conversation_stack: IConversation[];
   data: {
     name?: string;
+    day?: Date;
     year?: number;
     month?: number;
-    day?: number;
-    schedules?: { [index: string]: Date };
-    appointments?: { [index: string]: ConsultaModel };
-    appointment?: ConsultaModel;
+    specialty_id?: number;
+    schedules?: ScheduleModel[];
+    schedule?: ScheduleModel;
+    appointments?: AppointmentModel[];
+    appointment?: AppointmentModel;
+    specialties?: SpecialtyModel[];
   };
 };

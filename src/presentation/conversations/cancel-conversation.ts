@@ -1,8 +1,7 @@
-import { format } from "date-fns";
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { UserSession } from "@/domain/models/user-sesssion";
-import { IConsultaService } from "@/domain/services";
+import { AppointmentService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
@@ -12,7 +11,7 @@ export class CancelConversation implements IConversation {
 
   constructor(
     private readonly send: TypeSend,
-    private readonly consultaService: IConsultaService,
+    private readonly appointmentService: AppointmentService,
     private readonly youAreWelcomeConversation: IConversation
   ) {}
 
@@ -21,10 +20,10 @@ export class CancelConversation implements IConversation {
 
     await this.send(session.id, {
       text: Messages.CANCELAPPOINTMENT.format(
-        Weekday[appointment.marcada.getDay()].toLowerCase(),
-        appointment.marcada.getDate().toString(),
-        Month[appointment.marcada.getMonth() + 1].toLowerCase(),
-        format(appointment.marcada, "HH:mm")
+        Weekday[appointment.scheduled_day.getDay()].toLowerCase(),
+        appointment.scheduled_day.getDate().toString(),
+        Month[appointment.scheduled_day.getMonth() + 1].toLowerCase(),
+        appointment.start_time.toClockTime()
       ),
       buttons: Messages.SNBUTTONS,
     });
@@ -39,12 +38,13 @@ export class CancelConversation implements IConversation {
 
     if (clean_text === "sim") {
       const appointment = session.data.appointment;
-      await this.consultaService.delete(session.data.appointment.id);
+      await this.appointmentService.deleteById(session.data.appointment.id);
       await this.send(session.id, {
         text: Messages.CANCELEDAPPOINTMENT.format(
-          appointment.marcada.getDate().toString(),
-          Month[appointment.marcada.getMonth() + 1].toLowerCase(),
-          format(appointment.marcada, "HH:mm")
+          Weekday[appointment.scheduled_day.getDay()].toLowerCase(),
+          appointment.scheduled_day.getDate().toString(),
+          Month[appointment.scheduled_day.getMonth() + 1].toLowerCase(),
+          appointment.start_time.toClockTime()
         ),
       });
       session.data.appointment = undefined;

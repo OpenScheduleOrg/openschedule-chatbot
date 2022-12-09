@@ -1,14 +1,12 @@
-import { format } from "date-fns";
-
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicModel } from "@/domain/models";
 import { UserSession } from "@/domain/models/user-sesssion";
-import { IConsultaService, IHorarioService } from "@/domain/services";
+import { CalendarService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
+import { formatISO } from "date-fns";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
-import { manyIndexes } from "@/common/helpers";
 
 export class InformScheduleConversation implements IConversation {
   conversations: TypeConvesations = {};
@@ -16,9 +14,8 @@ export class InformScheduleConversation implements IConversation {
   constructor(
     private readonly send: TypeSend,
     private readonly clinic: ClinicModel,
-    private readonly horarioService: IHorarioService,
-    private readonly consultaService: IConsultaService,
-    private readonly youAreWelcomeConversation: IConversation
+    private readonly calendarService: CalendarService,
+    private readonly confirmAppointmentConversation: IConversation
   ) {}
 
   async ask(
@@ -27,51 +24,49 @@ export class InformScheduleConversation implements IConversation {
   ): Promise<void> {
     if (complement) await this.send(session.id, { text: complement });
 
-    const schedules = await this.horarioService.availableSchedules({
-      clinica_id: String(this.clinic.id),
-      consulta_dia: new Date(
-        session.data.year,
-        session.data.month - 1,
-        session.data.day
-      ),
+    const schedules = await this.calendarService.availableSchedules({
+      clinic_id: this.clinic.id,
+      specialty_id: session.data.specialty_id,
+      day: formatISO(session.data.day, { representation: "date" }),
     });
 
     if (!schedules.length) {
-      await session.conversation.ask(session, {
+      return await session.conversation_stack.pop()?.ask(session, {
         complement: Messages.WITHOUTFREESCHEDULES.format(
-          session.data.day.toString(),
-          Month[session.data.month].toLowerCase()
+          session.data.day.getDate().toString(),
+          Month[session.data.day.getMonth() + 1].toLowerCase()
         ),
       });
-      return;
     }
 
     const rows = [];
-    session.data.schedules = {};
+    session.data.schedules = schedules;
 
-    for (let i = 0; i < schedules.length; i++) {
+    for (let schedule of schedules) {
       rows.push({
-        title: format(schedules[i], "HH:mm"),
-        rowId: i + 1,
+        title:
+          schedule.start_time.toClockTime() +
+          " - " +
+          schedule.professional_name,
+        rowId: schedule.id,
       });
-      manyIndexes(
-        [(i + 1).toString(), format(schedules[i], "HH:mm")],
-        schedules[i],
-        session.data.schedules
-      );
     }
+
+    const day = session.data.day;
 
     await this.send(session.id, {
       text: session.data.appointment
         ? Messages.INFORMSCHEDULEREAPPOINTMENT.format(
-            session.data.day.toString(),
-            Month[session.data.month].toLowerCase()
+            Weekday[day.getDay()],
+            day.getDate().toString(),
+            Month[day.getMonth()]
           )
         : Messages.INFORMSCHEDULE.format(
-            session.data.day.toString(),
-            Month[session.data.month].toLowerCase()
+            Weekday[day.getDay()],
+            day.getDate().toString(),
+            Month[day.getMonth()]
           ),
-      buttonText: "Horarios livres para agendametno",
+      buttonText: "Horarios disponíveis para agendametno",
       sections: [{ rows }],
     });
 
@@ -91,42 +86,14 @@ export class InformScheduleConversation implements IConversation {
     )
       return await session.conversation_stack.pop()?.ask(session);
 
-    const marcada = session.data.schedules[clean_text];
-    if (!marcada)
+    const schedule = session.data.schedules.find(
+      (sc) => sc.id == Number(clean_text)
+    );
+    if (!schedule)
       return await this.ask(session, { complement: Messages.INVALIDSCHEDULE });
 
-    if (session.data.appointment)
-      await this.consultaService.update(session.data.appointment.id, {
-        marcada: new Date(format(marcada, "yyyy-MM-dd'T'HH:mm:ss'Z'")),
-      });
-    else
-      await this.consultaService.create({
-        clinica_id: String(this.clinic.id),
-        marcada: new Date(format(marcada, "yyyy-MM-dd'T'HH:mm:ss'Z'")),
-        cliente_id: String(session.patient.id),
-      });
-
-    const old_appointment = session.data.appointment;
-    await this.send(session.id, {
-      text: old_appointment
-        ? Messages.SUCCESSREAPOINTMENT.format(
-            old_appointment.marcada.getDate().toString(),
-            Month[old_appointment.marcada.getMonth() + 1].toLocaleLowerCase(),
-            format(old_appointment.marcada, "HH:mm"),
-            Weekday[marcada.getDay()].toLowerCase(),
-            marcada.getDate().toString(),
-            Month[marcada.getMonth() + 1].toLowerCase(),
-            format(marcada, "HH:mm")
-          )
-        : Messages.SUCCESSAPOINTMENT.format(
-            Weekday[marcada.getDay()],
-            marcada.getDate().toString(),
-            Month[marcada.getMonth() + 1].toLocaleLowerCase(),
-            format(marcada, "HH:mm")
-          ),
-    });
-
-    session.data.appointment = undefined;
-    await this.youAreWelcomeConversation.ask(session);
+    session.data.schedule = schedule;
+    session.conversation_stack.push(this);
+    await this.confirmAppointmentConversation.ask(session);
   }
 }

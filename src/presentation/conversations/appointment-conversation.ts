@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import { Month, Weekday } from "@/common/constants";
+import { Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { UserSession } from "@/domain/models/user-sesssion";
 import { IConversation } from "@/domain/usecases";
@@ -22,10 +22,12 @@ export class AppointmentConversation implements IConversation {
     const appointment = session.data.appointment;
     this.send(session.id, {
       text: Messages.SHOWAPPOINTMENT.format(
-        Weekday[appointment.marcada.getDay()].toLowerCase(),
-        appointment.marcada.getDate().toString(),
-        Month[appointment.marcada.getMonth() + 1].toLowerCase(),
-        format(appointment.marcada, "HH:mm")
+        appointment.specialty_description,
+        appointment.professional_name,
+        Weekday[appointment.scheduled_day.getDay()] +
+          " - " +
+          format(appointment.scheduled_day, "dd/MM"),
+        appointment.start_time.toClockTime()
       ),
       buttons: Messages.APPOINMENTACTIONS,
     });
@@ -43,14 +45,16 @@ export class AppointmentConversation implements IConversation {
       clean_text === "1" ||
       clean_text === "reagendar" ||
       clean_text === "reagenda"
-    )
+    ) {
+      session.conversation_stack = [this];
+      session.data.specialty_id = session.data.appointment.specialty_id;
       await this.rescheduleConversation.ask(session);
-    else if (
+    } else if (
       clean_text === "2" ||
       clean_text === "cancelar" ||
       clean_text === "cancela"
     ) {
-      session.conversation_stack.push(this);
+      session.conversation_stack = [this];
       await this.cancelConversation.ask(session);
     } else
       await this.send(session.id, {
