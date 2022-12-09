@@ -1,6 +1,5 @@
 import { Boom } from "@hapi/boom";
 import makeWASocket, {
-  AnyMessageContent,
   delay,
   DisconnectReason,
   proto,
@@ -8,7 +7,7 @@ import makeWASocket, {
 } from "@adiwajshing/baileys";
 
 import { IMessageApp } from "@/infra/interfaces/message-app";
-import { ContentSend } from "@/presentation/models";
+import { MessageTemplate } from "@/presentation/models";
 import { TypeRead } from "@/presentation/interfaces";
 import { onlyNumber } from "@/common/helpers";
 
@@ -17,17 +16,18 @@ export default class Whatsapp implements IMessageApp {
 
   read: TypeRead;
 
-  send = async (id: string, content: ContentSend) => {
+  send = async (id: string, message: MessageTemplate) => {
     id = "55" + id + "@s.whatsapp.net";
+    message.text = message.text.replaceAll("**", "*");
 
     await this.sock.presenceSubscribe(id);
     await delay(500);
 
     await this.sock.sendPresenceUpdate("composing", id);
-    await delay(2000);
+    await delay(500);
 
     await this.sock.sendPresenceUpdate("paused", id);
-    await this.sock.sendMessage(id, content);
+    await this.sock.sendMessage(id, message);
   };
 
   async connect() {
@@ -76,7 +76,6 @@ export default class Whatsapp implements IMessageApp {
 
       if (events["messages.upsert"]) {
         const upsert = events["messages.upsert"];
-        console.log("recv messages ", JSON.stringify(upsert, undefined, 2));
 
         if (upsert.type === "notify")
           for (const msg of upsert.messages)

@@ -4,7 +4,7 @@ type MessageButton = {
   type: number;
 };
 
-export type ContentSend = {
+export type MessageTemplate = {
   text?: string;
   location?: {
     degreesLatitude: number;
