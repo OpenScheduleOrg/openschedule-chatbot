@@ -10,7 +10,6 @@ export * from "./inform-cpf-conversation";
 export * from "./about-clinic-conversation";
 
 export * from "./inform-specialty-conversation";
-export * from "./inform-month-conversation";
 export * from "./inform-day-conversation";
 export * from "./inform-schedule-conversation";
 export * from "./confirm-appointment-conversation";

@@ -8,8 +8,3 @@ export * from "./responses";
 export * from "./schedule-response-model";
 export * from "./specialty-response-model";
 export * from "./user-response-model";
-
-// TODO: garbage
-export * from "./response-consulta-model";
-export * from "./response-horario-model";
-export * from "./response-notification-model";

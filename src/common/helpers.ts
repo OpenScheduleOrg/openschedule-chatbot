@@ -1,5 +1,3 @@
-import { ConsultaModel } from "@/domain/models";
-
 export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -38,12 +36,6 @@ export function secondsToHorario(s: number): {
     String(minutes);
 
   return { his: s, hours, minutes, hhmm };
-}
-
-export function sortConsultas(a: ConsultaModel, b: ConsultaModel): number {
-  if (a.marcada.valueOf() < b.marcada.valueOf()) return -1;
-  if (a.marcada.valueOf() > b.marcada.valueOf()) return 1;
-  return 0;
 }
 
 export function onlyNumber(jid: string): string {

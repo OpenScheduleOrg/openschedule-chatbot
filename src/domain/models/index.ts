@@ -7,7 +7,3 @@ export * from "./professional-model";
 export * from "./schedule-model";
 export * from "./specialty-model";
 export * from "./user-model";
-
-// TODO: garbage
-export * from "@/domain/models/consulta-model";
-export * from "@/domain/models/notification-model";

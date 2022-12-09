@@ -10,7 +10,6 @@ import {
   ConfirmConversation,
   InformCpfConversation,
   InformDayConversation,
-  InformMonthConversation,
   InformNameConversation,
   InformScheduleConversation,
   InformSpecialtyConversation,
@@ -23,7 +22,6 @@ import { TypeSend } from "@/presentation/interfaces";
 import {
   appointmentService,
   calendarService,
-  consultaService,
   patientService,
 } from "./services";
 
@@ -94,15 +92,9 @@ export const buildConversations = (
     optionsConversation
   );
 
-  const informMonthConversation = new InformMonthConversation(
-    send,
-    informDayConversation,
-    newUserConversation
-  );
-
   const newAppointmentConversation = new ConfirmConversation(
     send,
-    informMonthConversation,
+    informSpecialtyConversation,
     optionsConversation,
     optionsConversation
   );
@@ -145,11 +137,6 @@ export const buildConversations = (
   const global_listeners = {};
   manyIndexes(["cancelar", "menu"], optionsConversation, global_listeners);
   manyIndexes(
-    ["marcar", "marcar consulta"],
-    informMonthConversation,
-    global_listeners
-  );
-  manyIndexes(
     ["consultas", "minhas consultas"],
     appointmentsConversation,
     global_listeners
@@ -164,7 +151,6 @@ export const buildConversations = (
 
   welcomeBackConversation.conversations = global_listeners;
   appointmentConversation.conversations = global_listeners;
-  informMonthConversation.conversations = global_listeners;
   appointmentsConversation.conversations = global_listeners;
   aboutClinicConversation.conversations = global_listeners;
 
