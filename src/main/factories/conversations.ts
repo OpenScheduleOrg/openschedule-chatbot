@@ -135,7 +135,11 @@ export const buildConversations = (
   informCpfConversation.conversations = new_user_listeners;
 
   const global_listeners = {};
-  manyIndexes(["cancelar", "menu"], optionsConversation, global_listeners);
+  manyIndexes(
+    ["cancela", "cancelar", "menu"],
+    optionsConversation,
+    global_listeners
+  );
   manyIndexes(
     ["consultas", "minhas consultas"],
     appointmentsConversation,
