@@ -59,12 +59,12 @@ export class InformScheduleConversation implements IConversation {
         ? Messages.INFORMSCHEDULEREAPPOINTMENT.format(
             Weekday[day.getDay()],
             day.getDate().toString(),
-            Month[day.getMonth()]
+            Month[day.getMonth() + 1]
           )
         : Messages.INFORMSCHEDULE.format(
             Weekday[day.getDay()],
             day.getDate().toString(),
-            Month[day.getMonth()]
+            Month[day.getMonth() + 1]
           ),
       buttonText: "Horarios disponíveis para agendametno",
       sections: [{ rows }],

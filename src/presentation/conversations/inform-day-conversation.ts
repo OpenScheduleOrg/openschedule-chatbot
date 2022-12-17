@@ -1,4 +1,4 @@
-import { parseISO } from "date-fns";
+import { parseISO, formatISO, isValid } from "date-fns";
 
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
@@ -8,7 +8,6 @@ import { CalendarService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
-import { formatISO } from "date-fns";
 
 export class InformDayConversation implements IConversation {
   conversations: TypeConvesations = {};
@@ -70,8 +69,7 @@ export class InformDayConversation implements IConversation {
       return await session.conversation_stack.pop()?.ask(session);
 
     const day = parseISO(clean_text);
-
-    if (!day)
+    if (!isValid(day))
       return await this.ask(session, { complement: Messages.INVALIDDAY });
 
     session.data.day = day;

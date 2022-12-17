@@ -11,12 +11,12 @@ export default {
     "Parece que você não possui nenhuma consulta marcada, gostaria de marcar uma consulta?",
   INFORMDAY: "Selecione o dia que deseja realizar o agendamento.",
   INFORMDAYREAPOINTMENT: "Selecione o dia que deseja reagendar.",
-  INFORMSCHEDULE: "Qual horário deseja agendar para {0} {1} de {2}?",
+  INFORMSCHEDULE: "Qual horário deseja agendar para {0}, {1} de {2}?",
   INFORMSCHEDULEREAPPOINTMENT:
-    "Em qual horário deseja reagendar na {0} {1} de {2}?",
+    "Em qual horário deseja reagendar na {0}, {1} de {2}?",
   INVALIDSPECIALTY: "Informe um motivo de agendamento válido.",
   INVALIDMONTH: "Desculpa, mas isso não corresponde a um mês.",
-  INVALIDDAY: "Desculpa, mas esse não ê um dia válido.",
+  INVALIDDAY: "Desculpa, mas esse não é um dia válido.",
   INVALIDSCHEDULE: "Desculpa, mas esse não horário que está disponível.",
   SUCCESSAPOINTMENT:
     "✔Agendamento realizado com successo\n\n🗓 {0}, {1} de {2}\n🕜 {3}",
