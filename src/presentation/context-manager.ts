@@ -42,11 +42,25 @@ export class ContextManager implements IContextManager {
         clean_text: slugify(content.text),
       });
     } catch (e) {
+      console.error(e);
       console.log(
         "\n\nRECEIVED MESSAGE: ",
         JSON.stringify(content, undefined, 2)
       );
-      console.log("\n\nSESSION STATE: ", JSON.stringify(session, undefined, 2));
+      console.log(
+        "\n\nSESSION STATE: ",
+        JSON.stringify(
+          {
+            id: session.id,
+            conversation: session.conversation?.constructor.name,
+            conversation_stack: session.conversation_stack.map(
+              (c) => c.constructor.name
+            ),
+          },
+          undefined,
+          2
+        )
+      );
       this.sessionManager.close(id);
       await this.send(id, { text: Messages.TECHNICALPROBLEMS });
     }
