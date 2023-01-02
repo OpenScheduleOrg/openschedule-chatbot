@@ -1,1 +1,1 @@
-# consuchat-bot
+# Open Schedule Chatbot
