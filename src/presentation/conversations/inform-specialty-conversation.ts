@@ -47,7 +47,7 @@ export class InformSpecialtyConversation implements IConversation {
     session.data.specialties = clinic_specialties;
 
     await this.send(session.id, {
-      text: "Qual o motivo do agendamento?",
+      text: "Especialidade do agendamento?",
       buttons: buttons,
     });
 

@@ -1,6 +1,6 @@
 export default {
   SNCADASTRO:
-    "Poderia nos informar alguns de seus para realizamos seu cadastro?\nÉ fácil e rápido!",
+    "Poderia nos informar alguns de seus dados para realizamos seu cadastro?\nÉ fácil e rápido!",
   INFORMNAME: "Por favor, informe seu nome e sobrenome.",
   INVALIDNAME: "Informe novamente seu nome, mas com o sobrenome.",
   INFORMCPF: "Para finalizarmos seu cadastro, informe seu CPF.",
