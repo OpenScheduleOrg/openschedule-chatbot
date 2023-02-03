@@ -18,7 +18,7 @@ export default class Whatsapp implements IMessageApp {
 
   send = async (id: string, message: MessageTemplate) => {
     id = "55" + id + "@s.whatsapp.net";
-    message.text = message.text.replaceAll("**", "*");
+    if (message.text) message.text = message.text.replaceAll("**", "*");
 
     await this.sock.presenceSubscribe(id);
     await delay(500);
