@@ -12,13 +12,16 @@ export class OptionsConversation implements IConversation {
 
   constructor(private readonly send: TypeSend) {}
 
-  async ask(session: UserSession, optional): Promise<void> {
+  async ask(
+    session: UserSession,
+    { complement, title } = { complement: undefined, title: undefined }
+  ): Promise<void> {
     await this.send(session.id, {
-      text: optional.complement || Messages.ITFINE,
+      text: complement || Messages.ITFINE,
     });
 
     await this.send(session.id, {
-      text: optional.title || Messages.EASYACCESS,
+      text: title || Messages.EASYACCESS,
       buttons: Messages.MENUOPTIONS,
     });
     session.conversation = this;
@@ -36,6 +39,7 @@ export class OptionsConversation implements IConversation {
     else
       await this.ask(session, {
         complement: Messages.SORRYUDERSTAND,
+        title: undefined,
       });
   }
 }
