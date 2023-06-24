@@ -4,7 +4,7 @@ import makeWASocket, {
   DisconnectReason,
   proto,
   useMultiFileAuthState,
-} from "@adiwajshing/baileys";
+} from "@whiskeysockets/baileys";
 
 import { IMessageApp } from "@/infra/interfaces/message-app";
 import { MessageTemplate } from "@/presentation/models";

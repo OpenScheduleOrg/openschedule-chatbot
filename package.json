@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "^4.4.0",
     "@types/ws": "^8.5.3",
+    "@whiskeysockets/baileys": "^6.3.0",
     "axios": "^0.27.2",
     "date-fns": "^2.29.2"
   },
