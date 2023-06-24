@@ -9,10 +9,10 @@
         "sourceMap": true,
         "moduleResolution": "node",
         "outDir": "./build",
-        "baseUrl": "./src",
+        "baseUrl": "./",
         "paths": {
-          "@/*": ["*"],
-          "@/tests/*": ["../tests/*"]
+          "@/*": ["src/*"],
+          "@/tests/*": ["tests/*"]
         },
     },
     "include": ["src", "tests"],
