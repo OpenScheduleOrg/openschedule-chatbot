@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx tsc && node build",
+    "start": "npx ts-node ./src/main",
     "build": "npx tsc && npx tsc-alias"
   },
   "keywords": [],
