@@ -27,7 +27,21 @@ export default class Whatsapp implements IMessageApp {
     await delay(500);
 
     await this.sock.sendPresenceUpdate("paused", id);
-    await this.sock.sendMessage(id, message);
+    if ("buttons" in message)
+      await this.sock.sendMessage(id, this.getOptionsMessage(message));
+    else
+      await this.sock.sendMessage(id, message);
+  };
+
+  private getOptionsMessage = (message: MessageTemplate) =>  {
+    let textMessage = message.text + "\n";
+
+    for(var button of message.buttons){
+      textMessage += "\n"
+      textMessage += `${button.buttonId} - ${button.buttonText.displayText}`
+    }
+
+    return {text: textMessage};
   };
 
   async connect() {
