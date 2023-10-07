@@ -37,14 +37,14 @@ export class InformDayConversation implements IConversation {
       });
     }
 
-    const rows = [];
+    const buttons = [];
 
     for (const day of days) {
-      rows.push({
-        title: `${Weekday[day.getDay()]}, ${day.getDate()} de ${
+      buttons.push({
+        buttonText:{displayText:  `${Weekday[day.getDay()]}, ${day.getDate()} de ${
           Month[day.getMonth() + 1]
-        }`,
-        rowId: formatISO(day, { representation: "date" }),
+        }`},
+        buttonId: formatISO(day, { representation: "date" }),
       });
     }
 
@@ -52,8 +52,7 @@ export class InformDayConversation implements IConversation {
       text: session.data.appointment
         ? Messages.INFORMDAYREAPOINTMENT
         : Messages.INFORMDAY,
-      buttonText: "Dias disponíveis para agendamento",
-      sections: [{ rows }],
+      buttons
     });
 
     session.conversation = this;

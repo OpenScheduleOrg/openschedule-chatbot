@@ -39,16 +39,16 @@ export class InformScheduleConversation implements IConversation {
       });
     }
 
-    const rows = [];
+    const buttons = [];
     session.data.schedules = schedules;
 
     for (let schedule of schedules) {
-      rows.push({
-        title:
+      buttons.push({
+        buttonText:{displayText:
           schedule.start_time.toClockTime() +
           " - " +
-          schedule.professional_name,
-        rowId: schedule.id,
+          schedule.professional_name},
+        buttonId: schedule.id,
       });
     }
 
@@ -66,8 +66,7 @@ export class InformScheduleConversation implements IConversation {
             day.getDate().toString(),
             Month[day.getMonth() + 1]
           ),
-      buttonText: "Horarios disponíveis para agendametno",
-      sections: [{ rows }],
+      buttons
     });
 
     session.conversation = this;
