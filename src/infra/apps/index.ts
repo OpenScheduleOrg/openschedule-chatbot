@@ -1,1 +1,2 @@
-export * from "@/infra/apps";
+export * from "@/infra/apps/telegram";
+export * from "@/infra/apps/whatsapp";
