@@ -11,7 +11,7 @@ import { MessageTemplate } from "@/presentation/models";
 import { TypeRead } from "@/presentation/interfaces";
 import { onlyNumber } from "@/common/helpers";
 
-export default class Whatsapp implements IMessageApp {
+export class Whatsapp implements IMessageApp {
   sock: any;
 
   read: TypeRead;
