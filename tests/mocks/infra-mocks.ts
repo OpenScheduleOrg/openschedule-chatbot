@@ -1,6 +1,6 @@
-import { IMessageApp } from "@/infra/interfaces/message-app";
+import { MessageApp } from "@/presentation/apps";
 
-export const makeAppMock = (): IMessageApp => ({
+export const makeAppMock = (): MessageApp => ({
   connect: jest.fn(),
   send: jest.fn(),
   read: jest.fn(),

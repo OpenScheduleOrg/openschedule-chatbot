@@ -6,12 +6,12 @@ import makeWASocket, {
   useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
 
-import { IMessageApp } from "@/infra/interfaces/message-app";
 import { MessageTemplate } from "@/presentation/models";
 import { TypeRead } from "@/presentation/interfaces";
 import { onlyNumber } from "@/common/helpers";
+import { MessageApp } from "@/presentation/apps";
 
-export class Whatsapp implements IMessageApp {
+export class Whatsapp implements MessageApp {
   sock: any;
 
   read: TypeRead;

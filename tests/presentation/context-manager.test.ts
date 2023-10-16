@@ -2,7 +2,7 @@ import { ResourceNotFoundError } from "@/data/errors";
 import { ISessionManager } from "@/domain/interfaces";
 import { PatientService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
-import { IMessageApp } from "@/infra/interfaces/message-app";
+import { MessageApp } from "@/presentation/apps";
 import { ContextManager } from "@/presentation";
 import Messages from "@/presentation/messages";
 import {
@@ -15,7 +15,7 @@ import { makeFakePatient } from "../mocks/fake-models";
 
 type SutTypes = {
   sut: ContextManager;
-  appMock: IMessageApp;
+  appMock: MessageApp;
   sessionManagerMock: ISessionManager;
   patientServiceMock: PatientService;
   newUserConversationMock: IConversation;
@@ -23,7 +23,7 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-  const appMock: IMessageApp = makeAppMock();
+  const appMock: MessageApp = makeAppMock();
 
   const sessionManagerMock: ISessionManager = makeSessionManagerMock();
 

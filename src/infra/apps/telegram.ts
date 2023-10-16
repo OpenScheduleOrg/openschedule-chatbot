@@ -1,11 +1,11 @@
 import {Telegraf, Context, Markup} from "telegraf";
 import {message} from "telegraf/filters";
-import {IMessageApp} from "@/infra/interfaces/message-app";
+import {MessageApp} from "@/presentation/apps";
 import {MessageTemplate} from "@/presentation/models";
 import {TypeRead} from "@/presentation/interfaces";
 import {InlineKeyboardMarkup, InlineKeyboardButton} from "telegraf/typings/core/types/typegram";
 
-export class Telegram implements IMessageApp {
+export class Telegram implements MessageApp {
     private connection : Telegraf;
     read : TypeRead;
     private map_userid_phone : {
