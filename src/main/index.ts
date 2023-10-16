@@ -7,6 +7,7 @@ import { buildConversations } from "./factories";
 
 import "@/common/prototype";
 import { ClinicModel } from "@/domain/models";
+import { LocalAppDataStorage } from "@/infra/app-data-storage";
 
 async function main(): Promise<void> {
   const clinic = await clinicService.getById(config.CLINIC_ID);
@@ -34,7 +35,9 @@ async function whatsapp(clinic: ClinicModel) {
 }
 
 async function telegram(clinic: ClinicModel) {
-  const app = new Telegram(config.TELEGRAM_TOKEN);
+  const appDataStorage = new LocalAppDataStorage();
+
+  const app = new Telegram(config.TELEGRAM_TOKEN, appDataStorage);
   const session = new SessionManager(clinic);
 
   const { newUserConversation, welcomeBackConversation } = buildConversations(app.send, clinic);

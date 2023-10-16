@@ -2,7 +2,7 @@ import { slugify } from "@/common/helpers";
 import { ISessionManager } from "@/domain/interfaces";
 import { PatientService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
-import { IMessageApp } from "@/infra/interfaces/message-app";
+import { MessageApp } from "@/presentation/apps";
 import { IContextManager, TypeSend, TypeRead } from "./interfaces";
 import Messages from "./messages";
 import { MessageInfo } from "./models";
@@ -11,7 +11,7 @@ export class ContextManager implements IContextManager {
   send: TypeSend;
 
   constructor(
-    private readonly app: IMessageApp,
+    private readonly app: MessageApp,
     private readonly sessionManager: ISessionManager,
     private readonly patientService: PatientService,
     private readonly newUserConversation: IConversation,
