@@ -4,6 +4,7 @@ import {MessageApp} from "@/presentation/apps";
 import {MessageTemplate} from "@/presentation/models";
 import {TypeRead} from "@/presentation/interfaces";
 import {InlineKeyboardMarkup, InlineKeyboardButton} from "telegraf/typings/core/types/typegram";
+import { AppDataStorage } from "./app-data-storage";
 
 export class Telegram implements MessageApp {
     private connection : Telegraf;
@@ -16,7 +17,7 @@ export class Telegram implements MessageApp {
     } = {}
 
 
-    constructor(private readonly token : string) {};
+    constructor(private readonly token : string, private readonly appDataStorage: AppDataStorage) {};
 
     send = async (id : string, message : MessageTemplate) => {
         if (message.location) {
@@ -50,6 +51,8 @@ export class Telegram implements MessageApp {
     };
 
     async connect() {
+        this.map_userid_phone = await this.appDataStorage.loadMap("telegram", "map_userid_phone")
+
         this.connection = new Telegraf(this.token);
 
         this.connection.on("callback_query", this.processMessage)
@@ -63,7 +66,6 @@ export class Telegram implements MessageApp {
     private processMessage = (ctx) => {
         if (ctx.from.is_bot) 
             return;
-        
 
         const user_id = ctx.from.id;
         if (user_id in this.map_userid_phone) {
@@ -99,6 +101,8 @@ export class Telegram implements MessageApp {
             const phone_number = contact.phone_number.slice(2, 4) + contact.phone_number.slice(5);
 
             console.info("Phone number received", phone_number);
+
+            this.appDataStorage.insertToMap("telegram", "map_userid_phone", contact.user_id, phone_number)
 
             this.map_userid_phone[contact.user_id] = phone_number;
             this.map_phone_chatid[phone_number] = ctx.chat.id;
