@@ -40,7 +40,7 @@ export function secondsToHorario(s: number): {
 
 export function onlyNumber(jid: string): string {
   const phone = jid.slice(2, 12);
-  return phone.slice(0, 2) + "9" + phone.slice(2);
+  return phone;
 }
 
 const accentsMap = new Map([
