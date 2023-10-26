@@ -23,8 +23,8 @@ export class ConfirmConversation implements IConversation {
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
-    if (clean_text === "sim") await this.yesConveration.ask(session);
-    else if (clean_text == "nao") await this.noConversation.ask(session);
+    if (clean_text == "1" || clean_text == "sim") await this.yesConveration.ask(session);
+    else if (clean_text == "2" || clean_text == "nao") await this.noConversation.ask(session);
     else if (this.conversations[clean_text])
       await this.conversations[clean_text].ask(session);
     else
