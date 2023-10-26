@@ -9,6 +9,8 @@ import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
 
+const dateIdMapping = new Map();
+
 export class InformDayConversation implements IConversation {
   conversations: TypeConvesations = {};
 
@@ -17,7 +19,7 @@ export class InformDayConversation implements IConversation {
     private readonly clinic: ClinicModel,
     private readonly calendarService: CalendarService,
     private readonly informScheduleConversation: IConversation
-  ) {}
+  ) { }
 
   async ask(
     session: UserSession,
@@ -37,14 +39,27 @@ export class InformDayConversation implements IConversation {
       });
     }
 
+    // for (const day of days) {
+    //   buttons.push({
+    //     buttonText:{displayText:  `${Weekday[day.getDay()]}, ${day.getDate()} de ${
+    //       Month[day.getMonth() + 1]
+    //     }`},
+    //     buttonId: formatISO(day, { representation: "date" }),
+    //   });
+    // }
+
     const buttons = [];
 
-    for (const day of days) {
+    for (let i = 0; i < days.length; i++) {
+      const day = days[i];
+      const dateId = i + 1;
+      dateIdMapping.set(dateId, day);
+
       buttons.push({
-        buttonText:{displayText:  `${Weekday[day.getDay()]}, ${day.getDate()} de ${
-          Month[day.getMonth() + 1]
-        }`},
-        buttonId: formatISO(day, { representation: "date" }),
+        buttonText: {
+          displayText: ` ${Weekday[day.getDay()]}, ${day.getDate()} de ${Month[day.getMonth() + 1]}`,
+        },
+        buttonId: dateId.toString(),
       });
     }
 
@@ -67,13 +82,23 @@ export class InformDayConversation implements IConversation {
     if (clean_text == "volta" || clean_text == "voltar")
       return await session.conversation_stack.pop()?.ask(session);
 
-    const day = parseISO(clean_text);
-    if (!isValid(day))
-      return await this.ask(session, { complement: Messages.INVALIDDAY });
+    // const day = parseISO(clean_text);
 
-    session.data.day = day;
+    const selectedId = parseInt(clean_text);
 
-    session.conversation_stack.push(this);
+    if (dateIdMapping.has(selectedId)) {
+      const selectedDate = dateIdMapping.get(selectedId);
+      session.data.day = selectedDate;
+      session.conversation_stack.push(this);
+    }
+
+    // if (!isValid(day))
+    //   return await this.ask(session, { complement: Messages.INVALIDDAY });
+
+    // session.data.day = day;
+
+    // session.conversation_stack.push(this);
+
     await this.informScheduleConversation.ask(session);
   }
 }
