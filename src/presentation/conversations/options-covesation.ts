@@ -31,10 +31,10 @@ export class OptionsConversation implements IConversation {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
 
-    if (clean_text === "1") await this.newAppointmentEntry.ask(session);
-    else if (clean_text === "2")
+    if (clean_text === "1" || clean_text.toLowerCase() === "marcar consulta") await this.newAppointmentEntry.ask(session);
+    else if (clean_text === "2" || clean_text.toLowerCase() === "minhas consultas")
       await this.appointmentsConversation.ask(session);
-    else if (clean_text === "3")
+    else if (clean_text === "3" || clean_text.toLowerCase() === "sobre clinica")
       await this.aboutClinicConversation.ask(session);
     else
       await this.ask(session, {
