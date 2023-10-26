@@ -9,8 +9,8 @@ export default {
     "Infelizmente não temos nenhum serviço disponível para agendamento.",
   NOCONSULTA:
     "Parece que você não possui nenhuma consulta marcada, gostaria de marcar uma consulta?",
-  INFORMDAY: "Selecione o dia que deseja realizar o agendamento.",
-  INFORMDAYREAPOINTMENT: "Selecione o dia que deseja reagendar.",
+  INFORMDAY: "Selecione o dia que deseja realizar o agendamento:\n\n*Digite uma opção abaixo:*",
+  INFORMDAYREAPOINTMENT: "Selecione o dia que deseja reagendar:",
   INFORMSCHEDULE: "Qual horário deseja agendar para {0}, {1} de {2}?",
   INFORMSCHEDULEREAPPOINTMENT:
     "Em qual horário deseja reagendar na {0}, {1} de {2}?",
@@ -29,9 +29,9 @@ export default {
   CANCELEDAPPOINTMENT:
     "Agendamento para {0}, {1} de {2} as {3}  foi cancelada.",
   CONFIRMAPPOINTMENT:
-    "Confirma o agendamento:\n\n**Especialidade**: {0}\n**Profissional**: {1}\n**Dia**: {2}\n**Horário**: {3}\n",
+    "Confirma o agendamento:\n\n**Especialidade**: {0}\n**Profissional**: {1}\n**Dia**: {2}\n**Horário**: {3}\n\n*Digite uma opção abaixo:*",
   CONFIRMREAPPOINTMENT:
-    "Confirma o reagendamento:\n\n**Especialidade**: {0}\n**Profissional**: {1}\n**Dia**: {2}\n**Horário**: {3}\n",
+    "Confirma o reagendamento:\n\n**Especialidade**: {0}\n**Profissional**: {1}\n**Dia**: {2}\n**Horário**: {3}\n\n*Digite uma opção abaixo:*",
   SHOWAPPOINTMENT:
     "Você possui o seguinte agendamento:\n\n**Especialidade**: {0}\n**Profissional**: {1}\n**Dia**: {2}\n**Horário**: {3}\n\nGostaria de?",
 };
