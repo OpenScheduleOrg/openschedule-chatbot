@@ -12,12 +12,12 @@ export class ConfirmAppointmentConversation implements IConversation {
 
   private readonly buttons = [
     {
-      buttonId: "confirmar",
+      buttonId: "1",
       buttonText: { displayText: "Confirmar" },
       type: 2,
     },
     {
-      buttonId: "refazer",
+      buttonId: "2",
       buttonText: { displayText: "Refazer" },
       type: 2,
     },
@@ -53,11 +53,11 @@ export class ConfirmAppointmentConversation implements IConversation {
       return await this.conversations[clean_text].ask(session);
     }
 
-    if (clean_text === "refazer") {
+    if (clean_text === "refazer" || clean_text == 2) {
       session.conversation_stack.pop(); // Remove inform schedule
       if (!session.data.appointment) session.conversation_stack.pop(); // Remove inform day if not appointment
       return session.conversation_stack.pop().ask(session); // Ask inform specialty or inform day
-    } else if (clean_text !== "confirmar") return await this.ask(session);
+    } else if (clean_text !== "confirmar" && clean_text != 1) return await this.ask(session);
 
     const appointment = session.data.appointment;
     const day = session.data.day;
