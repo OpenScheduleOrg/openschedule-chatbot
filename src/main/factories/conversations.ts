@@ -55,9 +55,7 @@ export const buildConversations = (
 
   const newUserConversation = new NewUserConversation(
     send,
-    informNameConversation,
-    optionsConversation,
-    optionsConversation
+    informNameConversation
   );
 
   const youAreWelcomeConversation = new YouAreWelcomeConversation(
