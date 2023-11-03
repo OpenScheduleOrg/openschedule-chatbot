@@ -27,13 +27,15 @@ export class NewUserConversation implements IConversation {
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
-    if (clean_text === "sim") await this.informNameConveration.ask(session);
-    else if (clean_text == "nao") await this.optionsConversation.ask(session);
-    else if (this.conversations[clean_text])
-      await this.conversations[clean_text].ask(session);
+    if (clean_text === "sim" || clean_text == 1) await this.informNameConveration.ask(session);
+    // else if (clean_text == "nao" || clean_text == 2) await this.optionsConversation.ask(session);
+    else if (clean_text == "nao" || clean_text == 2) await this.send(session.id, { text: Messages.ITFINE });
+    // else if (this.conversations[clean_text])
+    //   await this.conversations[clean_text].ask(session);
     else
-      await this.undefinableConversation.ask(session, {
-        complement: Messages.SORRYUDERSTAND,
-      });
+    await this.ask(session, { complement: Messages.WELCOME });
+      // await this.undefinableConversation.ask(session, {
+      //   complement: Messages.SORRYUDERSTAND,
+      // });
   }
 }
