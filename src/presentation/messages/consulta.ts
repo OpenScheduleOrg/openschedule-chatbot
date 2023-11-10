@@ -9,7 +9,7 @@ export default {
     "Infelizmente não temos nenhum serviço disponível para agendamento.",
   NOCONSULTA:
     "Parece que você não possui nenhuma consulta marcada, gostaria de marcar uma consulta?",
-  INFORMDAY: "Selecione o dia que deseja realizar o agendamento:\n\n*Digite uma opção abaixo:*",
+  INFORMDAY: "Selecione o dia que deseja realizar o agendamento:\n\nDigite *cancelar* para voltar ou selecione umas das opções abaixo:",
   INFORMDAYREAPOINTMENT: "Selecione o dia que deseja reagendar:",
   INFORMSCHEDULE: "Qual horário deseja agendar para {0}, {1} de {2}?",
   INFORMSCHEDULEREAPPOINTMENT:
@@ -22,7 +22,7 @@ export default {
     "✔Agendamento realizado com successo\n\n🗓 {0}, {1} de {2}\n🕜 {3}",
   SUCCESSREAPOINTMENT:
     "✔Sua consulta do dia {0} de {1} as {2}, foi reagendada para {3}, {4} de {5} as {6}.",
-  SHOWAPPOINTMENTS: "Você possui as seguintes agendamentos:",
+  SHOWAPPOINTMENTS: "Você possui as seguintes agendamentos: \n\nDigite *cancelar* para voltar ou selecione umas das opções abaixo:",
   APPOINTMENTBUTTON: "{0}: {1} - {2} as {3}",
   CANCELAPPOINTMENT:
     "Você deseja realmente cancelar o agendamento de {0}, {1} de {2} as {3}?",
