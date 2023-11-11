@@ -6,6 +6,7 @@ export * from "./confirm-conversation";
 
 export * from "./inform-name-conversation";
 export * from "./inform-cpf-conversation";
+export * from "./inform-registration-conversation";
 
 export * from "./about-clinic-conversation";
 
