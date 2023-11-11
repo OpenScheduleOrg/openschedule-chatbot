@@ -8,7 +8,7 @@ import {
   CancelConversation,
   ConfirmAppointmentConversation,
   ConfirmConversation,
-  InformCpfConversation,
+  InformRegistrationConversation,
   InformDayConversation,
   InformNameConversation,
   InformScheduleConversation,
@@ -42,16 +42,28 @@ export const buildConversations = (
     optionsConversation
   );
 
-  const informCpfConversation = new InformCpfConversation(
+  
+  const informRegistrationConversation = new InformRegistrationConversation(
     send,
     patientService,
     optionsConversation
   );
-
+  
   const informNameConversation = new InformNameConversation(
     send,
-    informCpfConversation
+    informRegistrationConversation
   );
+
+  // const informCpfConversation = new InformCpfConversation(
+  //   send,
+  //   patientService,
+  //   optionsConversation
+  // );
+
+  // const informNameConversation = new InformNameConversation(
+  //   send,
+  //   informCpfConversation
+  // );
 
   const newUserConversation = new NewUserConversation(
     send,
@@ -130,7 +142,8 @@ export const buildConversations = (
   );
   newUserConversation.conversations = new_user_listeners;
   informNameConversation.conversations = new_user_listeners;
-  informCpfConversation.conversations = new_user_listeners;
+  // informCpfConversation.conversations = new_user_listeners;
+  informRegistrationConversation.conversations = new_user_listeners;
 
   const global_listeners = {};
   manyIndexes(
