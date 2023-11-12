@@ -17,6 +17,7 @@ import {
   OptionsConversation,
   WelcomeBackConversation,
   YouAreWelcomeConversation,
+  InformCpfConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
 import {
@@ -54,16 +55,16 @@ export const buildConversations = (
     informRegistrationConversation
   );
 
-  // const informCpfConversation = new InformCpfConversation(
-  //   send,
-  //   patientService,
-  //   optionsConversation
-  // );
-
-  // const informNameConversation = new InformNameConversation(
-  //   send,
-  //   informCpfConversation
-  // );
+  const informCpfConversation = new InformCpfConversation(
+    send,
+    patientService,
+    optionsConversation
+  );
+  
+  const informNameConversationCpf = new InformNameConversation(
+    send,
+    informCpfConversation
+  );
 
   const newUserConversation = new NewUserConversation(
     send,
@@ -142,7 +143,7 @@ export const buildConversations = (
   );
   newUserConversation.conversations = new_user_listeners;
   informNameConversation.conversations = new_user_listeners;
-  // informCpfConversation.conversations = new_user_listeners;
+  informNameConversationCpf.conversations = new_user_listeners;
   informRegistrationConversation.conversations = new_user_listeners;
 
   const global_listeners = {};
