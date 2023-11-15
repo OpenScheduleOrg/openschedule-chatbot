@@ -68,7 +68,7 @@ export class InformDayConversation implements IConversation {
       return await session.conversation_stack.pop()?.ask(session);
 
     const day = parseISO(clean_text);
-    if (!isValid(day))
+    if (!isValid(day) || clean_text > 10)
       return await this.ask(session, { complement: Messages.INVALIDDAY });
 
     session.data.day = day;
