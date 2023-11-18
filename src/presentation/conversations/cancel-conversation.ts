@@ -36,7 +36,7 @@ export class CancelConversation implements IConversation {
       await this.conversations[clean_text].ask(session);
     }
 
-    if (clean_text === "sim") {
+    if (clean_text === "sim" || clean_text == 1) {
       const appointment = session.data.appointment;
       await this.appointmentService.deleteById(session.data.appointment.id);
       await this.send(session.id, {
@@ -49,7 +49,7 @@ export class CancelConversation implements IConversation {
       });
       session.data.appointment = undefined;
       await this.youAreWelcomeConversation.ask(session);
-    } else if (clean_text == "nao") {
+    } else if (clean_text == "nao" || clean_text == 2) {
       await session.conversation_stack.pop()?.ask(session);
     } else await this.send(session.id, { text: Messages.SORRYNOTUDERSTAND });
   }

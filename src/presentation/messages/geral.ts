@@ -6,7 +6,7 @@ export default {
   WELCOMEBACK: "Olá {0}, que bom vê-lo novamente.",
   SORRYUDERSTAND: "Desculpa não entendo muita coisa.",
   SORRYNOTUDERSTAND: "Desculpa não entendi.",
-  ITFINE: "Tudo bem.",
+  ITFINE: "Tudo bem",
   ABOUT:
     "*{0}*" +
     "\n\nTelefone: {1}" +

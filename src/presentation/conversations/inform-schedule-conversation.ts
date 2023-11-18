@@ -32,10 +32,7 @@ export class InformScheduleConversation implements IConversation {
 
     if (!schedules.length) {
       return await session.conversation_stack.pop()?.ask(session, {
-        complement: Messages.WITHOUTFREESCHEDULES.format(
-          session.data.day.getDate().toString(),
-          Month[session.data.day.getMonth() + 1].toLowerCase()
-        ),
+        complement: Messages.INVALIDDAY,
       });
     }
 

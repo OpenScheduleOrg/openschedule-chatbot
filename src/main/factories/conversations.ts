@@ -8,7 +8,7 @@ import {
   CancelConversation,
   ConfirmAppointmentConversation,
   ConfirmConversation,
-  InformCpfConversation,
+  InformRegistrationConversation,
   InformDayConversation,
   InformNameConversation,
   InformScheduleConversation,
@@ -17,6 +17,7 @@ import {
   OptionsConversation,
   WelcomeBackConversation,
   YouAreWelcomeConversation,
+  InformCpfConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
 import {
@@ -42,22 +43,32 @@ export const buildConversations = (
     optionsConversation
   );
 
+  
+  const informRegistrationConversation = new InformRegistrationConversation(
+    send,
+    patientService,
+    optionsConversation
+  );
+  
+  const informNameConversation = new InformNameConversation(
+    send,
+    informRegistrationConversation
+  );
+
   const informCpfConversation = new InformCpfConversation(
     send,
     patientService,
     optionsConversation
   );
-
-  const informNameConversation = new InformNameConversation(
+  
+  const informNameConversationCpf = new InformNameConversation(
     send,
     informCpfConversation
   );
 
   const newUserConversation = new NewUserConversation(
     send,
-    informNameConversation,
-    optionsConversation,
-    optionsConversation
+    informNameConversation
   );
 
   const youAreWelcomeConversation = new YouAreWelcomeConversation(
@@ -132,7 +143,8 @@ export const buildConversations = (
   );
   newUserConversation.conversations = new_user_listeners;
   informNameConversation.conversations = new_user_listeners;
-  informCpfConversation.conversations = new_user_listeners;
+  informNameConversationCpf.conversations = new_user_listeners;
+  informRegistrationConversation.conversations = new_user_listeners;
 
   const global_listeners = {};
   manyIndexes(
