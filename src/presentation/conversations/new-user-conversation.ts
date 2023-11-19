@@ -10,8 +10,6 @@ export class NewUserConversation implements IConversation {
   constructor(
     private readonly send: TypeSend,
     private readonly informNameConveration: IConversation,
-    private readonly optionsConversation: IConversation,
-    private readonly undefinableConversation: IConversation
   ) {}
 
   async ask(
