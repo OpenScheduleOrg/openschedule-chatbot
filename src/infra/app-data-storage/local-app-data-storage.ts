@@ -6,7 +6,7 @@ import path from "path"
 export class LocalAppDataStorage  implements AppDataStorage {
 
   async loadMap(appName: string, mapName: string)   {
-    const directory = path.join(__dirname,"apps_local_storage", appName);
+    const directory = path.join(process.cwd(), "apps_local_storage", appName);
     const fileName = path.join(directory, mapName + ".json")
 
     if(!existsSync(directory))
@@ -24,14 +24,14 @@ export class LocalAppDataStorage  implements AppDataStorage {
   }
 
   async insertToMap(appName: string, mapName: string, key: string, value: string) {
-    const directory = path.join(__dirname,"apps_local_storage", appName);
+    const directory = path.join(process.cwd(), "apps_local_storage", appName);
     const fileName = path.join(directory, mapName + ".json")
 
     const file = await fs.open(fileName, "r+");
     const map = JSON.parse((await file.readFile()).toString() || "{}");
     map[key] = value;
 
-    await file.writeFile(JSON.stringify(map))
+    await file.write(JSON.stringify(map), 0)
     await file.close();
   }
 }
