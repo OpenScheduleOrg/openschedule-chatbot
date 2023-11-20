@@ -1,3 +1,6 @@
+import "@/common/prototype";
+import "@/common/logging";
+
 import { SessionManager } from "@/core";
 import { Whatsapp, Telegram } from "@/infra/apps";
 import { ContextManager } from "@/presentation";
@@ -5,9 +8,10 @@ import config from "@/main/config";
 import { clinicService, patientService } from "@/main/factories/services";
 import { buildConversations } from "./factories";
 
-import "@/common/prototype";
 import { ClinicModel } from "@/domain/models";
 import { LocalAppDataStorage } from "@/infra/app-data-storage";
+
+
 
 async function main(): Promise<void> {
   const clinic = await clinicService.getById(config.CLINIC_ID);
