@@ -5,13 +5,13 @@ declare global {
   var log: Logger
 }
 
-const consoleFormat = printf(({ level, message, timestamp, app }) => {
+const consoleFormat = printf(({ level, message, timestamp, ...meta}) => {
   let text = "";
-  if (app)
-    text = `[${app}] `;
+  if (meta)
+    text = ` ${JSON.stringify(meta)}`;
   if(typeof(message) == 'string')
-    return text + `${timestamp} ${level}: ${message}`;
-  return text + `${timestamp} ${level}: ${JSON.stringify(message, undefined, 2)}`;
+    return `${timestamp} ${level}: ${message}` + text;
+  return `${timestamp} ${level}: ${JSON.stringify(message, undefined, 2)}` + text;
 });
 
 const logger = createLogger({
