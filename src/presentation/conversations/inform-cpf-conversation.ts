@@ -1,5 +1,5 @@
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { PatientService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
@@ -16,7 +16,7 @@ export class InformCpfConversation implements IConversation {
 
   async ask(session: UserSession): Promise<void> {
     this.send(session.id, { text: Messages.INFORMCPF });
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { text, clean_text }): Promise<void> {
@@ -30,7 +30,7 @@ export class InformCpfConversation implements IConversation {
       clean_text == "corrigir nome" ||
       clean_text == "outro nome"
     )
-      return await session.conversation_stack.pop()?.ask(session);
+      return await session.lastConversation().ask(session);
 
     const cpf = text.replace(/\D/g, "");
     if (!cpf.match(/^\d{11}$/))

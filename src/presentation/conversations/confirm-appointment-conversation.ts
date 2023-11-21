@@ -1,6 +1,6 @@
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { AppointmentService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { format } from "date-fns";
@@ -44,7 +44,8 @@ export class ConfirmAppointmentConversation implements IConversation {
       ),
       buttons: this.buttons,
     });
-    session.conversation = this;
+
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
@@ -54,9 +55,9 @@ export class ConfirmAppointmentConversation implements IConversation {
     }
 
     if (clean_text === "refazer" || clean_text == 2) {
-      session.conversation_stack.pop(); // Remove inform schedule
-      if (!session.data.appointment) session.conversation_stack.pop(); // Remove inform day if not appointment
-      return session.conversation_stack.pop().ask(session); // Ask inform specialty or inform day
+      session.lastConversation();
+      if (!session.data.appointment) session.lastConversation();
+      return session.lastConversation().ask(session); // Ask inform specialty or inform day
     } else if (clean_text !== "confirmar" && clean_text != 1) return await this.ask(session);
 
     const appointment = session.data.appointment;
@@ -90,7 +91,6 @@ export class ConfirmAppointmentConversation implements IConversation {
     }
     session.data = {};
     session.data.appointment = undefined;
-    session.conversation = this.youAreWelcomeConversation;
     this.youAreWelcomeConversation.ask(session);
   }
 }

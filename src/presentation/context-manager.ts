@@ -6,6 +6,7 @@ import { MessageApp } from "@/presentation/apps";
 import { IContextManager, TypeSend, TypeRead } from "./interfaces";
 import Messages from "./messages";
 import { MessageInfo } from "./models";
+import { Logger } from "winston";
 
 export class ContextManager implements IContextManager {
   send: TypeSend;
@@ -15,7 +16,8 @@ export class ContextManager implements IContextManager {
     private readonly sessionManager: ISessionManager,
     private readonly patientService: PatientService,
     private readonly newUserConversation: IConversation,
-    private readonly welcomeBackConversation: IConversation
+    private readonly welcomeBackConversation: IConversation,
+    private readonly logger: Logger 
   ) {
     app.read = this.read;
     this.send = app.send;
@@ -27,40 +29,21 @@ export class ContextManager implements IContextManager {
       content.text = content.text.trim();
 
       if (!session) {
-        const patient = await this.patientService
-          .getByPhone(id)
-          .catch(() => undefined);
-        session = this.sessionManager.create(
-          id,
-          patient ? this.welcomeBackConversation : this.newUserConversation,
-          patient
-        );
-        if (!patient) return await session.conversation.ask(session);
+        try {
+          const patient = await this.patientService.getByPhone(id);
+          session = this.sessionManager.create(id, this.welcomeBackConversation, patient);
+        } catch (error) {
+          session = this.sessionManager.create(id, this.newUserConversation, undefined);
+          return await session.getConversation().ask(session);
+        }
       }
-      await session.conversation.answer(session, {
+
+      await session.getConversation().answer(session, {
         text: content.text,
         clean_text: slugify(content.text),
       });
     } catch (e) {
-      console.error(e);
-      console.log(
-        "\n\nRECEIVED MESSAGE: ",
-        JSON.stringify(content, undefined, 2)
-      );
-      console.log(
-        "\n\nSESSION STATE: ",
-        JSON.stringify(
-          {
-            id: session.id,
-            conversation: session.conversation?.constructor.name,
-            conversation_stack: session.conversation_stack.map(
-              (c) => c.constructor.name
-            ),
-          },
-          undefined,
-          2
-        )
-      );
+      this.logger.error(e.message);
       this.sessionManager.close(id);
       await this.send(id, { text: Messages.TECHNICALPROBLEMS });
     }

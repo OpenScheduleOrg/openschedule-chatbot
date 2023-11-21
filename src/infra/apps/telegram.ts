@@ -5,6 +5,7 @@ import {MessageTemplate} from "@/presentation/models";
 import {TypeRead} from "@/presentation/interfaces";
 import {InlineKeyboardMarkup, InlineKeyboardButton} from "telegraf/typings/core/types/typegram";
 import { AppDataStorage } from "./app-data-storage";
+import { Logger } from "winston";
 
 export class Telegram implements MessageApp {
     private connection : Telegraf;
@@ -17,9 +18,11 @@ export class Telegram implements MessageApp {
     } = {}
 
 
-    constructor(private readonly token : string, private readonly appDataStorage: AppDataStorage) {};
+    constructor(private readonly token : string, private readonly appDataStorage: AppDataStorage, private readonly logger: Logger) {};
 
     send = async (id : string, message : MessageTemplate) => {
+        this.logger.info("send message to " + id)
+
         if (message.location) {
             await this.connection.telegram.sendLocation(this.map_phone_chatid[id], message.location.degreesLatitude, message.location.degreesLongitude)
             return;
@@ -41,9 +44,6 @@ export class Telegram implements MessageApp {
             };
         }
 
-        console.info("Response to", id);
-        console.info("Message:", text);
-
         await this.connection.telegram.sendMessage(this.map_phone_chatid[id], text, {
             reply_markup: reply_markup,
             parse_mode: "Markdown"
@@ -59,7 +59,7 @@ export class Telegram implements MessageApp {
         this.connection.on(message("text"), this.processMessage)
         this.connection.on(message("contact"), this.processContact);
 
-        console.log("connecting to telegram");
+        this.logger.info("connecting to telegram");
         await this.connection.launch()
     }
 
@@ -72,12 +72,12 @@ export class Telegram implements MessageApp {
             const phone_number = this.map_userid_phone[user_id];
             this.map_phone_chatid[phone_number] = ctx.chat.id;
 
-            console.info(phone_number, "send a message", );
-            console.info("Message received:", ctx.message?.text || ctx.callbackQuery.data);
+            const text = ctx.message?.text || ctx.callbackQuery.data;
+            this.logger.info({phone_number, text});
 
             this.read(phone_number, {
-                text: ctx.message?.text || ctx.callbackQuery.data,
-                timestamp: ctx.message ?. message_id || ctx.callbackQuery.message_id
+                text,
+                timestamp: ctx.message?.date || ctx.callbackQuery.message.date
             })
         } else {
             this.sendContactMessage(ctx);
@@ -85,7 +85,7 @@ export class Telegram implements MessageApp {
     }
 
     private sendContactMessage(ctx : Context) {
-        console.info("Request contact to", ctx.from.first_name);
+        this.logger.info("Request contact to", ctx.from.first_name);
         ctx.reply("Poderia nos enviar seu contato por favor.", Markup.keyboard([[Markup.button.contactRequest("📲 Enviar contato")]]))
     }
 
@@ -100,7 +100,7 @@ export class Telegram implements MessageApp {
         if (contact.user_id === ctx.from.id) {
             const phone_number = contact.phone_number.slice(2, 4) + contact.phone_number.slice(5);
 
-            console.info("Phone number received", phone_number);
+            this.logger.info("Phone number received + ", phone_number);
 
             this.appDataStorage.insertToMap("telegram", "map_userid_phone", contact.user_id, phone_number)
 

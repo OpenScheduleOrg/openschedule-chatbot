@@ -3,7 +3,7 @@ import { parseISO, formatISO, isValid } from "date-fns";
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicModel } from "@/domain/models";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { CalendarService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
@@ -32,7 +32,7 @@ export class InformDayConversation implements IConversation {
     });
 
     if (!days.length) {
-      return await session.conversation_stack.pop()?.ask(session, {
+      return await session.lastConversation().ask(session, {
         complement: "Parece que não temos dias disponíveis para esse serviço.",
       });
     }
@@ -55,7 +55,7 @@ export class InformDayConversation implements IConversation {
       buttons
     });
 
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
@@ -65,7 +65,7 @@ export class InformDayConversation implements IConversation {
     }
 
     if (clean_text == "volta" || clean_text == "voltar")
-      return await session.conversation_stack.pop()?.ask(session);
+      return await session.lastConversation().ask(session);
 
     const day = parseISO(clean_text);
     if (!isValid(day) || clean_text > 10)
@@ -73,7 +73,6 @@ export class InformDayConversation implements IConversation {
 
     session.data.day = day;
 
-    session.conversation_stack.push(this);
     await this.informScheduleConversation.ask(session);
   }
 }

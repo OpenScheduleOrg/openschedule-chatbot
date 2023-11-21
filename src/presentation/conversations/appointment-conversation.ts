@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import { Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
@@ -14,25 +14,23 @@ export class AppointmentConversation implements IConversation {
     private readonly send: TypeSend,
     private readonly rescheduleConversation: IConversation,
     private readonly cancelConversation: IConversation
-  ) {}
+  ) { }
 
   async ask(session: UserSession): Promise<void> {
-    session.conversation_stack = [];
-
     const appointment = session.data.appointment;
     this.send(session.id, {
       text: Messages.SHOWAPPOINTMENT.format(
         appointment.specialty_description,
         appointment.professional_name,
         Weekday[appointment.scheduled_day.getDay()] +
-          " - " +
-          format(appointment.scheduled_day, "dd/MM"),
+        " - " +
+        format(appointment.scheduled_day, "dd/MM"),
         appointment.start_time.toClockTime()
       ),
       buttons: Messages.APPOINMENTACTIONS,
     });
 
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
@@ -46,7 +44,6 @@ export class AppointmentConversation implements IConversation {
       clean_text === "reagendar" ||
       clean_text === "reagenda"
     ) {
-      session.conversation_stack = [this];
       session.data.specialty_id = session.data.appointment.specialty_id;
       await this.rescheduleConversation.ask(session);
     } else if (
@@ -54,7 +51,6 @@ export class AppointmentConversation implements IConversation {
       clean_text === "cancelar" ||
       clean_text === "cancela"
     ) {
-      session.conversation_stack = [this];
       await this.cancelConversation.ask(session);
     } else
       await this.send(session.id, {

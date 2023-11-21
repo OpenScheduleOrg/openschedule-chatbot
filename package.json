@@ -15,7 +15,9 @@
     "@whiskeysockets/baileys": "^6.5.0",
     "axios": "^0.27.2",
     "date-fns": "^2.29.2",
-    "telegraf": "^4.14.0"
+    "qrcode-terminal": "^0.12.0",
+    "telegraf": "^4.14.0",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@types/jest": "^29.0.1",

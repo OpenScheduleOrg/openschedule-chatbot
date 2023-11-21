@@ -2,7 +2,7 @@ import { format, formatISO } from "date-fns";
 
 import { WeekdayMinimal } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import { AppointmentService } from "@/domain/services";
@@ -19,7 +19,7 @@ export class AppointmentsConversation implements IConversation {
     private readonly newAppointmentConversation: IConversation,
     private readonly showAppointmentConversation: IConversation,
     private readonly newUserConversation: IConversation
-  ) {}
+  ) { }
 
   async ask(
     session: UserSession,
@@ -68,12 +68,14 @@ export class AppointmentsConversation implements IConversation {
 
     session.data.appointments = appointments;
 
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
+    if (clean_text.includes('volta'))
+      return await session.lastConversation().ask(session);
 
     const appointment = session.data.appointments.find(
       (a) => a.id == Number(clean_text)

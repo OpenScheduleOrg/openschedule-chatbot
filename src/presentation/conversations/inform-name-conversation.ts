@@ -1,5 +1,5 @@
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
@@ -10,13 +10,11 @@ export class InformNameConversation implements IConversation {
   constructor(
     private readonly send: TypeSend,
     private readonly informCpfConversation: IConversation
-  ) {}
+  ) { }
 
   async ask(session: UserSession): Promise<void> {
-    session.conversation_stack = [];
-
     this.send(session.id, { text: Messages.INFORMNAME });
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { text, clean_text }): Promise<void> {
@@ -31,7 +29,6 @@ export class InformNameConversation implements IConversation {
 
     session.data = { name };
 
-    session.conversation_stack.push(this);
     await this.informCpfConversation.ask(session);
   }
 }
