@@ -1,4 +1,5 @@
 import { createLogger, format, transports, Logger } from 'winston';
+import { stringify } from "flatted"
 const { combine, timestamp, printf, json } = format;
 
 declare global {
@@ -8,10 +9,10 @@ declare global {
 const consoleFormat = printf(({ level, message, timestamp, ...meta}) => {
   let text = "";
   if (meta)
-    text = ` ${JSON.stringify(meta)}`;
+    text = ` ${stringify(meta)}`;
   if(typeof(message) == 'string')
     return `${timestamp} ${level}: ${message}` + text;
-  return `${timestamp} ${level}: ${JSON.stringify(message, undefined, 2)}` + text;
+  return `${timestamp} ${level}: ${stringify(message)}` + text;
 });
 
 const logger = createLogger({

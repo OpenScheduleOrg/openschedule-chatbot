@@ -12,6 +12,7 @@ import {
   makeSessionManagerMock,
 } from "../mocks";
 import { makeFakePatient } from "../mocks/fake-models";
+import { createLogger } from "winston";
 
 type SutTypes = {
   sut: ContextManager;
@@ -32,13 +33,15 @@ const makeSut = (): SutTypes => {
   const newUserConversationMock: IConversation = makeConversationMock();
 
   const welcomeBackConversationMock: IConversation = makeConversationMock();
+  const logger = createLogger();
 
   const sut = new ContextManager(
     appMock,
     sessionManagerMock,
     patientServiceMock,
     newUserConversationMock,
-    welcomeBackConversationMock
+    welcomeBackConversationMock,
+    logger
   );
 
   return {

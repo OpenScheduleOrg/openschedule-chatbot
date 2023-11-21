@@ -17,7 +17,7 @@ export class CredentialManager {
         await this.updateCredentials();
       } catch (err) {
         log.warn("Could not get new token");
-        log.error(err);
+        log.error(err.message);
       }
     }
 
