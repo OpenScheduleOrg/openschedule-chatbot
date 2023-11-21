@@ -1,5 +1,5 @@
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import Messages from "../messages";
 
@@ -9,7 +9,7 @@ export class YouAreWelcomeConversation implements IConversation {
   constructor(private readonly optionsConversation: IConversation) {}
 
   async ask(session: UserSession): Promise<void> {
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {

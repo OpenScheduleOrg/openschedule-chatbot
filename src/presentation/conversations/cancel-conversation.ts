@@ -1,6 +1,6 @@
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { AppointmentService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
@@ -27,7 +27,8 @@ export class CancelConversation implements IConversation {
       ),
       buttons: Messages.SNBUTTONS,
     });
-    session.conversation = this;
+
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
@@ -50,7 +51,7 @@ export class CancelConversation implements IConversation {
       session.data.appointment = undefined;
       await this.youAreWelcomeConversation.ask(session);
     } else if (clean_text == "nao" || clean_text == 2) {
-      await session.conversation_stack.pop()?.ask(session);
+      await session.lastConversation().ask(session);
     } else await this.send(session.id, { text: Messages.SORRYNOTUDERSTAND });
   }
 }

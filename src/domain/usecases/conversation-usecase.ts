@@ -1,4 +1,4 @@
-import { UserSession } from "../models/user-sesssion";
+import { UserSession } from "../../core/user-sesssion";
 
 export interface IConversation {
   ask?(

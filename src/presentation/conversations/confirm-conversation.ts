@@ -1,5 +1,5 @@
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
 import Messages from "../messages";
@@ -19,7 +19,7 @@ export class ConfirmConversation implements IConversation {
       text: complement,
       buttons: Messages.SNBUTTONS,
     });
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {

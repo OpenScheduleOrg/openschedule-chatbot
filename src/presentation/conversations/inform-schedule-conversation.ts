@@ -1,7 +1,7 @@
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicModel } from "@/domain/models";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { CalendarService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { formatISO } from "date-fns";
@@ -31,7 +31,7 @@ export class InformScheduleConversation implements IConversation {
     });
 
     if (!schedules.length) {
-      return await session.conversation_stack.pop()?.ask(session, {
+      return await session.lastConversation().ask(session, {
         complement: Messages.INVALIDDAY,
       });
     }
@@ -66,7 +66,7 @@ export class InformScheduleConversation implements IConversation {
       buttons
     });
 
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
@@ -80,7 +80,7 @@ export class InformScheduleConversation implements IConversation {
       clean_text == "voltar" ||
       clean_text == "outro dia"
     )
-      return await session.conversation_stack.pop()?.ask(session);
+      return await session.lastConversation().ask(session);
 
     const schedule = session.data.schedules.find(
       (sc) => sc.id == Number(clean_text)
@@ -89,7 +89,6 @@ export class InformScheduleConversation implements IConversation {
       return await this.ask(session, { complement: Messages.INVALIDSCHEDULE });
 
     session.data.schedule = schedule;
-    session.conversation_stack.push(this);
     await this.confirmAppointmentConversation.ask(session);
   }
 }

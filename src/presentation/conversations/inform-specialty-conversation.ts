@@ -1,6 +1,6 @@
 import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicModel } from "@/domain/models";
-import { UserSession } from "@/domain/models/user-sesssion";
+import { UserSession } from "@/core/user-sesssion";
 import { CalendarService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { TypeSend } from "../interfaces";
@@ -51,7 +51,7 @@ export class InformSpecialtyConversation implements IConversation {
       buttons: buttons,
     });
 
-    session.conversation = this;
+    session.setConversation(this);
   }
 
   async answer(session: UserSession, { clean_text }): Promise<void> {
@@ -61,7 +61,7 @@ export class InformSpecialtyConversation implements IConversation {
     }
 
     if (clean_text == "volta" || clean_text == "voltar")
-      return await session.conversation_stack.pop()?.ask(session);
+      return await session.lastConversation().ask(session);
 
     const specialty_id = Number(clean_text);
 
@@ -70,7 +70,6 @@ export class InformSpecialtyConversation implements IConversation {
 
     session.data.specialty_id = specialty_id;
 
-    session.conversation_stack = [this];
     await this.informDayConversation.ask(session);
   }
 }

@@ -5,8 +5,7 @@ import {MessageTemplate} from "@/presentation/models";
 import {TypeRead} from "@/presentation/interfaces";
 import {onlyNumber} from "@/common/helpers";
 import {MessageApp} from "@/presentation/apps";
-
-log = log.child({ app: "whatsapp" })
+import { Logger } from "winston";
 
 export class Whatsapp implements MessageApp {
     sock : any;
@@ -16,8 +15,10 @@ export class Whatsapp implements MessageApp {
     [jid: string]: {[option: string]: string} 
     } = {};
 
+    constructor(private readonly logger: Logger) { }
+
     send = async (id : string, message : MessageTemplate) => {
-        log.info("send message to " + id)
+        this.logger.info("send message to " + id)
 
         id = "55" + id + "@s.whatsapp.net";
         if (message.text) 
@@ -69,15 +70,15 @@ export class Whatsapp implements MessageApp {
                     if ((lastDisconnect ?. error as Boom) ?. output ?. statusCode !== DisconnectReason.loggedOut) {
                         this.connect();
                     } else {
-                        log.info("Connection closed. You are logged out.");
+                        this.logger.info("Connection closed. You are logged out.");
                     }
                 }
-                log.info("connection update");
+                this.logger.info("connection update");
             }
 
             if (events["chats.set"]) {
                 const {chats, isLatest} = events["chats.set"];
-                log.info(`recv ${
+                this.logger.info(`recv ${
                     chats.length
                 } chats (is latest: ${isLatest})`);
             }
@@ -88,7 +89,7 @@ export class Whatsapp implements MessageApp {
 
             if (events["messages.set"]) {
                 const {messages, isLatest} = events["messages.set"];
-                log.info(`recv ${
+                this.logger.info(`recv ${
                     messages.length
                 } messages (is latest: ${isLatest})`);
             }
@@ -115,7 +116,7 @@ export class Whatsapp implements MessageApp {
 
             delete this.current_options[msg.key.remoteJid];
             const phone_number = onlyNumber(msg.key.remoteJid);
-            log.info({phone_number, text});
+            this.logger.info({phone_number, text});
 
             await this.read(phone_number, {text, timestamp: msg.messageTimestamp as number});
         }
