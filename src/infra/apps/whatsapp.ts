@@ -6,6 +6,8 @@ import {TypeRead} from "@/presentation/interfaces";
 import {onlyNumber} from "@/common/helpers";
 import {MessageApp} from "@/presentation/apps";
 
+log = log.child({ app: "whatsapp" })
+
 export class Whatsapp implements MessageApp {
     sock : any;
     read : TypeRead;
@@ -15,6 +17,8 @@ export class Whatsapp implements MessageApp {
     } = {};
 
     send = async (id : string, message : MessageTemplate) => {
+        log.info("send message to " + id)
+
         id = "55" + id + "@s.whatsapp.net";
         if (message.text) 
             message.text = message.text.replaceAll("**", "*");
@@ -65,15 +69,15 @@ export class Whatsapp implements MessageApp {
                     if ((lastDisconnect ?. error as Boom) ?. output ?. statusCode !== DisconnectReason.loggedOut) {
                         this.connect();
                     } else {
-                        console.log("Connection closed. You are logged out.");
+                        log.info("Connection closed. You are logged out.");
                     }
                 }
-                console.log("connection update", update);
+                log.info("connection update");
             }
 
             if (events["chats.set"]) {
                 const {chats, isLatest} = events["chats.set"];
-                console.log(`recv ${
+                log.info(`recv ${
                     chats.length
                 } chats (is latest: ${isLatest})`);
             }
@@ -84,7 +88,7 @@ export class Whatsapp implements MessageApp {
 
             if (events["messages.set"]) {
                 const {messages, isLatest} = events["messages.set"];
-                console.log(`recv ${
+                log.info(`recv ${
                     messages.length
                 } messages (is latest: ${isLatest})`);
             }
@@ -110,8 +114,10 @@ export class Whatsapp implements MessageApp {
             text = (current_option && current_option[text?.trim()]) || text;
 
             delete this.current_options[msg.key.remoteJid];
+            const phone_number = onlyNumber(msg.key.remoteJid);
+            log.info({phone_number, text});
 
-            await this.read(onlyNumber(msg.key.remoteJid), {text, timestamp: msg.messageTimestamp as number});
+            await this.read(phone_number, {text, timestamp: msg.messageTimestamp as number});
         }
     }
 }

@@ -70,7 +70,7 @@ export class HttpClient {
     error: AxiosError<MessageResponse | ValidationsResponse>
   ): Promise<any> => {
     const res = error.response;
-    console.error(error);
+    log.error(error);
 
     if (res) {
       if (res.status == 400)
