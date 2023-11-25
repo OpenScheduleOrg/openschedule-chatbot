@@ -18,3 +18,5 @@ export * from "./confirm-appointment-conversation";
 export * from "./appointments-conversation";
 export * from "./appointment-conversation";
 export * from "./cancel-conversation";
+
+export * from "./inform-feedback-conversation";
