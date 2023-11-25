@@ -35,7 +35,7 @@ export default {
   SHOWAPPOINTMENT:
     "Você possui o seguinte agendamento:\n\n**Especialidade**: {0}\n**Profissional**: {1}\n**Dia**: {2}\n**Horário**: {3}\n\nGostaria de?",
   INFORMFEEDBACK:
-    "Foi um prazer atender você por aqui😁 \n Para me ajudar a melhorar, qual nota, de 1 a 5, você atribui ao meu atendimento?",
+    "Foi um prazer atender você por aqui 😁 \nPara me ajudar a melhorar, qual nota, de 1 a 5, você atribui ao meu atendimento?",
   INVALIDFEEDBACK:
     "Informe um feedback válido.",
 };
