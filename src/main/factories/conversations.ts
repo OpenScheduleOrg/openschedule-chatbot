@@ -18,6 +18,7 @@ import {
   WelcomeBackConversation,
   YouAreWelcomeConversation,
   InformCpfConversation,
+  InformFeedbackConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
 import {
