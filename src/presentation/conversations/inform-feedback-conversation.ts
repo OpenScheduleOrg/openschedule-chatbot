@@ -10,7 +10,10 @@ export class InformFeedbackConversation implements IConversation {
   aboutClinicConversation: IConversation;
   conversations: TypeConvesations = {};
 
-  constructor(private readonly send: TypeSend) {}
+  constructor(
+    private readonly send: TypeSend,
+    private readonly youAreWelcomeConversation: IConversation
+    ) {}
 
   async ask(
     session: UserSession,
@@ -31,14 +34,18 @@ export class InformFeedbackConversation implements IConversation {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
     
-    if (clean_text < 1 || clean_text > 5){
+    const textIsNumeric = !isNaN(clean_text);
+    
+    if (!textIsNumeric || clean_text <= 1 || clean_text > 5){
         await this.ask(session, {
             complement: Messages.INVALIDFEEDBACK,
             title: undefined
         })
     }
     else{
-        //ADD CODE TO FIREBASE
+      //ADD CODE TO FIREBASE
+      this.send(session.id, { text: "Muito obrigado!" });
+      this.youAreWelcomeConversation.ask(session);
     }
   }
 }
