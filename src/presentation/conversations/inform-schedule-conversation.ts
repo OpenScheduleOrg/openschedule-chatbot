@@ -1,11 +1,11 @@
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
 import { ClinicModel } from "@/domain/models";
-import { UserSession } from "@/core/user-sesssion";
+import { UserSession } from "@/domain/session/user-session";
 import { CalendarService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { formatISO } from "date-fns";
-import { TypeSend } from "../interfaces";
+import { TypeSend } from "../session";
 import Messages from "../messages";
 
 export class InformScheduleConversation implements IConversation {

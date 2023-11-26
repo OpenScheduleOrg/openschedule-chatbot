@@ -2,7 +2,7 @@ import {Boom} from "@hapi/boom";
 import makeWASocket, {delay, DisconnectReason, proto, useMultiFileAuthState} from "@whiskeysockets/baileys";
 
 import {MessageTemplate} from "@/presentation/models";
-import {TypeRead} from "@/presentation/interfaces";
+import {TypeRead} from "@/presentation/session";
 import {onlyNumber} from "@/common/helpers";
 import {MessageApp} from "@/presentation/apps";
 import { Logger } from "winston";

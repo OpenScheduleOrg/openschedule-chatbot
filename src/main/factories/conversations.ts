@@ -20,7 +20,7 @@ import {
   InformCpfConversation,
   InformFeedbackConversation,
 } from "@/presentation/conversations";
-import { TypeSend } from "@/presentation/interfaces";
+import { TypeSend } from "@/presentation/session";
 import {
   appointmentService,
   calendarService,

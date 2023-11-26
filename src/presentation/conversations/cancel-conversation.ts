@@ -1,9 +1,9 @@
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/core/user-sesssion";
+import { UserSession } from "@/domain/session/user-session";
 import { AppointmentService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
-import { TypeSend } from "../interfaces";
+import { TypeSend } from "../session";
 import Messages from "../messages";
 
 export class CancelConversation implements IConversation {

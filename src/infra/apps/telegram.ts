@@ -2,7 +2,7 @@ import {Telegraf, Context, Markup} from "telegraf";
 import {message} from "telegraf/filters";
 import {MessageApp} from "@/presentation/apps";
 import {MessageTemplate} from "@/presentation/models";
-import {TypeRead} from "@/presentation/interfaces";
+import {TypeRead} from "@/presentation/session";
 import {InlineKeyboardMarkup, InlineKeyboardButton} from "telegraf/typings/core/types/typegram";
 import { AppDataStorage } from "./app-data-storage";
 import { Logger } from "winston";

@@ -3,7 +3,7 @@ import { ISessionManager } from "@/domain/interfaces";
 import { PatientService } from "@/domain/services";
 import { IConversation } from "@/domain/usecases";
 import { MessageApp } from "@/presentation/apps";
-import { IContextManager, TypeSend, TypeRead } from "./interfaces";
+import { IContextManager, TypeSend, TypeRead } from "./session";
 import Messages from "./messages";
 import { MessageInfo } from "./models";
 import { Logger } from "winston";

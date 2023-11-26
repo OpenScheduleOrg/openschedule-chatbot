@@ -1,6 +1,6 @@
 import { ClinicModel, PatientModel } from "../models";
-import { UserSession } from "../../core/user-sesssion";
-import { IConversation } from "../usecases";
+import { UserSession } from "@/domain/session/user-session";
+import { IConversation } from "@/domain/usecases";
 
 export interface ISessionManager {
   clinic: ClinicModel;

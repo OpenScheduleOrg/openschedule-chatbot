@@ -2,9 +2,9 @@ import { format, formatISO } from "date-fns";
 
 import { WeekdayMinimal } from "@/common/constants";
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/core/user-sesssion";
+import { UserSession } from "@/domain/session/user-session";
 import { IConversation } from "@/domain/usecases";
-import { TypeSend } from "../interfaces";
+import { TypeSend } from "../session";
 import { AppointmentService } from "@/domain/services";
 import { ClinicModel } from "@/domain/models";
 import Messages from "../messages";

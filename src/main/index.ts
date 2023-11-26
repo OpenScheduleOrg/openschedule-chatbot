@@ -1,7 +1,7 @@
 import "@/common/prototype";
 import "@/common/logging";
 
-import { SessionManager } from "@/core";
+import { SessionManager } from "@/domain/session";
 import { Whatsapp, Telegram } from "@/infra/apps";
 import { ContextManager } from "@/presentation";
 import config from "@/main/config";

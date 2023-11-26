@@ -1,4 +1,4 @@
-import { UserSession } from "../../core/user-sesssion";
+import { UserSession } from "@/domain/session/user-session";
 
 export interface IConversation {
   ask?(

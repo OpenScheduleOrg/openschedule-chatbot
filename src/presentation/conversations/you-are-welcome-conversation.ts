@@ -1,5 +1,5 @@
 import { TypeConvesations } from "@/domain/interfaces";
-import { UserSession } from "@/core/user-sesssion";
+import { UserSession } from "@/domain/session/user-session";
 import { IConversation } from "@/domain/usecases";
 import Messages from "../messages";
 
