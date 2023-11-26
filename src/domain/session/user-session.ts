@@ -1,9 +1,9 @@
 import { Logger } from "winston";
 import { IConversation } from "../../presentation/conversations";
-import { AppointmentModel } from "../models/appointment-model";
-import { PatientModel } from "../models/patient-model";
-import { ScheduleModel } from "../models/schedule-model";
-import { SpecialtyModel } from "../models/specialty-model";
+import { AppointmentModel } from "../../data/services/models/appointment-model";
+import { PatientModel } from "../../data/services/models/patient-model";
+import { ScheduleModel } from "../../data/services/models/schedule-model";
+import { SpecialtyModel } from "../../data/services/models/specialty-model";
 
 export class UserSession {
 

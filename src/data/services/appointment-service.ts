@@ -1,8 +1,8 @@
-import { HttpClient } from "@/data/http/http-client";
-import { AppointmentResponseModel } from "@/data/models";
+import { HttpClient } from "@/infra/http/http-client";
+import { AppointmentResponseModel } from "@/data/services/responses";
 import { parseISO } from "date-fns";
-import { AppointmentModel } from "../models";
-import { AppointmentBody, AppointmentFilter } from "../params";
+import { AppointmentModel } from "./models";
+import { AppointmentBody, AppointmentFilter } from "./params";
 
 export class AppointmentService {
   constructor(private readonly httpClient: HttpClient) {}

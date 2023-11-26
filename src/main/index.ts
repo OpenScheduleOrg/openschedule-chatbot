@@ -2,14 +2,14 @@ import "@/common/prototype";
 import "@/common/logging";
 
 import { SessionManager } from "@/domain/session";
-import { Whatsapp, Telegram } from "@/infra/apps";
+import { Whatsapp, Telegram } from "@/domain/apps";
 import { ContextManager } from "@/presentation";
 import config from "@/main/config";
 import { clinicService, patientService } from "@/main/factories/services";
 import { buildConversations } from "./factories";
 
-import { ClinicModel } from "@/domain/models";
-import { LocalAppDataStorage } from "@/infra/app-data-storage";
+import { ClinicModel } from "@/data/services/models";
+import { LocalAppDataStorage } from "@/data/app-data-storage";
 
 
 async function main(): Promise<void> {

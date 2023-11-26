@@ -7,7 +7,7 @@ import {
   UnexpectedError,
   ResourceNotFoundError,
 } from "../errors";
-import { MessageResponse, ValidationsResponse } from "../models";
+import { MessageResponse, ValidationsResponse } from "../../data/services/responses";
 
 export type HttpRequest = {
   body?: any;

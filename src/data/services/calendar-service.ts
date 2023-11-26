@@ -1,7 +1,7 @@
-import { HttpClient } from "@/data/http/http-client";
-import { ScheduleResponseModel, SpecialtyResponseModel } from "@/data/models";
-import { ScheduleModel, SpecialtyModel } from "../models";
-import { CalendarParams } from "../params";
+import { HttpClient } from "@/infra/http/http-client";
+import { ScheduleResponseModel, SpecialtyResponseModel } from "@/data/services/responses";
+import { ScheduleModel, SpecialtyModel } from "./models";
+import { CalendarParams } from "./params";
 import { parseISO } from "date-fns";
 
 export class CalendarService {

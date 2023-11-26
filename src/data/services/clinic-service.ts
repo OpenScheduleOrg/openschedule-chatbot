@@ -1,7 +1,7 @@
-import { HttpClient } from "@/data/http/http-client";
-import { ClinicResponseModel } from "@/data/models";
-import { ClinicModel } from "../models";
-import { ClinicBody, ClinicFilter } from "../params";
+import { HttpClient } from "@/infra/http/http-client";
+import { ClinicResponseModel } from "@/data/services/responses";
+import { ClinicModel } from "./models";
+import { ClinicBody, ClinicFilter } from "./params";
 
 export class ClinicService {
   constructor(private readonly httpClient: HttpClient) {}

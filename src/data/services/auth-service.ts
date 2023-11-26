@@ -1,7 +1,7 @@
-import { AuthInfo } from "../models";
-import { TokenPayload, TokenResponse } from "@/data/models";
-import { HttpClient } from "@/data/http/http-client";
-import { Credentials } from "../params";
+import { AuthInfo } from "./models";
+import { TokenPayload, TokenResponse } from "@/data/services/responses";
+import { HttpClient } from "@/infra/http/http-client";
+import { Credentials } from "./params";
 
 export class AuthService {
   constructor(private readonly httpClient: HttpClient) {}

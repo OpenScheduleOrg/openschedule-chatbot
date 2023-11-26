@@ -1,6 +1,6 @@
 import { slugify } from "@/common/helpers";
 import { ISessionManager } from "@/presentation/session";
-import { PatientService } from "@/domain/services";
+import { PatientService } from "@/data/services";
 import { IConversation } from "@/presentation/conversations";
 import { MessageApp } from "@/presentation/apps";
 import Messages from "./messages";

@@ -1,4 +1,4 @@
-import { PatientService } from "@/domain/services";
+import { PatientService } from "@/data/services";
 
 class MockPatientService extends PatientService {
   create = jest.fn();

@@ -1,4 +1,4 @@
-import { AppDataStorage } from "@/infra/apps/app-data-storage";
+import { AppDataStorage } from "@/domain/apps/app-data-storage";
 import fs from "fs/promises"
 import { existsSync } from "fs"
 import path from "path"

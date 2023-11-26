@@ -1,4 +1,4 @@
-import { ValidationsResponse } from "../models";
+import { ValidationsResponse } from "../../data/services/responses";
 
 export class ServerValidationError extends Error {
   constructor(readonly validations: ValidationsResponse) {

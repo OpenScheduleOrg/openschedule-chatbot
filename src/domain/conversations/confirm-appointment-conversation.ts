@@ -1,7 +1,7 @@
 import { Month, Weekday } from "@/common/constants";
 import { TypeConvesations } from "@/presentation/session";
 import { UserSession } from "@/domain/session/user-session";
-import { AppointmentService } from "@/domain/services";
+import { AppointmentService } from "@/data/services";
 import { IConversation } from "@/presentation/conversations";
 import { format } from "date-fns";
 import { TypeSend } from "@/presentation/apps/send-read";

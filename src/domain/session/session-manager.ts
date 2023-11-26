@@ -1,5 +1,5 @@
 import { ISessionManager } from "@/presentation/session";
-import { ClinicModel, PatientModel } from "@/domain/models";
+import { ClinicModel, PatientModel } from "@/data/services/models";
 import { UserSession } from "@/domain/session/user-session";
 import { IConversation } from "@/presentation/conversations";
 import { Logger } from "winston";

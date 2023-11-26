@@ -1,6 +1,6 @@
 import { manyIndexes } from "@/common/helpers";
 import { TypeConvesations } from "@/presentation/session";
-import { ClinicModel } from "@/domain/models";
+import { ClinicModel } from "@/data/services/models";
 import {
   AboutClinicConversation,
   AppointmentConversation,

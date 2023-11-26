@@ -1,7 +1,7 @@
-import { HttpClient } from "@/data/http/http-client";
-import { PatientResponseModel } from "@/data/models";
-import { PatientModel } from "../models";
-import { PatientBody, PatientFilter } from "../params";
+import { HttpClient } from "@/infra/http/http-client";
+import { PatientResponseModel } from "@/data/services/responses";
+import { PatientModel } from "./models";
+import { PatientBody, PatientFilter } from "./params";
 
 import { parseISO } from "date-fns";
 

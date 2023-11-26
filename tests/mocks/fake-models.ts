@@ -1,4 +1,4 @@
-import { ClinicModel, PatientModel } from "@/domain/models";
+import { ClinicModel, PatientModel } from "@/data/services/models";
 
 export const makeFakeClinic = (): ClinicModel => ({
   id: 1,

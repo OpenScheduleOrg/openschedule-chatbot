@@ -1,6 +1,6 @@
-import { ResourceNotFoundError } from "@/data/errors";
+import { ResourceNotFoundError } from "@/infra/errors";
 import { ISessionManager } from "@/presentation/session";
-import { PatientService } from "@/domain/services";
+import { PatientService } from "@/data/services";
 import { IConversation } from "@/presentation/conversations";
 import { MessageApp } from "@/presentation/apps";
 import { ContextManager } from "@/presentation";

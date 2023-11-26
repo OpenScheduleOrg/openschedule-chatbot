@@ -5,8 +5,8 @@ import { TypeConvesations } from "@/presentation/session";
 import { UserSession } from "@/domain/session/user-session";
 import { IConversation } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/apps/send-read";
-import { AppointmentService } from "@/domain/services";
-import { ClinicModel } from "@/domain/models";
+import { AppointmentService } from "@/data/services";
+import { ClinicModel } from "@/data/services/models";
 import Messages from "@/presentation/messages";
 
 export class AppointmentsConversation implements IConversation {

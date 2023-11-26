@@ -1,6 +1,6 @@
 import { TypeConvesations } from "@/presentation/session";
 import { UserSession } from "@/domain/session/user-session";
-import { PatientService } from "@/domain/services";
+import { PatientService } from "@/data/services";
 import { IConversation } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/apps/send-read";
 import Messages from "@/presentation/messages";

@@ -1,5 +1,5 @@
 import { TypeConvesations } from "@/presentation/session";
-import { ClinicModel } from "@/domain/models";
+import { ClinicModel } from "@/data/services/models";
 import { UserSession } from "@/domain/session/user-session";
 import { IConversation } from "@/presentation/conversations";
 import Messages from "@/presentation/messages";
