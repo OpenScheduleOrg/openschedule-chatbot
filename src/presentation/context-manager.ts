@@ -1,14 +1,14 @@
 import { slugify } from "@/common/helpers";
-import { ISessionManager } from "@/domain/interfaces";
+import { ISessionManager } from "@/presentation/session";
 import { PatientService } from "@/domain/services";
-import { IConversation } from "@/domain/usecases";
+import { IConversation } from "@/presentation/conversations";
 import { MessageApp } from "@/presentation/apps";
-import { IContextManager, TypeSend, TypeRead } from "./session";
 import Messages from "./messages";
-import { MessageInfo } from "./models";
 import { Logger } from "winston";
+import { TypeRead, TypeSend } from "./apps/send-read";
+import { MessageInfo } from "./apps/message-info";
 
-export class ContextManager implements IContextManager {
+export class ContextManager {
   send: TypeSend;
 
   constructor(

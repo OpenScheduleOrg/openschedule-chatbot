@@ -1,10 +1,10 @@
-import { TypeConvesations } from "@/domain/interfaces";
+import { TypeConvesations } from "@/presentation/session";
 import { ClinicModel } from "@/domain/models";
 import { UserSession } from "@/domain/session/user-session";
 import { CalendarService } from "@/domain/services";
-import { IConversation } from "@/domain/usecases";
-import { TypeSend } from "../session";
-import Messages from "../messages";
+import { IConversation } from "@/presentation/conversations";
+import { TypeSend } from "@/presentation/apps/send-read";
+import Messages from "@/presentation/messages";
 
 export class InformSpecialtyConversation implements IConversation {
   conversations: TypeConvesations = {};

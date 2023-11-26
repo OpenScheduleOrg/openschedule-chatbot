@@ -1,11 +1,10 @@
 import {Boom} from "@hapi/boom";
 import makeWASocket, {delay, DisconnectReason, proto, useMultiFileAuthState} from "@whiskeysockets/baileys";
 
-import {MessageTemplate} from "@/presentation/models";
-import {TypeRead} from "@/presentation/session";
 import {onlyNumber} from "@/common/helpers";
-import {MessageApp} from "@/presentation/apps";
+import {MessageApp, MessageTemplate} from "@/presentation/apps";
 import { Logger } from "winston";
+import { TypeRead } from "@/presentation/apps/send-read";
 
 export class Whatsapp implements MessageApp {
     sock : any;

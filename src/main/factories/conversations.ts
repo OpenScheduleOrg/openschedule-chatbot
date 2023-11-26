@@ -1,5 +1,5 @@
 import { manyIndexes } from "@/common/helpers";
-import { TypeConvesations } from "@/domain/interfaces";
+import { TypeConvesations } from "@/presentation/session";
 import { ClinicModel } from "@/domain/models";
 import {
   AboutClinicConversation,
@@ -18,14 +18,14 @@ import {
   WelcomeBackConversation,
   YouAreWelcomeConversation,
   InformCpfConversation,
-  InformFeedbackConversation,
-} from "@/presentation/conversations";
-import { TypeSend } from "@/presentation/session";
+  InformFeedbackConversation
+} from "@/domain/conversations";
 import {
   appointmentService,
   calendarService,
   patientService,
 } from "./services";
+import { TypeSend } from "@/presentation/apps";
 
 export const buildConversations = (
   send: TypeSend,

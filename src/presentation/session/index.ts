@@ -1,2 +1,2 @@
-export * from "@/presentation/session/send-read";
-export * from "@/presentation/session/context-manager";
+export * from "./session-manager";
+export * from "./type-conversations";

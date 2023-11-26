@@ -1,5 +1,5 @@
 import { Logger } from "winston";
-import { IConversation } from "../usecases";
+import { IConversation } from "../../presentation/conversations";
 import { AppointmentModel } from "../models/appointment-model";
 import { PatientModel } from "../models/patient-model";
 import { ScheduleModel } from "../models/schedule-model";

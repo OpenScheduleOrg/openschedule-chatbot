@@ -1,11 +1,11 @@
 import { Month, Weekday } from "@/common/constants";
-import { TypeConvesations } from "@/domain/interfaces";
+import { TypeConvesations } from "@/presentation/session";
 import { UserSession } from "@/domain/session/user-session";
 import { AppointmentService } from "@/domain/services";
-import { IConversation } from "@/domain/usecases";
+import { IConversation } from "@/presentation/conversations";
 import { format } from "date-fns";
-import { TypeSend } from "../session";
-import Messages from "../messages";
+import { TypeSend } from "@/presentation/apps/send-read";
+import Messages from "@/presentation/messages";
 
 export class ConfirmAppointmentConversation implements IConversation {
   conversations: TypeConvesations = {};

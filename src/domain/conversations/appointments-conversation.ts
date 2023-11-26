@@ -1,13 +1,13 @@
 import { format, formatISO } from "date-fns";
 
 import { WeekdayMinimal } from "@/common/constants";
-import { TypeConvesations } from "@/domain/interfaces";
+import { TypeConvesations } from "@/presentation/session";
 import { UserSession } from "@/domain/session/user-session";
-import { IConversation } from "@/domain/usecases";
-import { TypeSend } from "../session";
+import { IConversation } from "@/presentation/conversations";
+import { TypeSend } from "@/presentation/apps/send-read";
 import { AppointmentService } from "@/domain/services";
 import { ClinicModel } from "@/domain/models";
-import Messages from "../messages";
+import Messages from "@/presentation/messages";
 
 export class AppointmentsConversation implements IConversation {
   conversations: TypeConvesations = {};

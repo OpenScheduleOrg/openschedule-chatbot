@@ -1,8 +1,8 @@
-import { TypeConvesations } from "@/domain/interfaces";
+import { TypeConvesations } from "@/presentation/session";
 import { UserSession } from "@/domain/session/user-session";
-import { IConversation } from "@/domain/usecases";
-import { TypeSend } from "../session";
-import Messages from "../messages";
+import { IConversation } from "@/presentation/conversations";
+import { TypeSend } from "@/presentation/apps/send-read";
+import Messages from "@/presentation/messages";
 
 export class NewUserConversation implements IConversation {
   conversations: TypeConvesations = {};
