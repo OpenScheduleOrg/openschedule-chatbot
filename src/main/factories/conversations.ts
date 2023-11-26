@@ -18,6 +18,7 @@ import {
   WelcomeBackConversation,
   YouAreWelcomeConversation,
   InformCpfConversation,
+  InformFeedbackConversation,
 } from "@/presentation/conversations";
 import { TypeSend } from "@/presentation/interfaces";
 import {
@@ -74,11 +75,16 @@ export const buildConversations = (
   const youAreWelcomeConversation = new YouAreWelcomeConversation(
     optionsConversation
   );
+  
+  const informFeedbackConversation = new InformFeedbackConversation(
+    send,
+    youAreWelcomeConversation
+  );
 
   const confirmAppointmentConversation = new ConfirmAppointmentConversation(
     send,
     appointmentService,
-    youAreWelcomeConversation
+    informFeedbackConversation
   );
 
   const informScheduleConversation = new InformScheduleConversation(
