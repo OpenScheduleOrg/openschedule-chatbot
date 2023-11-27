@@ -1,0 +1,1 @@
+export type Feedback = { phone: string, timestamp?: Date, message: Text, readed?: boolean };
