@@ -18,7 +18,7 @@ import {
   WelcomeBackConversation,
   YouAreWelcomeConversation,
   InformCpfConversation,
-  InformFeedbackConversation
+  InformRatingConversation
 } from "@/domain/conversations";
 import {
   appointmentService,
@@ -26,6 +26,7 @@ import {
   patientService,
 } from "./services";
 import { TypeSend } from "@/presentation/apps";
+import { ratingRepository } from "./repositories";
 
 export const buildConversations = (
   send: TypeSend,
@@ -76,15 +77,16 @@ export const buildConversations = (
     optionsConversation
   );
   
-  const informFeedbackConversation = new InformFeedbackConversation(
+  const informRatingConversation = new InformRatingConversation(
     send,
+    ratingRepository,
     youAreWelcomeConversation
   );
 
   const confirmAppointmentConversation = new ConfirmAppointmentConversation(
     send,
     appointmentService,
-    informFeedbackConversation
+    informRatingConversation
   );
 
   const informScheduleConversation = new InformScheduleConversation(
