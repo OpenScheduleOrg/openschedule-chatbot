@@ -1,0 +1,1 @@
+export type Rating = { phone: string, timestamp?: Date, rate: number };
