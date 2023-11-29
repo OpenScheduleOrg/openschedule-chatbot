@@ -16,7 +16,7 @@ export default class FeedbackRepository implements Repository<Feedback, Feedback
         await this.database.insert(this.collection, data);
     }
     async update(data: Feedback): Promise<void> {
-        await this.database.insert(this.collection, data);
+        await this.database.update(this.collection, data);
     }
     async load(): Promise<Feedback[]> {
         return await this.database.load(this.collection);

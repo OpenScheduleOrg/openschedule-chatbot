@@ -15,7 +15,7 @@ export default class RatingRepository implements Repository<Rating, RatingFields
         await this.database.insert(this.collection, data);
     }
     async update(data: Rating): Promise<void> {
-        await this.database.insert(this.collection, data);
+        await this.database.update(this.collection, data);
     }
     async load(): Promise<Rating[]> {
         return await this.database.load(this.collection);
