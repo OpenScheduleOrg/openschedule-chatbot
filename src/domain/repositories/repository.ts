@@ -6,5 +6,5 @@ export interface Repository<Model, Fields> {
     load(): Promise<Model[]>
     find(query: Fields): Promise<Model[]>
 
-    findById(collection: string, id: string): Promise<Model>
+    findById(id: string): Promise<Model>
 }
