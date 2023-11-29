@@ -1,1 +1,1 @@
-export type User = { id: string, name: string, last_session: Date, last_feedback?: Date, last_rating: Date, telegram_id?: string, whatsapp_id?: string };
+export type User = { id: string, name: string, patient_id: number, last_session?: Date, last_feedback?: Date, last_rating?: Date, telegram_id?: string, whatsapp_id?: string };
