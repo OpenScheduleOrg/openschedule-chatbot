@@ -48,6 +48,8 @@ export class InformRatingConversation implements IConversation {
 
     await this.ratingRepository.insert({ phone: session.id, rate: Number(clean_text) });
 
+    session.last_rating = new Date();
+
     this.send(session.id, { text: "Muito obrigado!" });
     this.youAreWelcomeConversation.ask(session);
   }

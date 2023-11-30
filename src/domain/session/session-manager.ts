@@ -9,43 +9,62 @@ import { Repository } from "../repositories/repository";
 import { ResourceNotFoundError } from "@/infra/errors";
 
 export class SessionManager implements ISessionManager {
-  private sessions: { [id: string]: UserSession } = {};
+	private sessions: { [id: string]: UserSession } = {};
 
-  constructor(readonly clinic: ClinicModel, private readonly logger: Logger,
-    private readonly patientService: PatientService, private readonly userRepository: Repository<User, UserFields>
-  ) { }
+	constructor(readonly clinic: ClinicModel, private readonly logger: Logger,
+		private readonly patientService: PatientService, private readonly userRepository: Repository<User, UserFields>
+	) { }
 
-  async create(id: string): Promise<UserSession> {
-    let patient = undefined;
-    try {
-      patient = await this.patientService.getByPhone(id);
-    } catch (error) {
-      if (!(error instanceof ResourceNotFoundError))
-        throw error;
-    }
+	async create(id: string): Promise<UserSession> {
+		let patient = undefined;
+		try {
+			patient = await this.patientService.getByPhone(id);
+		} catch (error) {
+			if (!(error instanceof ResourceNotFoundError))
+				throw error;
+		}
 
-    let user = await this.userRepository.findById(id);
+		let user = await this.userRepository.findById(id);
 
-    if(patient && !user){ 
-      user = { id, name: patient.name, patient_id: patient.id };
-      await this.userRepository.insert(user);
-    } else if(patient && user && patient.name != user.name && patient.id && user.id) {
-      user.patient_id= patient.id;
-      user.name = patient.name;
-      this.userRepository.update(user);
-    }
+		if (patient && !user) {
+			user = { id, name: patient.name, patient_id: patient.id };
+			await this.userRepository.insert(user);
+		} else if (patient && user && patient.name != user.name && patient.id && user.id) {
+			user.patient_id = patient.id;
+			user.name = patient.name;
+		}
 
-    const userSession = new UserSession(user, this.logger.child({ user_id: id }))
+		user.last_interaction = new Date();
 
-    this.sessions[id] = userSession;
-    return userSession;
-  }
+		this.userRepository.update(user);
 
-  get(id: string): UserSession {
-    return this.sessions[id];
-  }
+		const userSession = new Proxy(new UserSession(user, this.logger.child({ user_id: id })), { set: this.updateUserProxy })
 
-  close(id: string): void {
-    delete this.sessions[id];
-  }
+		this.sessions[id] = userSession;
+		return userSession;
+	}
+
+	updateUserProxy = (target, prop, val): boolean => {
+		if(prop == "last_interaction")
+			this.userRepository.update({ id: target.id, last_interaction: val} as User)
+		else if(prop == "last_rating")
+				this.userRepository.update({ id: target.id, last_rating: val} as User)
+		else if(prop == "last_feedback")
+				this.userRepository.update({ id: target.id, last_feedback: val} as User)
+		else if(prop == "name")
+			this.userRepository.update({ id: target.id, name: val} as User)
+		else if(prop == "patient_id")
+			this.userRepository.update({ id: target.id, patient_id: val} as User)
+
+		target[prop] = val;
+		return true;
+	}
+
+	get(id: string): UserSession {
+		return this.sessions[id];
+	}
+
+	close(id: string): void {
+		delete this.sessions[id];
+	}
 }
