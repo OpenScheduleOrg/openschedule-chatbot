@@ -1,4 +1,4 @@
-export * from "./options-covesation";
+export * from "./options-conversation";
 export * from "./new-user-conversation";
 export * from "./welcome-back-conversation";
 export * from "./you-are-welcome-conversation";
@@ -19,3 +19,4 @@ export * from "./appointments-conversation";
 export * from "./appointment-conversation";
 export * from "./cancel-conversation";
 export * from "./inform-rating-conversation";
+export * from "./inform-feedback-conversation";

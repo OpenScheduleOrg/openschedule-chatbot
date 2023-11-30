@@ -16,8 +16,6 @@ export class YouAreWelcomeConversation implements IConversation {
     if (this.conversations[clean_text])
       return await this.conversations[clean_text].ask(session);
 
-    await this.optionsConversation.ask(session, {
-      complement: Messages.YOUAREWELCOME,
-    });
+    await this.optionsConversation.ask(session);
   }
 }

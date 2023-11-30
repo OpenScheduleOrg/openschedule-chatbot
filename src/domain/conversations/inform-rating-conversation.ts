@@ -8,25 +8,23 @@ import { RatingFields } from "../repositories/fields";
 import { Rating } from "../repositories/models";
 
 export class InformRatingConversation implements IConversation {
-  newAppointmentEntry: IConversation;
-  appointmentsConversation: IConversation;
-  aboutClinicConversation: IConversation;
   conversations: TypeConvesations = {};
 
   constructor(
     private readonly send: TypeSend,
     private readonly ratingRepository: Repository<Rating, RatingFields>,
-    private readonly youAreWelcomeConversation: IConversation
+    private readonly youAreWelcomeConversation: IConversation,
+    private readonly informFeedbackConversation: IConversation
   ) { }
 
   async ask(
     session: UserSession,
     { complement } = { complement: undefined }
   ): Promise<void> {
-    if(complement)
+    if (complement)
       await this.send(session.id, { text: complement });
 
-    await this.send(session.id, { text: Messages.INFORMFEEDBACK });
+    await this.send(session.id, { text: Messages.INFORMRATING });
 
     session.setConversation(this);
   }
@@ -38,13 +36,16 @@ export class InformRatingConversation implements IConversation {
     const textIsNumeric = !isNaN(clean_text);
 
     if (!textIsNumeric || clean_text <= 1 || clean_text > 5)
-      return await this.ask(session, { complement: Messages.INVALIDFEEDBACK })
+      return await this.ask(session, { complement: Messages.INFORMRATING })
 
     await this.ratingRepository.insert({ phone: session.id, rate: Number(clean_text) });
 
     session.last_rating = new Date();
 
-    this.send(session.id, { text: "Muito obrigado!" });
-    this.youAreWelcomeConversation.ask(session);
+    await this.send(session.id, { text: "Muito obrigado!" });
+    if (session.requestFeedback())
+      await this.informFeedbackConversation.ask(session);
+    else
+      await this.youAreWelcomeConversation.ask(session);
   }
 }

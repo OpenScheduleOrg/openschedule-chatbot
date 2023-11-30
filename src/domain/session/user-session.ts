@@ -72,4 +72,8 @@ export class UserSession {
   requestRating(): boolean {
     return !this.last_rating || this.last_rating.addSeconds(config.REQUESTRATING_PERIOD * 24 * 60 * 60) < new Date();
   }
+
+  requestFeedback(): boolean {
+    return !this.last_feedback || this.last_feedback.addSeconds(config.REQUESTFEEDBACK_PERIOD * 24 * 60 * 60) < new Date();
+  }
 };

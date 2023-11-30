@@ -8,6 +8,7 @@ export class OptionsConversation implements IConversation {
   newAppointmentEntry: IConversation;
   appointmentsConversation: IConversation;
   aboutClinicConversation: IConversation;
+  informFeedbackConversation: IConversation;
   conversations: TypeConvesations = {};
 
   constructor(private readonly send: TypeSend) {}
@@ -16,9 +17,10 @@ export class OptionsConversation implements IConversation {
     session: UserSession,
     { complement, title } = { complement: undefined, title: undefined }
   ): Promise<void> {
-    await this.send(session.id, {
-      text: complement || Messages.ITFINE,
-    });
+    if(complement)
+      await this.send(session.id, {
+        text: complement || Messages.ITFINE,
+      });
 
     await this.send(session.id, {
       text: title || Messages.EASYACCESS,
@@ -37,6 +39,8 @@ export class OptionsConversation implements IConversation {
       await this.appointmentsConversation.ask(session);
     else if (clean_text == "3" || clean_text == "sobre clinica")
       await this.aboutClinicConversation.ask(session);
+    else if (clean_text == "4" || clean_text == "feedback")
+      await this.informFeedbackConversation.ask(session);
     else
       await this.ask(session, {
         complement: Messages.SORRYUDERSTAND,
