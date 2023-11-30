@@ -25,7 +25,7 @@ export class AppointmentsConversation implements IConversation {
     session: UserSession,
     { complement } = { complement: undefined }
   ): Promise<void> {
-    if (!session.patient)
+    if (!session.patient_id)
       return this.newUserConversation.ask(session, {
         complement: Messages.NEEDREGISTER,
       });
@@ -35,7 +35,7 @@ export class AppointmentsConversation implements IConversation {
 
     const appointments = await this.appointmentService.load({
       clinic_id: this.clinic.id,
-      patient_id: session.patient.id,
+      patient_id: session.patient_id,
       start_date: formatISO(now, { representation: "date" }),
       start_time: now.getHours() * 60 + now.getMinutes(),
     });

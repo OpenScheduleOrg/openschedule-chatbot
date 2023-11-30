@@ -12,7 +12,7 @@ export class InformCpfConversation implements IConversation {
     private readonly send: TypeSend,
     private readonly patientService: PatientService,
     private readonly optionsConversation: IConversation
-  ) {}
+  ) { }
 
   async ask(session: UserSession): Promise<void> {
     this.send(session.id, { text: Messages.INFORMCPF });
@@ -35,11 +35,15 @@ export class InformCpfConversation implements IConversation {
     const cpf = text.replace(/\D/g, "");
     if (!cpf.match(/^\d{11}$/))
       return this.send(session.id, { text: Messages.INVALIDCPF });
-    session.patient = await this.patientService.create({
+    var patient = await this.patientService.create({
       name: session.data.name,
       cpf: cpf,
       phone: session.id,
     });
+
+    session.patient_id = patient.id;
+    session.name = patient.name;
+
     await this.send(session.id, { text: Messages.SUCCESSREGISTER });
 
     await this.optionsConversation.ask(session, {

@@ -14,7 +14,6 @@ export class ContextManager {
   constructor(
     private readonly app: MessageApp,
     private readonly sessionManager: ISessionManager,
-    private readonly patientService: PatientService,
     private readonly newUserConversation: IConversation,
     private readonly welcomeBackConversation: IConversation,
     private readonly logger: Logger 
@@ -29,19 +28,11 @@ export class ContextManager {
       content.text = content.text.trim();
 
       if (!session) {
-        try {
-          const patient = await this.patientService.getByPhone(id);
-          session = this.sessionManager.create(id, this.welcomeBackConversation, patient);
-        } catch (error) {
-          session = this.sessionManager.create(id, this.newUserConversation, undefined);
-          return await session.getConversation().ask(session);
-        }
+          session = await this.sessionManager.create(id);
+          session.setConversation(session.patient_id ? this.welcomeBackConversation : this.newUserConversation)
       }
 
-      await session.getConversation().answer(session, {
-        text: content.text,
-        clean_text: slugify(content.text),
-      });
+      await session.getConversation().answer(session, { text: content.text, clean_text: slugify(content.text) });
     } catch (e) {
       this.logger.error(e.message);
       this.sessionManager.close(id);

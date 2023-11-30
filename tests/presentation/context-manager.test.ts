@@ -38,7 +38,6 @@ const makeSut = (): SutTypes => {
   const sut = new ContextManager(
     appMock,
     sessionManagerMock,
-    patientServiceMock,
     newUserConversationMock,
     welcomeBackConversationMock,
     logger

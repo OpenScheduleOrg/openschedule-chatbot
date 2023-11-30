@@ -33,11 +33,13 @@ export class InformRegistrationConversation implements IConversation {
             return await session.lastConversation().ask(session);
 
         const registration = text;
-        session.patient = await this.patientService.create({
+        const patient = await this.patientService.create({
             name: session.data.name,
             registration: registration,
             phone: session.id,
         });
+        session.patient_id = patient.id;
+        session.name = patient.name;
 
         await this.send(session.id, { text: Messages.SUCCESSREGISTER });
 

@@ -4,6 +4,7 @@ import { AppointmentModel } from "../../data/services/models/appointment-model";
 import { PatientModel } from "../../data/services/models/patient-model";
 import { ScheduleModel } from "../../data/services/models/schedule-model";
 import { SpecialtyModel } from "../../data/services/models/specialty-model";
+import { User } from "../repositories/models";
 
 export class UserSession {
 
@@ -16,19 +17,26 @@ export class UserSession {
     appointments?: AppointmentModel[];
     appointment?: AppointmentModel;
     specialties?: SpecialtyModel[];
+    patient?: PatientModel
   };
 
   private conversation: IConversation;
   private conversation_stack: IConversation[];
   private last_interaction: number; 
-  patient: PatientModel;
 
-  constructor(readonly id: string, patient: PatientModel, readonly logger: Logger) {
+  id: string;
+  name: string;
+  patient_id: number;
+  
+
+  constructor(user: User, readonly logger: Logger) {
     this.data = { }
     this.conversation = undefined;
     this.conversation_stack = []
     this.last_interaction = Date.now()
-    this.patient = patient;
+    this.id = user.id;
+    this.name = user.name;
+    this.patient_id = user.patient_id;
   }
 
   setConversation(conversation: IConversation) {

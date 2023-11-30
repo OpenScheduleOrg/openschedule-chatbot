@@ -81,7 +81,7 @@ export class ConfirmAppointmentConversation implements IConversation {
       });
     } else {
       await this.appointmentService.create({
-        patient_id: session.patient.id,
+        patient_id: session.patient_id,
         scheduled_day: session.data.day,
         start_time: session.data.schedule.start_time,
         acting_id: session.data.schedule.acting_id,
