@@ -4,7 +4,7 @@ import "@/common/logging";
 import { SessionManager } from "@/domain/session";
 import { Whatsapp, Telegram } from "@/domain/apps";
 import { ContextManager } from "@/presentation";
-import config from "@/main/config";
+import config from "@/common/config";
 import { clinicService, patientService } from "@/main/factories/services";
 import { buildConversations, userRepository } from "./factories";
 

@@ -21,3 +21,7 @@ export const FIREBASE_CONFIG = {
   messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID,
   appId: process.env.FIREBASE_APIID
 }
+
+
+export const REQUESTRATING_PERIOD = Number(process.env.REQUESTRATING_PERIOD);
+export const REQUESTFEEDBACK_PERIOD = Number(process.env.REQUESTFEEDBACK_PERIOD);

@@ -8,7 +8,7 @@ import {
   PatientService,
 } from "@/data/services";
 import { CredentialManager } from "@/security";
-import config from "@/main/config";
+import config from "@/common/config";
 
 const httpClient = new HttpClient(config.AUTH_DNS);
 const authService = new AuthService(httpClient);
