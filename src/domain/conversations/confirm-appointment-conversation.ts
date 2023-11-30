@@ -26,8 +26,9 @@ export class ConfirmAppointmentConversation implements IConversation {
   constructor(
     private readonly send: TypeSend,
     private readonly appointmentService: AppointmentService,
-    private readonly youAreWelcomeConversation: IConversation
-  ) {}
+    private readonly youAreWelcomeConversation: IConversation,
+    private readonly ratingConversation: IConversation
+  ) { }
 
   async ask(session: UserSession): Promise<void> {
     const day = session.data.day;
@@ -73,11 +74,9 @@ export class ConfirmAppointmentConversation implements IConversation {
       });
 
       this.send(session.id, {
-        text: `Reagendamento realizado com sucesso para ${
-          Weekday[day.getDay()]
-        }, ${day.getDate()} de ${
-          Month[day.getMonth() + 1]
-        } as ${start_time.toClockTime()}.`,
+        text: `Reagendamento realizado com sucesso para ${Weekday[day.getDay()]
+          }, ${day.getDate()} de ${Month[day.getMonth() + 1]
+          } as ${start_time.toClockTime()}.`,
       });
     } else {
       await this.appointmentService.create({
@@ -91,6 +90,10 @@ export class ConfirmAppointmentConversation implements IConversation {
     }
     session.data = {};
     session.data.appointment = undefined;
-    this.youAreWelcomeConversation.ask(session);
+
+    if (session.requestRating())
+      this.ratingConversation.ask(session);
+    else
+      this.youAreWelcomeConversation.ask(session);
   }
 }

@@ -1,6 +1,6 @@
 import { Database } from "@/data/database/database";
 import { initializeApp, FirebaseOptions } from "@firebase/app";
-import { Firestore, getFirestore, collection, getDocs, setDoc, addDoc, updateDoc, doc, getDoc } from "@firebase/firestore";
+import { Firestore, getFirestore, collection, setDoc, updateDoc, doc, getDoc, Timestamp } from "@firebase/firestore";
 
 export class FirebaeDatabase implements Database {
 
@@ -11,15 +11,15 @@ export class FirebaeDatabase implements Database {
   }
 
   async insert(collection_name: string, data: any): Promise<void> {
-      const col = collection(this.firestore, collection_name);
-      const document = data.id ? doc(col, data.id) : doc(col);
-      await setDoc(document, data);
+    const col = collection(this.firestore, collection_name);
+    const document = data.id ? doc(col, data.id) : doc(col);
+    await setDoc(document, data);
   }
 
   async update(collection_name: string, data: any): Promise<void> {
-      const col = collection(this.firestore, collection_name);
-      const document = doc(col, data.id);
-      await updateDoc(document, data);
+    const col = collection(this.firestore, collection_name);
+    const document = doc(col, data.id);
+    await updateDoc(document, data);
   }
 
   load(collection_name: string): Promise<any[]> {
@@ -31,9 +31,16 @@ export class FirebaeDatabase implements Database {
   }
 
   async findById(collection_name: string, id: string): Promise<any> {
-      const col = collection(this.firestore, collection_name);
-      const documentReference = doc(col, id);
-      const document = await getDoc(documentReference);
-      return document.data();
+    const col = collection(this.firestore, collection_name);
+    const documentReference = doc(col, id);
+    const document = await getDoc(documentReference);
+    const data = document.data();
+
+    for (var field in data) {
+      if (data[field] instanceof Timestamp)
+        data[field] = data[field].toDate();
+    }
+
+    return data;
   }
 }

@@ -86,6 +86,7 @@ export const buildConversations = (
   const confirmAppointmentConversation = new ConfirmAppointmentConversation(
     send,
     appointmentService,
+    youAreWelcomeConversation,
     informRatingConversation
   );
 

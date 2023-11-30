@@ -5,8 +5,7 @@ import { PatientModel } from "../../data/services/models/patient-model";
 import { ScheduleModel } from "../../data/services/models/schedule-model";
 import { SpecialtyModel } from "../../data/services/models/specialty-model";
 import { User } from "../repositories/models";
-import { Repository } from "../repositories/repository";
-import { UserFields } from "../repositories/fields";
+import config from "@/common/config";
 
 export class UserSession {
 
@@ -68,5 +67,9 @@ export class UserSession {
 
   expired(seconds: number = 3600): boolean {
     return (this.last_interaction.getTime() + (seconds * 1000)) < Date.now();
+  }
+
+  requestRating(): boolean {
+    return !this.last_rating || this.last_rating.addSeconds(config.REQUESTRATING_PERIOD * 24 * 60 * 60) < new Date();
   }
 };

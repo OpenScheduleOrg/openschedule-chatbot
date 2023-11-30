@@ -21,15 +21,12 @@ export class InformRatingConversation implements IConversation {
 
   async ask(
     session: UserSession,
-    { complement, title } = { complement: undefined, title: undefined }
+    { complement } = { complement: undefined }
   ): Promise<void> {
-    await this.send(session.id, {
-      text: complement || Messages.ITFINE,
-    });
+    if(complement)
+      await this.send(session.id, { text: complement });
 
-    await this.send(session.id, {
-      text: title || Messages.INFORMFEEDBACK,
-    });
+    await this.send(session.id, { text: Messages.INFORMFEEDBACK });
 
     session.setConversation(this);
   }
@@ -41,10 +38,7 @@ export class InformRatingConversation implements IConversation {
     const textIsNumeric = !isNaN(clean_text);
 
     if (!textIsNumeric || clean_text <= 1 || clean_text > 5)
-      return await this.ask(session, {
-        complement: Messages.INVALIDFEEDBACK,
-        title: undefined
-      })
+      return await this.ask(session, { complement: Messages.INVALIDFEEDBACK })
 
     await this.ratingRepository.insert({ phone: session.id, rate: Number(clean_text) });
 
