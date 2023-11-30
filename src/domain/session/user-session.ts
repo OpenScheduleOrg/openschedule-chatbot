@@ -5,6 +5,8 @@ import { PatientModel } from "../../data/services/models/patient-model";
 import { ScheduleModel } from "../../data/services/models/schedule-model";
 import { SpecialtyModel } from "../../data/services/models/specialty-model";
 import { User } from "../repositories/models";
+import { Repository } from "../repositories/repository";
+import { UserFields } from "../repositories/fields";
 
 export class UserSession {
 
@@ -22,21 +24,24 @@ export class UserSession {
 
   private conversation: IConversation;
   private conversation_stack: IConversation[];
-  private last_interaction: number; 
+  private last_interaction: Date; 
 
   id: string;
   name: string;
   patient_id: number;
-  
+  last_feedback: Date;
+  last_rating: Date;
 
   constructor(user: User, readonly logger: Logger) {
     this.data = { }
     this.conversation = undefined;
     this.conversation_stack = []
-    this.last_interaction = Date.now()
+    this.last_interaction = user.last_interaction;
     this.id = user.id;
     this.name = user.name;
     this.patient_id = user.patient_id;
+    this.last_rating = user.last_rating;
+    this.last_feedback = user.last_feedback;
   }
 
   setConversation(conversation: IConversation) {
@@ -49,7 +54,7 @@ export class UserSession {
   }
 
   getConversation(): IConversation {
-    this.last_interaction = Date.now();
+    this.last_interaction = new Date();
 
     const conversation_name = (this.conversation as any).constructor.name;
     this.logger.info("get conversation", { conversation: conversation_name })
@@ -62,6 +67,6 @@ export class UserSession {
   }
 
   expired(seconds: number = 3600): boolean {
-    return (this.last_interaction + (seconds * 1000)) < Date.now();
+    return (this.last_interaction.getTime() + (seconds * 1000)) < Date.now();
   }
 };
