@@ -1,15 +1,14 @@
-import { AuthorizeHttpClient } from "@/data/http/authorize-http-client";
-import { HttpClient } from "@/data/http/http-client";
+import { AuthorizeHttpClient } from "@/infra/http/authorize-http-client";
+import { HttpClient } from "@/infra/http/http-client";
 import {
   AppointmentService,
   AuthService,
   CalendarService,
   ClinicService,
   PatientService,
-} from "@/domain/services";
+} from "@/data/services";
 import { CredentialManager } from "@/security";
-import axios, { Axios } from "axios";
-import config from "../config";
+import config from "@/common/config";
 
 const httpClient = new HttpClient(config.AUTH_DNS);
 const authService = new AuthService(httpClient);

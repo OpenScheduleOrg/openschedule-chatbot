@@ -1,0 +1,1 @@
+export type FeedbackFields = { phone?: string, timestamp?: Date, message?: Text, readed?: boolean };

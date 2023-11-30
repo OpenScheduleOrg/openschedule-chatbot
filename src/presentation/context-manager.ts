@@ -1,20 +1,19 @@
 import { slugify } from "@/common/helpers";
-import { ISessionManager } from "@/domain/interfaces";
-import { PatientService } from "@/domain/services";
-import { IConversation } from "@/domain/usecases";
+import { ISessionManager } from "@/presentation/session";
+import { PatientService } from "@/data/services";
+import { IConversation } from "@/presentation/conversations";
 import { MessageApp } from "@/presentation/apps";
-import { IContextManager, TypeSend, TypeRead } from "./interfaces";
 import Messages from "./messages";
-import { MessageInfo } from "./models";
 import { Logger } from "winston";
+import { TypeRead, TypeSend } from "./apps/send-read";
+import { MessageInfo } from "./apps/message-info";
 
-export class ContextManager implements IContextManager {
+export class ContextManager {
   send: TypeSend;
 
   constructor(
     private readonly app: MessageApp,
     private readonly sessionManager: ISessionManager,
-    private readonly patientService: PatientService,
     private readonly newUserConversation: IConversation,
     private readonly welcomeBackConversation: IConversation,
     private readonly logger: Logger 
@@ -29,19 +28,11 @@ export class ContextManager implements IContextManager {
       content.text = content.text.trim();
 
       if (!session) {
-        try {
-          const patient = await this.patientService.getByPhone(id);
-          session = this.sessionManager.create(id, this.welcomeBackConversation, patient);
-        } catch (error) {
-          session = this.sessionManager.create(id, this.newUserConversation, undefined);
-          return await session.getConversation().ask(session);
-        }
+          session = await this.sessionManager.create(id);
+          session.setConversation(session.patient_id ? this.welcomeBackConversation : this.newUserConversation)
       }
 
-      await session.getConversation().answer(session, {
-        text: content.text,
-        clean_text: slugify(content.text),
-      });
+      await session.getConversation().answer(session, { text: content.text, clean_text: slugify(content.text) });
     } catch (e) {
       this.logger.error(e.message);
       this.sessionManager.close(id);

@@ -1,5 +1,5 @@
-import { CurrentUser } from "@/domain/models";
-import { AuthService } from "@/domain/services";
+import { CurrentUser } from "@/data/services/models";
+import { AuthService } from "@/data/services";
 
 export class CredentialManager {
   private user: CurrentUser;

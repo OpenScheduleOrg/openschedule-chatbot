@@ -1,6 +1,6 @@
 import { manyIndexes } from "@/common/helpers";
-import { TypeConvesations } from "@/domain/interfaces";
-import { ClinicModel } from "@/domain/models";
+import { TypeConvesations } from "@/presentation/session";
+import { ClinicModel } from "@/data/services/models";
 import {
   AboutClinicConversation,
   AppointmentConversation,
@@ -18,14 +18,16 @@ import {
   WelcomeBackConversation,
   YouAreWelcomeConversation,
   InformCpfConversation,
-  InformFeedbackConversation,
-} from "@/presentation/conversations";
-import { TypeSend } from "@/presentation/interfaces";
+  InformRatingConversation,
+  InformFeedbackConversation
+} from "@/domain/conversations";
 import {
   appointmentService,
   calendarService,
   patientService,
 } from "./services";
+import { TypeSend } from "@/presentation/apps";
+import { feedbackRepository, ratingRepository } from "./repositories";
 
 export const buildConversations = (
   send: TypeSend,
@@ -75,16 +77,25 @@ export const buildConversations = (
   const youAreWelcomeConversation = new YouAreWelcomeConversation(
     optionsConversation
   );
-  
+
   const informFeedbackConversation = new InformFeedbackConversation(
     send,
+    feedbackRepository,
     youAreWelcomeConversation
+  );
+  
+  const informRatingConversation = new InformRatingConversation(
+    send,
+    ratingRepository,
+    youAreWelcomeConversation,
+    informFeedbackConversation
   );
 
   const confirmAppointmentConversation = new ConfirmAppointmentConversation(
     send,
     appointmentService,
-    informFeedbackConversation
+    youAreWelcomeConversation,
+    informRatingConversation
   );
 
   const informScheduleConversation = new InformScheduleConversation(
@@ -140,6 +151,7 @@ export const buildConversations = (
   optionsConversation.newAppointmentEntry = informSpecialtyConversation;
   optionsConversation.appointmentsConversation = appointmentsConversation;
   optionsConversation.aboutClinicConversation = aboutClinicConversation;
+  optionsConversation.informFeedbackConversation = informFeedbackConversation;
 
   const new_user_listeners = {};
   manyIndexes(
@@ -168,6 +180,11 @@ export const buildConversations = (
     aboutClinicConversation,
     global_listeners
   );
+  manyIndexes(
+    ["feedback"],
+    informFeedbackConversation,
+    global_listeners
+  );
 
   optionsConversation.conversations = global_listeners;
 
@@ -182,6 +199,9 @@ export const buildConversations = (
   youAreWelcomeConversation.conversations = global_listeners;
   newAppointmentConversation.conversations = global_listeners;
   confirmAppointmentConversation.conversations = global_listeners;
+
+  informFeedbackConversation.conversations = global_listeners;
+  informRatingConversation.conversations = global_listeners;
 
   const cancel_listeners = { ...global_listeners };
   delete cancel_listeners["cancelar"];

@@ -1,5 +1,5 @@
-import { ISessionManager } from "@/domain/interfaces";
-import { IConversation } from "@/domain/usecases";
+import { ISessionManager } from "@/presentation/session";
+import { IConversation } from "@/presentation/conversations";
 import { makeFakeClinic } from "./fake-models";
 
 export const makeSessionManagerMock = (): ISessionManager => ({

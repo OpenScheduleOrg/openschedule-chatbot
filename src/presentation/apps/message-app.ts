@@ -1,4 +1,4 @@
-import { TypeRead, TypeSend } from "@/presentation/interfaces";
+import { TypeRead, TypeSend } from "@/presentation/apps/send-read";
 
 export interface MessageApp {
   read: TypeRead;

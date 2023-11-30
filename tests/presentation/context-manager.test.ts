@@ -1,7 +1,7 @@
-import { ResourceNotFoundError } from "@/data/errors";
-import { ISessionManager } from "@/domain/interfaces";
-import { PatientService } from "@/domain/services";
-import { IConversation } from "@/domain/usecases";
+import { ResourceNotFoundError } from "@/infra/errors";
+import { ISessionManager } from "@/presentation/session";
+import { PatientService } from "@/data/services";
+import { IConversation } from "@/presentation/conversations";
 import { MessageApp } from "@/presentation/apps";
 import { ContextManager } from "@/presentation";
 import Messages from "@/presentation/messages";
@@ -38,7 +38,6 @@ const makeSut = (): SutTypes => {
   const sut = new ContextManager(
     appMock,
     sessionManagerMock,
-    patientServiceMock,
     newUserConversationMock,
     welcomeBackConversationMock,
     logger
