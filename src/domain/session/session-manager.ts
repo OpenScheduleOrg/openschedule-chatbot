@@ -34,9 +34,13 @@ export class SessionManager implements ISessionManager {
 			user.name = patient.name;
 		}
 
-		user.last_interaction = new Date();
-
-		this.userRepository.update(user);
+		if(user) {
+			user.last_interaction = new Date();
+			this.userRepository.update(user);
+		} else {
+			user = { id: id, last_interaction: new Date() } as User;
+			await this.userRepository.insert(user);
+		}
 
 		const userSession = new Proxy(new UserSession(user, this.logger.child({ user_id: id })), { set: this.updateUserProxy })
 
