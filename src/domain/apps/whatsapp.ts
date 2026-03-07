@@ -1,26 +1,27 @@
-import {Boom} from "@hapi/boom";
-import makeWASocket, {delay, DisconnectReason, proto, useMultiFileAuthState} from "@whiskeysockets/baileys";
+import { Boom } from "@hapi/boom";
+import makeWASocket, { delay, DisconnectReason, proto, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore } from "@whiskeysockets/baileys";
 
-import {onlyNumber} from "@/common/helpers";
-import {MessageApp, MessageTemplate} from "@/presentation/apps";
+import { onlyNumber } from "@/common/helpers";
+import { MessageApp, MessageTemplate } from "@/presentation/apps";
 import { Logger } from "winston";
 import { TypeRead } from "@/presentation/apps/send-read";
+import QRCode from 'qrcode'
 
 export class Whatsapp implements MessageApp {
-    sock : any;
-    read : TypeRead;
+    sock: any;
+    read: TypeRead;
 
-    private readonly current_options : {
-    [jid: string]: {[option: string]: string} 
+    private readonly current_options: {
+        [jid: string]: { [option: string]: string }
     } = {};
 
     constructor(private readonly logger: Logger) { }
 
-    send = async (id : string, message : MessageTemplate) => {
+    send = async (id: string, message: MessageTemplate) => {
         this.logger.info("send message to " + id)
 
         id = "55" + id + "@s.whatsapp.net";
-        if (message.text) 
+        if (message.text)
             message.text = message.text.replaceAll("**", "*");
 
         await this.sock.presenceSubscribe(id);
@@ -30,13 +31,13 @@ export class Whatsapp implements MessageApp {
         await delay(500);
 
         await this.sock.sendPresenceUpdate("paused", id);
-        if ("buttons" in message) 
+        if ("buttons" in message)
             await this.sock.sendMessage(id, this.getOptionsMessage(message, id));
-         else 
+        else
             await this.sock.sendMessage(id, message);
     };
 
-    private getOptionsMessage = (message : MessageTemplate, jid: string) => {
+    private getOptionsMessage = (message: MessageTemplate, jid: string) => {
         let textMessage = message.text + "\n";
 
         this.current_options[jid] = {}
@@ -46,40 +47,54 @@ export class Whatsapp implements MessageApp {
             this.current_options[jid][i + 1] = button.buttonId.toString();
 
             textMessage += "\n"
-            textMessage += `${
-                i + 1
-            } - ${
-                button.buttonText.displayText
-            }`
+            textMessage += `${i + 1
+                } - ${button.buttonText.displayText
+                }`
         }
 
-        return {text: textMessage};
+        return { text: textMessage };
     };
 
     async connect() {
-        const {state, saveCreds} = await useMultiFileAuthState("baileys_auth_info");
+        const { state, saveCreds } = await useMultiFileAuthState("baileys_auth_info");
 
-        const sock = (this.sock = makeWASocket({printQRInTerminal: true, auth: state}));
+        const { version, isLatest } = await fetchLatestBaileysVersion()
+
+        this.logger.info(`${{ version: version.join('.'), isLatest }} using latest WA version`);
+
+        const sock = (this.sock = makeWASocket({
+            version,
+            auth: {
+                creds: state.creds,
+                keys: makeCacheableSignalKeyStore(state.keys),
+            },
+        }));
+
 
         sock.ev.process(async (events) => {
             if (events["connection.update"]) {
                 const update = events["connection.update"];
-                const {connection, lastDisconnect} = update;
+                const { connection, lastDisconnect, qr } = update;
+
+                if (qr) {
+                    console.log(await QRCode.toString(qr, { type: 'terminal' }));
+                }
+
                 if (connection === "close") { // reconnect if not logged out
-                    if ((lastDisconnect ?. error as Boom) ?. output ?. statusCode !== DisconnectReason.loggedOut) {
+                    if ((lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut) {
                         this.connect();
                     } else {
                         this.logger.info("Connection closed. You are logged out.");
                     }
                 }
+
                 this.logger.info("connection update");
             }
 
             if (events["chats.set"]) {
-                const {chats, isLatest} = events["chats.set"];
-                this.logger.info(`recv ${
-                    chats.length
-                } chats (is latest: ${isLatest})`);
+                const { chats, isLatest } = events["chats.set"];
+                this.logger.info(`recv ${chats.length
+                    } chats (is latest: ${isLatest})`);
             }
 
             if (events["creds.update"]) {
@@ -87,37 +102,37 @@ export class Whatsapp implements MessageApp {
             }
 
             if (events["messages.set"]) {
-                const {messages, isLatest} = events["messages.set"];
-                this.logger.info(`recv ${
-                    messages.length
-                } messages (is latest: ${isLatest})`);
+                const { messages, isLatest } = events["messages.set"];
+                this.logger.info(`recv ${messages.length
+                    } messages (is latest: ${isLatest})`);
             }
 
             if (events["messages.upsert"]) {
                 const upsert = events["messages.upsert"];
 
-                if (upsert.type === "notify") 
-                    for (const msg of upsert.messages) 
-                        if (! msg.key.fromMe && msg.message) 
+                if (upsert.type === "notify")
+                    for (const msg of upsert.messages)
+                        if (!msg.key.fromMe && msg.message)
                             this.processMessage(msg);
             }
         });
     }
 
-    async processMessage(msg : proto.IWebMessageInfo) {
-        await this.sock !.readMessages([msg.key]);
+    async processMessage(msg: proto.IWebMessageInfo) {
+        await this.sock!.readMessages([msg.key]);
+        console.log(msg)
 
-        let text = msg.message.conversation || msg.message ?. extendedTextMessage ?. text || msg.message ?. buttonsResponseMessage ?. selectedButtonId || msg.message ?. listResponseMessage ?. singleSelectReply ?. selectedRowId;
+        let text = msg.message.conversation || msg.message?.extendedTextMessage?.text || msg.message?.buttonsResponseMessage?.selectedButtonId || msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId;
 
-        if (text && msg.key.remoteJid.endsWith("s.whatsapp.net")) {
-            const current_option = this.current_options[msg.key.remoteJid];
+        if (text && msg.key.remoteJidAlt.endsWith("s.whatsapp.net")) {
+            const current_option = this.current_options[msg.key.remoteJidAlt];
             text = (current_option && current_option[text?.trim()]) || text;
 
-            delete this.current_options[msg.key.remoteJid];
-            const phone_number = onlyNumber(msg.key.remoteJid);
-            this.logger.info({phone_number, text});
+            delete this.current_options[msg.key.remoteJidAlt];
+            const phone_number = onlyNumber(msg.key.remoteJidAlt);
+            this.logger.info({ phone_number, text });
 
-            await this.read(phone_number, {text, timestamp: msg.messageTimestamp as number});
+            await this.read(phone_number, { text, timestamp: msg.messageTimestamp as number });
         }
     }
 }

@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "target": "ES2022",
-        "module": "commonjs",
+        "target": "esnext",
+        "module": "esnext",
         "esModuleInterop": true,
         "noImplicitAny": false,
         "removeComments": true,

@@ -23,7 +23,7 @@ export class UserSession {
 
   private conversation: IConversation;
   private conversation_stack: IConversation[];
-  private last_interaction: Date; 
+  private last_interaction: Date;
 
   id: string;
   name: string;
@@ -32,7 +32,7 @@ export class UserSession {
   last_rating: Date;
 
   constructor(user: User, readonly logger: Logger) {
-    this.data = { }
+    this.data = {}
     this.conversation = undefined;
     this.conversation_stack = []
     this.last_interaction = user.last_interaction;
@@ -44,7 +44,7 @@ export class UserSession {
   }
 
   setConversation(conversation: IConversation) {
-    if(this.conversation)
+    if (this.conversation)
       this.conversation_stack.push(this.conversation);
     this.conversation = conversation;
 
@@ -70,10 +70,13 @@ export class UserSession {
   }
 
   requestRating(): boolean {
-    return !this.last_rating || this.last_rating.addSeconds(config.REQUESTRATING_PERIOD * 24 * 60 * 60) < new Date();
+
+    return config.REQUESTRATING_PERIOD && (
+      !this.last_rating || this.last_rating.addSeconds(config.REQUESTRATING_PERIOD * 24 * 60 * 60) < new Date());
   }
 
   requestFeedback(): boolean {
-    return !this.last_feedback || this.last_feedback.addSeconds(config.REQUESTFEEDBACK_PERIOD * 24 * 60 * 60) < new Date();
+    return config.REQUESTFEEDBACK_PERIOD && (
+      !this.last_feedback || this.last_feedback.addSeconds(config.REQUESTFEEDBACK_PERIOD * 24 * 60 * 60) < new Date());
   }
 };
