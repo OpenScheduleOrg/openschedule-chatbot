@@ -1,0 +1,14 @@
+services:
+  chatbot:
+    build: .
+    restart: unless-stopped
+    environment:
+      API_DNS: ""
+      AUTH_DNS: ""
+      BEARER_TOKEN: ""
+      CLINIC_ID: 1
+      TELEGRAM_TOKEN: ""
+      WHATSAPP_ENABLED: 1
+    volumes:
+      - ./volume/apps_local_storage:/app/apps_local_storage
+      - ./volume/logs:/app/logs

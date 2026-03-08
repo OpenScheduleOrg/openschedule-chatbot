@@ -120,7 +120,6 @@ export class Whatsapp implements MessageApp {
 
     async processMessage(msg: proto.IWebMessageInfo) {
         await this.sock!.readMessages([msg.key]);
-        console.log(msg)
 
         let text = msg.message.conversation || msg.message?.extendedTextMessage?.text || msg.message?.buttonsResponseMessage?.selectedButtonId || msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId;
 

@@ -1,0 +1,7 @@
+node_modules
+.env
+build
+baileys_auth_info
+.vscode
+apps_local_storage
+logs
